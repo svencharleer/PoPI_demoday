@@ -6,11 +6,19 @@ var visualization = function () {
 var __canvas;
 var _users;
 var _solos;
+var _countries;
 
 //METHODS
 
 var _dataPoints = {};
 
+    var drawCountries = function(processing)
+    {
+        _countries.forEach(function(country){
+            processing.fill(255);
+            processing.text(country.name, country.x, country.y, 1000,100);
+        });
+    }
     var drawSolos = function(_processing)
     {
         try {
@@ -56,8 +64,10 @@ var _dataPoints = {};
     {
         var screenWidth =  $("#" + __canvas).width();
         var screenHeight = $("#" + __canvas).height()
-        var sphereWidth = 40;
-        var sphereHeight = 20;
+        var sphereWidth = 22;
+        var sphereHeight = 13;
+        var padding = -4;
+        var size = 6;
 
 
         Object.keys(_users).forEach(function (k) {
@@ -68,22 +78,24 @@ var _dataPoints = {};
                 //first the data point
                 if(_dataPoints[s] == undefined) {
                     _processing.noFill();
-                    _processing.stroke(128);
+                    _processing.stroke(255);
                     //_processing.ellipse(x,y,2*sphereWidth,2*sphereHeight)
 
-                    _processing.rectMode(_processing.CORNER);
-                    _processing.noStroke();
+                    _processing.rectMode(_processing.CORNERS);
+
 
 
                     _processing.strokeWeight(1);
-                    _processing.fill(255);
-                    _processing.rect(x + sphereWidth / 4, y + sphereHeight / 3, sphereWidth / 2, 4);
+                    _processing.noFill(255);
+                    _processing.rect(x-padding , y-padding , x+sphereWidth+padding, y+sphereHeight+padding);
 
                 }
 
                 //then draw the user dot
                 var userX = _users[k].position.x * screenWidth;
                 var userY = _users[k].position.y * screenHeight;
+               _processing.noStroke();
+                _processing.strokeWeight(1);
                 _processing.fill(parseInt(_users[k].color));
 
                 var xDiff = (userX/ screenWidth );
@@ -95,7 +107,7 @@ var _dataPoints = {};
 
                 // _processing.line(x,y,x+xDiff,y+yDiff);
 
-                _processing.ellipse(x+xDiff,y+yDiff, 4,4)
+                _processing.ellipse(x+xDiff,y+yDiff, size,size)
 
             });
 
@@ -118,6 +130,7 @@ var _dataPoints = {};
         processing.background(0,0);
         drawRealTable(processing);
         drawSolos(processing);
+        drawCountries(processing);
         processing.smooth();
     };
 
@@ -153,12 +166,14 @@ var _dataPoints = {};
             _p = processing;
             _users = {};
             _solos = {};
+            _countries = [];
 
         },
-        "update": function( users, solos)
+        "update": function( users, solos, countries)
         {
             _users = users;
             _solos = solos;
+            _countries = countries;
         }
 
 

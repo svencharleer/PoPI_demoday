@@ -5,25 +5,56 @@
 var countryToCoordinates = {
   LVA: [57.0000,25.0000],
   DEU: [52.5167,13.3833],
-  SWE: [59.3500,18.0667],
+  SWE: [57.3500,18.0667],
     AUT:[48.2000,16.3500],
     CZE:[49.7500,15.7500],
-    RUS:[60.0000,90.0000],
+    RUS:[57.0000,35.0000],
     FRA:[47.0000,2.0000],
     NLD:[52.3167,5.5500],
-    ESP:[40.4333,3.7000],
-    GBR:[51.5000,0.1167]
+    ESP:[41.4333,3.7000],
+    GBR:[51.5000,0.1167],
+    BEL:[50.85,4.35],
+    LTU:[55,24],
+    HUN:[47.4333,19.2500],
+    CHE:[46.8333,8.3333],
+    NOR:[8.3333,8.0000]
 };
 
+var countryAbbrToName = {
+    LVA: "Latvia",
+    DEU: "Germany",
+    SWE: "Sweden",
+    AUT:"Austria",
+    CZE:"Czech",
+    RUS:"Russia",
+    FRA:"France",
+    NLD:"Netherlands",
+    ESP:"Spain",
+    GBR:"United Kingdom",
+    BEL:"Belgium",
+    LTU:"Lithuania",
+    HUN:"Hungary",
+    CHE:"Switzerland",
+    NOR:"Norway"
+}
 
 var map;
 
 var squares = {};
 
+var getCountries = function()
+{
+    var countries = [];
+    Object.keys(countryToCoordinates).forEach(function(c){
+        var point = map.latLngToLayerPoint(countryToCoordinates[c]);
+        countries.push({name: countryAbbrToName[c], x: point.x-40, y: point.y-20});
+    });
+    return countries;
+}
 
 var generateMap = function()
 {
-    map = L.map('map').setView([54.9000, 20.3167], 4);
+    map = L.map('map').setView([50.9000, 18.3167], 5);
     L.tileLayer('http://api.tiles.mapbox.com/v4/svencharleer.2b20ff07/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic3ZlbmNoYXJsZWVyIiwiYSI6IllXNkdIaG8ifQ.ISDLLDx44LQ2JKuxebfqSA', {
         attribution: '',
         maxZoom: 18
@@ -37,6 +68,7 @@ var convertMapCoordToScreen = function(user)
 {
     var countries = user.data[0].Facets[0]["RECORD_SPATIAL"];
     Object.keys(countries).forEach(function(cc) {
+
         if(countryToCoordinates[cc] == undefined)
         {
             //WE NEED TO ADD THE CODE

@@ -49,7 +49,8 @@
             });
             __users = msg.users;
             __solos = msg.solos;
-            __vis.update(__users,__solos);
+            var countries = getCountries();
+            __vis.update(__users,__solos,countries);
 
         });
 

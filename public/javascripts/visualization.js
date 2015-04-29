@@ -18,9 +18,31 @@ var _dataPoints = {};
             var screenHeight = $("#" + __canvas).height();
             Object.keys(_solos).forEach(function (k) {
                 var solo = _solos[k];
-                _processing.strokeWeight(1);
-                _processing.fill(parseInt(solo.color));
-                _processing.ellipse(solo.x * screenWidth, solo.y * screenHeight, 20, 20);
+                var x= solo.x,y=solo.y;
+                if(solo.x < .5 && solo.y < .5)
+                {
+                    if(solo.x < solo.y) x = 0;
+                    else y = 0;
+                }
+                else if(solo.x < .5 && solo.y >= .5)
+                {
+                    if(solo.x < (1.0 - solo.y)) x = 0;
+                    else y = 1;
+                }
+                else if(solo.x >= .5 && solo.y < .5)
+                {
+                    if((1.0 - solo.x) <  solo.y) x = 1;
+                    else y = 0;
+                }
+                else if(solo.x >= .5 && solo.y >= .5)
+                {
+                    if(solo.x >  solo.y) x = 1;
+                    else y = 1;
+                }
+                _processing.strokeWeight(5);
+                _processing.noFill();
+                _processing.stroke(parseInt(solo.color));
+                _processing.ellipse(x * screenWidth, y * screenHeight, 100, 100);
             });
         }
         catch(exc)

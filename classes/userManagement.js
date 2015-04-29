@@ -56,12 +56,18 @@ exports.updateUserPositions = function(positions)
         hansolos[h].alive = false;
     });
     positions.forEach(function(position){
-
+        position.x = parseFloat(position.x);
+        position.y = parseFloat(position.y);
         var userId = positionIdToUserId[position.id];
         if(userId != undefined) {
             userId.alive = true;
             exports.updateUser(userId.userId, undefined, undefined, position);
             console.log(userId.userId + " is still alive");
+        }
+        else if(hansolos[position.id] != undefined) {
+
+            hansolos[position.id].x = position.x;
+            hansolos[position.id].y = position.y;
         }
         else if(hansolos[position.id] == undefined)
             hansolos[position.id] = position;
@@ -97,7 +103,7 @@ exports.updateUserPositions = function(positions)
         if(positionIdToUserId[hansolos[h].id] != undefined)
         {
             positionIdToUserId[hansolos[h].id].alive = true;
-            exports.updateUser(positionIdToUserId[hansolos[h].id], undefined, undefined, hansolos[h].color);
+            exports.updateUser(positionIdToUserId[hansolos[h].id], undefined, undefined, hansolos[h].position);
             hansolos[h] = undefined;
             delete hansolos[h];
         }

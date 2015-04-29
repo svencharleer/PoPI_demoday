@@ -42,6 +42,9 @@ exports.matchUserToPosition = function(userId, color)
         {
             //if match, remove from han, put in the other list
             positionIdToUserId[hansolos[h].id] = {userId: userId, alive: true};
+            exports.updateUser(userId.userId, undefined, undefined, hansolos[h]);
+            hansolos[h] = undefined;
+            delete hansolos[h];
         }
     });
 }
@@ -103,7 +106,7 @@ exports.updateUserPositions = function(positions)
         if(positionIdToUserId[hansolos[h].id] != undefined)
         {
             positionIdToUserId[hansolos[h].id].alive = true;
-            exports.updateUser(positionIdToUserId[hansolos[h].id], undefined, undefined, hansolos[h].position);
+            exports.updateUser(positionIdToUserId[hansolos[h].id], undefined, undefined, hansolos[h]);
             hansolos[h] = undefined;
             delete hansolos[h];
         }

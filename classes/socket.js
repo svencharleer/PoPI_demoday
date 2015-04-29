@@ -37,6 +37,8 @@ exports.init = function(ioWeb) {
             userMgm.matchUserToPosition(socket.id, color);
             socket.emit("chooseColor", color);
             console.log("choose color " + msg);
+            msg = {users: userMgm.getUsers(), solos: userMgm.grabSolos()};
+            broadcastUpdate(msg);
         });
 
 

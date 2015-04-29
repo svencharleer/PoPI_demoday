@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>eCloud</title>
+      <script type="application/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+      <script src="/socket.io/socket.io.js"></script>
+
+    <script type="application/javascript">
+        var socket = io();
+        var id;
+        var selectColor = function(color){
+            socket.emit("chooseColor", color);
+        };
+
+        var submit = function() {
+            var userColors = ["#8CFF6B","#fff3a2","#ff1313","#00deff","#ff03f0"];
+           socket.emit("doQuery", {query:($("#query").val())});
+        };
+        socket.on("availableColors", function(colors){
+            colors.forEach(function(color){
+                var cssColor = color.replace("0xCC", "#");
+                $("#colors").append("<p onclick='javascript:selectColor(" + '"' + color + '"' + ");' style='background-color:"+cssColor+";'>" + color + "</p>");
+            });
+        });
+        socket.on("chooseColor", function(color){
+            $("#colors").hide();
+            $("body").attr("style","background-color:" + color.replace("0xCC", "#") );
+        });
+
+        $(window).bind('unload', function(){
+            socket.disconnect();
+        });
+
+    </script>
+
+  </head>
+  <body>
+
+    <div id="colors"></div>
+
+    <input id="query" type="search" />
+
+    <input type="submit" onclick="javascript:submit()">
+  </body>
+</html>

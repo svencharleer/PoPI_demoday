@@ -79,6 +79,7 @@ var convertMapCoordToScreen = function(user)
         if(user.screenCoords == undefined) user.screenCoords = {};
 
         user.screenCoords[cc] = map.latLngToLayerPoint(coords); //convert
+        user.data[cc] = countries[cc];
     });
 }
 

@@ -27,6 +27,8 @@ exports.getPapersByAt = function(query, by, at,  callback)
 
     rest.doGET("data.theeuropeanlibrary.org", param,
         function(data, err){
+
+            console.log(data);
             callback(data, err)
         });
 }

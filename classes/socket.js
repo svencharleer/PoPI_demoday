@@ -45,8 +45,9 @@ exports.init = function(ioWeb) {
 
         socket.on('doQuery', function (msg) {
 
-            console.log('user: ' + msg.user + ' queried ' + msg.query);
+            console.log('user: ' + socket.id + ' queried ' + msg.query);
             paperLib.getPapersByAt(msg.query, 10, 0, function (data, err) {
+
                 console.log('user: ' + socket.id + ' queried with results ' + data);
                 userMgm.updateUser(socket.id, data);
 

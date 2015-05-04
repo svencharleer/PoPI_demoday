@@ -61,7 +61,9 @@ exports.init = function(ioWeb) {
                 socket.emit("doQuery", "processing")
                 var msg = {users: userMgm.getUsers(), solos: userMgm.grabSolos()};
                 broadcastUpdate(msg);
+                userMgm.clearFlagsUser(socket.id);
             });
+
             pausePositions = false;
         });
 

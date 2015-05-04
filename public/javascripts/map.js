@@ -66,6 +66,7 @@ var height = .6;
 
 var convertMapCoordToScreen = function(user)
 {
+    if(user.data == undefined) return;
     var countries = user.data[0].Facets[0]["RECORD_SPATIAL"];
     Object.keys(countries).forEach(function(cc) {
 
@@ -76,7 +77,11 @@ var convertMapCoordToScreen = function(user)
             return;
         }
         var coords = countryToCoordinates[cc].slice();
-        if(user.screenCoords == undefined) user.screenCoords = {};
+        if(user.screenCoords == undefined)
+        {
+            user.screenCoords = {};
+
+        }
 
         user.screenCoords[cc] = map.latLngToLayerPoint(coords); //convert
         user.data[cc] = countries[cc];

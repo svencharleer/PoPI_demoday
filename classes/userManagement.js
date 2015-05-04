@@ -10,6 +10,13 @@ var availableColors = [true,true,true,true,true];
 var positionIdToUserId = {};
 var hansolos = {};
 
+exports.clearFlagsUser = function(id)
+{
+    if(users[id] != undefined) {
+       users[id].dataUpdate = false;
+    }
+}
+
 exports.updateUser = function(id,data,color,position)
 {
     if(users[id] == undefined)
@@ -17,8 +24,11 @@ exports.updateUser = function(id,data,color,position)
         users[id] = {id:id, data:data, color:color};
         return;
     }
-    if(data != undefined)
+    if(data != undefined) {
+
         users[id].data = data;
+        users[id].dataUpdate = true;
+    }
     if(color != undefined)
         users[id].color = color;
     if(position != undefined) {
@@ -34,6 +44,8 @@ exports.updateUser = function(id,data,color,position)
         users[id].color = undefined;
     if(position == "clear")
         users[id].position = undefined;
+
+
 
 
 
@@ -159,10 +171,12 @@ exports.getUsers = function()
     var ret = {};
     Object.keys(users).forEach(function(u){
         var user = users[u];
-        if(user.data != undefined && user.color != undefined && user.position != undefined)
+        if(user.color != undefined && user.position != undefined)
         {
             ret[user.id] = user;
         }
+
+
     });
     return ret;
 }

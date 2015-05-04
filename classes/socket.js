@@ -6,15 +6,19 @@
 ///////////////////////////////////////////
 var paperLib = require('../classes/libCalls.js');
 var userMgm = require('../classes/userManagement.js');
+
+var pausePositions = false;
 exports.init = function(ioWeb) {
 
     ioWeb.on('connection', function (socket) {
+
 
         var address = socket.handshake.address;
         console.log('Client connected with id: ' + socket.id + " from " + address.address + ":" + address.port);
         userMgm.updateUser(socket.id);
 
         socket.on('disconnect', function(){
+            pausePositions = true;
             console.log(socket.id + " disconnecting");
             var usr = userMgm.getAllUsers()[socket.id];
             console.log(usr);
@@ -24,6 +28,7 @@ exports.init = function(ioWeb) {
             console.log(socket.id + " disconnected. " + usr.color+ " free again");
             var msg = {users: userMgm.getUsers(), solos: userMgm.grabSolos()};
             broadcastUpdate(msg);
+            pausePositions = false;
         });
 
 
@@ -31,6 +36,7 @@ exports.init = function(ioWeb) {
         socket.emit("availableColors",userMgm.getAvailableColors());
 
         socket.on('chooseColor', function(msg){
+            pausePositions = true;
             var color = msg;
             userMgm.updateUser(socket.id, undefined, color);
             userMgm.colorAvailable(color, false);
@@ -39,12 +45,13 @@ exports.init = function(ioWeb) {
             console.log("choose color " + msg);
             msg = {users: userMgm.getUsers(), solos: userMgm.grabSolos()};
             broadcastUpdate(msg);
+            pausePositions = false;
         });
 
 
 
         socket.on('doQuery', function (msg) {
-
+            pausePositions = true;
             console.log('user: ' + socket.id + ' queried ' + msg.query);
             paperLib.getPapersByAt(msg.query, 10, 0, function (data, err) {
 
@@ -55,6 +62,7 @@ exports.init = function(ioWeb) {
                 var msg = {users: userMgm.getUsers(), solos: userMgm.grabSolos()};
                 broadcastUpdate(msg);
             });
+            pausePositions = false;
         });
 
 
@@ -68,6 +76,7 @@ exports.init = function(ioWeb) {
 
         socket.on("updatePositions", function (msg) {
             console.log(msg);
+            if(pausePositions) return;
             var positions = JSON.parse(msg);
             userMgm.updateUserPositions(positions);
             var msg = {users: userMgm.getUsers(), solos: userMgm.grabSolos()};

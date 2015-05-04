@@ -21,8 +21,13 @@ exports.updateUser = function(id,data,color,position)
         users[id].data = data;
     if(color != undefined)
         users[id].color = color;
-    if(position != undefined)
-        users[id].position = position;
+    if(position != undefined) {
+        console.log("user position updated");
+        users[id].position = {};
+        users[id].position.x = position.x;
+        users[id].position.y = position.y;
+        users[id].position.id = position.id;
+    }
     if(data == "clear")
         users[id].data = undefined;
     if(color == "clear")
@@ -38,11 +43,13 @@ exports.matchUserToPosition = function(userId, color)
 {
     //find a han that matches the color chosen by the user
     Object.keys(hansolos).forEach(function(h) {
+        console.log("color comp: " + hansolos[h].color + " "  +color);
         if(hansolos[h].color == color)
         {
+            console.log("match found");
             //if match, remove from han, put in the other list
             positionIdToUserId[hansolos[h].id] = {userId: userId, alive: true};
-            exports.updateUser(userId.userId, undefined, undefined, hansolos[h]);
+            exports.updateUser(userId, undefined, undefined, hansolos[h]);
             hansolos[h] = undefined;
             delete hansolos[h];
         }

@@ -8,6 +8,7 @@ var paperLib = require('../classes/libCalls.js');
 var userMgm = require('../classes/userManagement.js');
 
 var pausePositions = false;
+var _shows = [];
 exports.init = function(ioWeb) {
 
     ioWeb.on('connection', function (socket) {
@@ -76,6 +77,9 @@ exports.init = function(ioWeb) {
             socket.join('positionListener');
         });
 
+        socket.on("registerInformation", function(msg){
+            socket.join("informationListener");
+        });
         socket.on("updatePositions", function (msg) {
             console.log(msg);
             if(pausePositions) return;
@@ -93,6 +97,20 @@ exports.init = function(ioWeb) {
             console.log("Kinect messed up")
         })
 
+        socket.on("show",function(msg){
+            console.log(msg);
+            if(_shows.indexOf(msg) < 0)
+                _shows.push(msg);
+            broadcastInformation(_shows)
+        })
+        socket.on("hide",function(msg){
+            console.log(msg);
+            var i = _shows.indexOf(msg);
+            _shows[i] = undefined;
+            broadcastInformation(_shows);
+
+        })
+
     });
 
 ///////////////////////////////////////////
@@ -105,5 +123,9 @@ exports.init = function(ioWeb) {
 
     function broadcastPositions(positions) {
         ioWeb.sockets.in('positionListener').emit('positionsUpdate', positions);
+    }
+    function broadcastInformation(msg) {
+
+        ioWeb.sockets.in('informationListener').emit('informationUpdate',  userMgm.getUsers(), msg);
     }
 }

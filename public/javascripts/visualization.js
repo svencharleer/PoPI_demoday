@@ -12,24 +12,40 @@ var _countries;
 
 var _dataPoints = {};
 
+
     var handleTouches = function(processing)
     {
         try {
             var sphereWidth = 22;
             var sphereHeight = 13;
 
+            //check if anything is untouched
+            //if it is, delete
+            Object.keys(_dataPoints).forEach(function(d){
+                _dataPoints[d].touched = false;
+            });
+
 
             Object.keys(_users).forEach(function (k) {
-                _users[k].touched = false;
+
                 Object.keys(_users[k].screenCoords).forEach(function (s) {
 
+
                     //if within distance of center:
-                    var x = _users[k].screenCoords[s].x - sphereWidth / 2;
-                    var y = _users[k].screenCoords[s].y - sphereHeight / 2;
+                    var x = _users[k].screenCoords[s].x;
+                    var y = _users[k].screenCoords[s].y;
                     Object.keys(_touches).forEach(function (t) {
                         var touch = _touches[t];
+
                         if (processing.dist(x, y, touch.x, touch.y) < 22) {
-                            _dataPoints[s] = {x:x,y:y};
+                            //if it exists, do nothing
+                            if(_dataPoints[s] != undefined)
+                                _dataPoints[s].touched = true;
+                            else {
+                                _dataPoints[s] = {x: x, y: y, touched: true};
+                                //new touch! send to server!
+                                socket.emit("show", s);
+                            }
 
                         }
                         return false;
@@ -39,6 +55,14 @@ var _dataPoints = {};
                 });
 
             })
+            //delete remainder
+            Object.keys(_dataPoints).forEach(function(d){
+                if(!_dataPoints[d].touched)
+                {
+                    _dataPoints[d] = undefined;
+                    delete _dataPoints[d];
+                }
+            });
         }
         catch(exc)
         {
@@ -139,7 +163,7 @@ n
         Object.keys(_dataPoints).forEach(function(d){
             processing.fill(0);
             processing.stroke(255);
-            processing.strokeWeight(2);
+            processing.strokeWeight(3 * Math.abs(Math.cos(2*((processing.frameCount)/30.0))*Math.PI/2));
 
             processing.ellipse(_dataPoints[d].x,_dataPoints[d].y, 100,100);
         });
@@ -314,7 +338,7 @@ n
             }
         });
 
-        _dataPoints= {};
+        //_dataPoints= {};
 
         processing.smooth();
     };

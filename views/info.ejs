@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>eCloud</title>
+      <script type="application/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+      <script src="/socket.io/socket.io.js"></script>
+
+    <script type="application/javascript">
+        var socket = io();
+
+
+
+
+
+           socket.emit("registerInformation");
+        socket.on("informationUpdate", function(users, shows){
+            console.log(users);
+            console.log(shows);
+
+        });
+
+
+    </script>
+
+  </head>
+  <body>
+
+
+  </body>
+</html>

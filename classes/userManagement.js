@@ -84,12 +84,14 @@ exports.updateUserPositions = function(positions)
         if(hansolos[position.id] != undefined)
             hansolos[position.id].alive = true;
     });
-    //deal with the dead. (they might just have stepped out the playing field)
+    //deal with the dead. no way we can link them again with original user, so get rid of them
     Object.keys(positionIdToUserId).forEach(function(p){
         if(!positionIdToUserId[p].alive)
         {
            //remove from the data points
-            exports.updateUser(positionIdToUserId[p].userId, undefined, undefined, "clear"); //this will cause it not to be sent to clients
+            exports.removeUser(positionIdToUserId[p].userId);
+            positionIdToUserId[p] = undefined;
+            delete positionIdToUserId[p];
             console.log(positionIdToUserId[p].userId + " walked out");
         }
     });
@@ -105,20 +107,19 @@ exports.updateUserPositions = function(positions)
 
     });
 
-    //color is link between lost user and active node!
-    //deal with those who walk back into the scene
-    //if they exist in posToUserId, they walked out
-    //if they don't, they're new and need a color
+    //actually what happens is we need to move hansolo to a real user
+    //or in case of new hansolos, give them color
     Object.keys(hansolos).forEach(function(h){
-        if(positionIdToUserId[hansolos[h].id] != undefined)
+
+       /* if(positionIdToUserId[hansolos[h].id] != undefined)
         {
             positionIdToUserId[hansolos[h].id].alive = true;
             exports.updateUser(positionIdToUserId[hansolos[h].id], undefined, undefined, hansolos[h]);
             hansolos[h] = undefined;
             delete hansolos[h];
         }
-        else
-        {
+        else*/
+
             //we will just draw them for someone to grab
             //so give'm color
             if(hansolos[h].color == undefined)
@@ -126,7 +127,7 @@ exports.updateUserPositions = function(positions)
                 hansolos[h].color = exports.getFirstAvailableColor();
                 exports.colorAvailable(hansolos[h].color, false);
             }
-        }
+
     });
 
 

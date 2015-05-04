@@ -61,7 +61,7 @@ var _dataPoints = {};
             Object.keys(_solos).forEach(function (k) {
                 var solo = _solos[k];
                 var x= solo.x,y=solo.y;
-                if(solo.x < .5 && solo.y < .5)
+                /*if(solo.x < .5 && solo.y < .5)
                 {
                     if(solo.x < solo.y) x = 0;
                     else y = 0;
@@ -80,11 +80,23 @@ var _dataPoints = {};
                 {
                     if(solo.x >  solo.y) x = 1;
                     else y = 1;
-                }
+                }*/
+
+
+                var v = new _processing.PVector(x -.5, y -.5);
+                v.normalize();
+                var signX = v.x? v.x<0?-1:1:0;
+                var signY = v.y? v.y<0?-1:1:0;
+                if(Math.abs(v.x)>Math.abs(v.y)) v.y = signY;
+                else v.x = signX;
+
+                x = v.x * screenWidth / 2 + screenWidth/2;
+                y = v.y * screenHeight /2 + screenHeight/2;
+
                 _processing.strokeWeight(5);
                 _processing.noFill();
                 _processing.stroke(parseInt(solo.color));
-                _processing.ellipse(x * screenWidth, y * screenHeight, 100, 100);
+                _processing.ellipse(x, y, 100, 100);
             });
         }
         catch(exc)

@@ -111,7 +111,7 @@ exports.updateUserPositions = function(positions)
             exports.removeUser(positionIdToUserId[p]);
             positionIdToUserId[p] = undefined;
             delete positionIdToUserId[p];
-            console.log(positionIdToUserId[p].userId + " walked out");
+            console.log(positionIdToUserId[p] + " walked out");
         }
     });
 

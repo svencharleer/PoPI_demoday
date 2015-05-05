@@ -23,7 +23,7 @@ exports.countPapers = function(query,  callback)
 //get by "by" papers at offset "at"
 exports.getPapersByAt = function(query, by, at,  callback)
 {
-    var param = "/opensearch/catalogue?format=json&q=" + query + "&key="+ apiKey + "&c="+ by + "&s" + at +  "&ff=(country)"
+    var param = "/opensearch/catalogue?format=json&q=" + encodeURI(query) + "&key="+ apiKey + "&c="+ by + "&s" + at +  "&ff=(country)"
 
     rest.doGET("data.theeuropeanlibrary.org", param,
         function(data, err){
@@ -37,7 +37,8 @@ exports.getPapersByAt = function(query, by, at,  callback)
 exports.getPapersForCountry = function(query, country, userid, originalData, callback)
 {
 
-    var param = "/opensearch/catalogue?format=json&q=" + query + "&key="+ apiKey + "&qf=(country,"+ country +")";
+
+    var param = "/opensearch/catalogue?format=json&q=" + encodeURI(query) + "&key="+ apiKey + "&qf=(country,"+ country +")";
     console.log(param);
     rest.doGET2("data.theeuropeanlibrary.org", param, originalData,
         function(data, originalData){

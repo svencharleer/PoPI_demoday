@@ -74,8 +74,14 @@ exports.doGET = function(host, path, callback, auth) {
         });
         result.on('end', function () {
             ////console.log(dataPerPage);
-            totalData = totalData.concat(JSON.parse(dataPerPage));
-
+            try {
+                totalData = totalData.concat(JSON.parse(dataPerPage));
+            }
+            catch(exc)
+            {
+                console.log(dataPerPage);
+                totalData = [];
+            }
             callback(totalData);
 
 

@@ -17,6 +17,13 @@ exports.clearFlagsUser = function(id)
     }
 }
 
+exports.userQuery = function(id, query)
+{
+    if(users[id] != undefined) {
+        users[id].query = query;
+    }
+}
+
 exports.updateUser = function(id,data,color,position)
 {
     if(users[id] == undefined)

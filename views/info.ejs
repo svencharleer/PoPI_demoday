@@ -3,29 +3,77 @@
   <head>
     <title>eCloud</title>
       <script type="application/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/info.css' />
       <script src="/socket.io/socket.io.js"></script>
 
-    <script type="application/javascript">
-        var socket = io();
 
-
-
-
-
-           socket.emit("registerInformation");
-        socket.on("informationUpdate", function(users, shows){
-            console.log(users);
-            console.log(shows);
-
-        });
-
-
-    </script>
 
   </head>
   <body>
+    <div id="results">
 
-
+    </div>
+  <div id="info"></div>
+    <h1>System Information</h1>
+    <p>Number of users detected: <span id="nrOfTotal"></span></p>
+    <p>Number of users active: <span id="nrOfUsers"></span></p>
+    <p>Number of users inactive: <span id="nrOfSolos"></span></p>
+    <div id="queries"></div>
   </body>
+  <script type="application/javascript">
+      var socket = io();
+
+
+      //var users = {"kzQUO_pJZ8k3OgW4AAAK":{"id":"kzQUO_pJZ8k3OgW4AAAK","data":[{"NoOfResults":"277502","UrlToResults":"http://www.theeuropeanlibrary.org/tel4/search?s0=&count=10&query=test&offset=0","Results":[{"PROVIDER_ID":"P02035","LANGUAGE":["und"],"COLLECTION_ID":"a1141","COUNTRY":["DE"],"ID":"3000050881663","CREATOR":["Test"],"DIGITAL_OBJECT":["http://www.base-search.net/Search/Results?lookfor=ftsubbremen:oai:elib.suub.uni-bremen.de:EP/00102990","http://nbn-resolving.de/urn:nbn:de:gbv:46-00102990-19"],"TITLE":["Test"],"URI":"http://data.theeuropeanlibrary.org/BibliographicResource/3000050881663"},{"COLLECTION_ID":"a1195","LANGUAGE":["eng"],"SUBTITLE":["a study of travel patterns in Milton Keynes and Almere"],"COUNTRY":["GB"],"YEAR":["1991"],"CREATOR":["TEST."],"PUBLISHER":["TEST"],"TOPIC":["Transportation.","Traffic surveys.","Statistics."],"CREATED":["1991"],"CONTRIBUTOR":["Nicola. Brown"],"PROVIDER_ID":"P02023","ID":"3000091284307","URI":"http://data.theeuropeanlibrary.org/BibliographicResource/3000091284307","TITLE":["Changed travel - better world?"]},{"COLLECTION_ID":"a0037","LANGUAGE":["und"],"COUNTRY":["GB"],"YEAR":["1992"],"CREATOR":["TEST."],"PUBLISHER":["TEST"],"CREATED":["1992"],"TOPIC":["Regional planning"],"PROVIDER_ID":"P01264","CATALOGUE_RECORD":["http://explore.bl.uk/primo_library/libweb/action/search.do?mode=Basic&vid=BLVU1&vl(freeText0)=006167422&fn=search&tab=local_tab&"],"ID":"2000036753059","URI":"http://data.theeuropeanlibrary.org/BibliographicResource/2000036753059","TITLE":["An environmental approach to transport and planning in Cardiff"]},{"COLLECTION_ID":"a0037","LANGUAGE":["und"],"SUBTITLE":["a review"],"COUNTRY":["GB"],"YEAR":["1992"],"CREATOR":["TEST."],"PUBLISHER":["TEST"],"CREATED":["1992"],"TOPIC":["Regional planning"],"CATALOGUE_RECORD":["http://explore.bl.uk/primo_library/libweb/action/search.do?mode=Basic&vid=BLVU1&vl(freeText0)=006166794&fn=search&tab=local_tab&"],"PROVIDER_ID":"P01264","ID":"2000036752458","URI":"http://data.theeuropeanlibrary.org/BibliographicResource/2000036752458","TITLE":["Social transport in Lambeth"]},{"COLLECTION_ID":"a0037","LANGUAGE":["und"],"SUBTITLE":["a study of travel patterns in Milton Keynes and Almere"],"COUNTRY":["GB"],"YEAR":["1991"],"CREATOR":["TEST."],"PUBLISHER":["TEST"],"CREATED":["1991"],"TOPIC":["Regional planning"],"CATALOGUE_RECORD":["http://explore.bl.uk/primo_library/libweb/action/search.do?mode=Basic&vid=BLVU1&vl(freeText0)=006166790&fn=search&tab=local_tab&"],"PROVIDER_ID":"P01264","ID":"2000036752454","URI":"http://data.theeuropeanlibrary.org/BibliographicResource/2000036752454","TITLE":["Changed travel - better world?"]},{"COLLECTION_ID":"a0037","LANGUAGE":["und"],"SUBTITLE":["a study of travel patterns in Manchester"],"COUNTRY":["GB"],"YEAR":["1992"],"CREATOR":["TEST."],"PUBLISHER":["TEST"],"CREATED":["1992"],"TOPIC":["Regional planning"],"CATALOGUE_RECORD":["http://explore.bl.uk/primo_library/libweb/action/search.do?mode=Basic&vid=BLVU1&vl(freeText0)=006166793&fn=search&tab=local_tab&"],"PROVIDER_ID":"P01264","ID":"2000036752457","URI":"http://data.theeuropeanlibrary.org/BibliographicResource/2000036752457","TITLE":["Have car will travel"]},{"COLLECTION_ID":"a0037","LANGUAGE":["und"],"COUNTRY":["GB"],"YEAR":["1988"],"CREATOR":["TEST."],"PUBLISHER":["TEST"],"CREATED":["1988"],"TOPIC":["Regional planning"],"PROVIDER_ID":"P01264","CATALOGUE_RECORD":["http://explore.bl.uk/primo_library/libweb/action/search.do?mode=Basic&vid=BLVU1&vl(freeText0)=006084141&fn=search&tab=local_tab&"],"ID":"2000036673152","URI":"http://data.theeuropeanlibrary.org/BibliographicResource/2000036673152","TITLE":["Buses and pedestrians in Birmingham High Street"]},{"COLLECTION_ID":"a0037","LANGUAGE":["und"],"SUBTITLE":["how traditional urban centres benefit from traffic-calming"],"COUNTRY":["GB"],"YEAR":["1989"],"CREATOR":["TEST."],"PUBLISHER":["TEST"],"CREATED":["1989"],"TOPIC":["Regional planning"],"CATALOGUE_RECORD":["http://explore.bl.uk/primo_library/libweb/action/search.do?mode=Basic&vid=BLVU1&vl(freeText0)=006100239&fn=search&tab=local_tab&"],"PROVIDER_ID":"P01264","ID":"2000036691593","URI":"http://data.theeuropeanlibrary.org/BibliographicResource/2000036691593","TITLE":["Quality streets"]},{"COLLECTION_ID":"a0037","LANGUAGE":["und"],"COUNTRY":["GB"],"YEAR":["1991"],"CREATOR":["TEST."],"PUBLISHER":["TEST"],"CREATED":["1991"],"TOPIC":["Regional planning","Commerce"],"CONTRIBUTOR":["National Economic Development Office."],"CATALOGUE_RECORD":["http://explore.bl.uk/primo_library/libweb/action/search.do?mode=Basic&vid=BLVU1&vl(freeText0)=006118160&fn=search&tab=local_tab&"],"PROVIDER_ID":"P01264","ID":"2000036705706","URI":"http://data.theeuropeanlibrary.org/BibliographicResource/2000036705706","TITLE":["Company car parking"]},{"COLLECTION_ID":"a0037","LANGUAGE":["und"],"SUBTITLE":["an international perspective"],"COUNTRY":["GB"],"YEAR":["1991"],"CREATOR":["TEST."],"PUBLISHER":["TEST"],"TOPIC":["Labor","Regional planning","Commerce"],"CREATED":["1991"],"CONTRIBUTOR":["National Economic Development Office."],"CATALOGUE_RECORD":["http://explore.bl.uk/primo_library/libweb/action/search.do?mode=Basic&vid=BLVU1&vl(freeText0)=006118161&fn=search&tab=local_tab&"],"PROVIDER_ID":"P01264","ID":"2000036705707","URI":"http://data.theeuropeanlibrary.org/BibliographicResource/2000036705707","TITLE":["Company cars"]}],"Facets":[{"RECORD_SPATIAL":{"CHE":2108,"NOR":2471,"DEU":65319,"SWE":50993,"AUT":2886,"CZE":6488,"FRA":4322,"NLD":5384,"ESP":7009,"GBR":114722}}]}],"color":"0xCCff03f0","position":{"x":1,"y":1,"id":"user1"},"dataUpdate":false}};
+      //var shows = ["DEU","CZE","SWE","NLD","GBR"];
+
+      var shows = [];
+         socket.emit("registerInformation");
+       socket.on("informationUpdate", function(users, show, res){
+       shows.push(show);
+      Object.keys(res).forEach(function(u){
+          if(!$("#"+u).length)
+            $("#results").append($("<div id='" + u +"' ><h2 style='color:"+ users[u].color.replace("0xCC", "#")+"'>Query:"+ users[u].query + "</h3></div>").hide().fadeIn('slow'));
+          var i = 0;
+          res[u].forEach(function(r){
+              if(i > 4) return true;
+              i++;
+              console.log(r);
+              //shows.forEach(function(s){
+                  //if(r.COUNTRY.indexOf(s.substring(0,2)) >= 0)
+                  {
+                      //if(!$("#"+s).length)
+                          //$("#results").prepend($("<div id='"+ s+"'><h1>"+ s +"</h1></div>").hide().fadeIn('slow'));
+                     $("#"+u).append("<h3>"+ (r.TITLE != undefined ? r.TITLE[0] : "no title") + "</h3>");
+                      $("#"+u).append("<span>"
+                              + (r.CREATED != undefined ? r.CREATED[0] : "")
+                              + " "
+                              + (r.CONTRIBUTOR != undefined ? r.CONTRIBUTOR[0] : "")
+
+                              + "</span>");
+                      $("#"+u).append("<p>"+r.URI + "</p>");
+
+                  }
+              //});
+
+          })
+      });
+
+
+
+     });
+
+      socket.on("systemUpdate",function(msg){
+        $("#nrOfTotal").text(msg.nrOfUsers+msg.nrOfSolos);
+        $("#nrOfUsers").text(msg.nrOfUser);
+        $("#nrOfSolos").text(msg.nrOfSolos);
+        $("#queries").html("");
+        msg.queries.forEach(function(q){
+            $("#queries").append(q + "</br>");
+        });
+
+      });
+
+
+  </script>
 </html>

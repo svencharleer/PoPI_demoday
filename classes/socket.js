@@ -8,7 +8,10 @@ var paperLib = require('../classes/libCalls.js');
 var userMgm = require('../classes/userManagement.js');
 
 var pausePositions = false;
-var _shows = [];
+var _queries = [];
+
+
+
 exports.init = function(ioWeb) {
 
     ioWeb.on('connection', function (socket) {
@@ -54,10 +57,14 @@ exports.init = function(ioWeb) {
         socket.on('doQuery', function (msg) {
             pausePositions = true;
             console.log('user: ' + socket.id + ' queried ' + msg.query);
+            userMgm.userQuery(socket.id, msg.query);
+            _queries.push(msg.query);
+
             paperLib.getPapersByAt(msg.query, 10, 0, function (data, err) {
 
                 console.log('user: ' + socket.id + ' queried with results ' + data);
                 userMgm.updateUser(socket.id, data);
+
 
                 socket.emit("doQuery", "processing")
                 var msg = {users: userMgm.getUsers(), solos: userMgm.grabSolos()};
@@ -88,6 +95,7 @@ exports.init = function(ioWeb) {
             var msg = {users: userMgm.getUsers(), solos: userMgm.grabSolos()};
             broadcastUpdate(msg);
 
+
         });
 
         socket.on("kinectOK", function (msg) {
@@ -99,19 +107,41 @@ exports.init = function(ioWeb) {
 
         socket.on("show",function(msg){
             console.log(msg);
-            if(_shows.indexOf(msg) < 0)
-                _shows.push(msg);
-            broadcastInformation(_shows)
-        })
-        socket.on("hide",function(msg){
-            console.log(msg);
-            var i = _shows.indexOf(msg);
-            _shows[i] = undefined;
-            broadcastInformation(_shows);
+            //go over users and call queries
+            var userKeys = Object.keys(userMgm.getUsers());
+            recursivePaperCall(userKeys,msg);
+
+
+
+
 
         })
+
 
     });
+
+
+
+    var recursivePaperCall = function(userKeys, country, data)
+    {
+        if(data == undefined)
+            data = {};
+        console.log(userKeys);
+        if(userKeys.length > 0)
+        {
+            var key = userKeys.pop();
+            paperLib.getPapersForCountry(userMgm.getUsers()[key].query, country, key, data, function (d, err) {
+
+                recursivePaperCall(userKeys, country, d);
+            });
+        }
+        else {
+            console.log("out of rec" + data)
+            broadcastInformation(country, data);
+        }
+
+
+    };
 
 ///////////////////////////////////////////
 //         BroadCasting                  //
@@ -119,13 +149,19 @@ exports.init = function(ioWeb) {
 
     function broadcastUpdate(msg) {
         ioWeb.sockets.in('visualizationListener').emit('update', msg);
+        var sysInfo = {
+            nrOfUsers: Object.keys(msg.users).length,
+            nrOfSolos: Object.keys(msg.solos).length,
+            queries: _queries
+        };
+        ioWeb.sockets.in('informationListener').emit('systemUpdate', sysInfo);
     };
 
     function broadcastPositions(positions) {
         ioWeb.sockets.in('positionListener').emit('positionsUpdate', positions);
     }
-    function broadcastInformation(msg) {
+    function broadcastInformation(country,data) {
 
-        ioWeb.sockets.in('informationListener').emit('informationUpdate',  userMgm.getUsers(), msg);
+        ioWeb.sockets.in('informationListener').emit('informationUpdate',  userMgm.getUsers(), country,data);
     }
 }

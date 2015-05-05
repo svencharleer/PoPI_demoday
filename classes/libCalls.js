@@ -33,3 +33,20 @@ exports.getPapersByAt = function(query, by, at,  callback)
         });
 }
 
+//get by "by" papers at offset "at"
+exports.getPapersForCountry = function(query, country, userid, originalData, callback)
+{
+
+    var param = "/opensearch/catalogue?format=json&q=" + query + "&key="+ apiKey + "&qf=(country,"+ country +")";
+    console.log(param);
+    rest.doGET2("data.theeuropeanlibrary.org", param, originalData,
+        function(data, originalData){
+
+            console.log("data:" + data);
+            console.log("original" + originalData);
+            console.log("id" + userid);
+            originalData[userid] = data != undefined ? data[0].Results : [];
+            callback(originalData);
+        });
+}
+

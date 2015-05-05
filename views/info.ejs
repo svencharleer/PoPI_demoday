@@ -3,6 +3,7 @@
   <head>
     <title>eCloud</title>
       <script type="application/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+      <script type="application/javascript" src="javascripts/qrcode.min.js"></script>
     <link rel='stylesheet' href='/stylesheets/info.css' />
       <script src="/socket.io/socket.io.js"></script>
 
@@ -31,6 +32,7 @@
          socket.emit("registerInformation");
        socket.on("informationUpdate", function(users, show, res){
        shows.push(show);
+           $("#results").html("");
       Object.keys(res).forEach(function(u){
           if(!$("#"+u).length)
             $("#results").append($("<div id='" + u +"' ><h2 style='color:"+ users[u].color.replace("0xCC", "#")+"'>Query:"+ users[u].query + "</h3></div>").hide().fadeIn('slow'));
@@ -52,6 +54,17 @@
 
                               + "</span>");
                       $("#"+u).append("<p>"+r.URI + "</p>");
+                      $("#"+u).append("<div id='qr" + u + i + "'></div>")
+                      var qrCode = new QRCode("qr"+u + i, {
+                          text: r.URI,
+                          width: 200,
+                          height: 200,
+                          colorDark : "#000000",
+                          colorLight : "#ffffff",
+                          correctLevel : QRCode.CorrectLevel.H
+                      });
+
+
 
                   }
               //});

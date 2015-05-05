@@ -7,6 +7,7 @@ var __canvas;
 var _users;
 var _solos;
 var _countries;
+var _tweens = {};
 
 //METHODS
 
@@ -28,6 +29,7 @@ var _dataPoints = {};
 
             Object.keys(_users).forEach(function (k) {
 
+                if(_users[k].screenCoords == undefined) return;
                 Object.keys(_users[k].screenCoords).forEach(function (s) {
 
 
@@ -129,7 +131,8 @@ var _dataPoints = {};
                 else if(y == -converted.v.y * 60) _processing.rotate(Math.PI);
                 _processing.translate(-25,0);
                 _processing.fill(parseInt(solo.color));
-                _processing.text("welcome",0,0,50,20);
+                _processing.text("tinyurl.com/",0,-10,60,20);
+                _processing.text("heverlee",0,10,55,20);
                 _processing.popMatrix();
 
                 _processing.textAlign(_processing.LEFT);
@@ -195,7 +198,7 @@ n
             //stuff animates when an update happens
             if(_users[k].dataUpdate)
             {
-                _users[k].tween = 0;
+                _tweens[k] = 0;
                 _users[k].dataUpdate = false;
 
             }
@@ -255,7 +258,7 @@ n
                     yDiff = v.y * sphereHeight / 2;
 
 
-                    var dest = tween(origin.x, origin.y, x + xDiff, y + yDiff, _users[k].tween);
+                    var dest = tween(origin.x, origin.y, x + xDiff, y + yDiff, _tweens[k]);
                     _processing.ellipse(dest.x, dest.y, size, size)
                     if (touched) {
 
@@ -289,16 +292,16 @@ n
 
                 });
             }
-            if(_users[k].tween < 1)
+            if(_tweens[k] < 1)
             {
                 //update anim
-                _users[k].tween += 1/(30*2);
-                console.log(_processing.frameRate);
-                console.log(_users[k].tween);
+                _tweens[k] += 1/(30*2);
+               // console.log(_processing.frameRate);
+                //console.log(_users[k].tween);
             }
             else
             {
-                _users[k].tween = 1;
+                _tweens[k] = 1;
             }
         })
 
@@ -399,7 +402,7 @@ n
             }
             _debugCursors[id] = {id:id,x:x,y:y};
             _touches[id] = {id:id,x:x,y:y, startx:x, starty:y};
-            console.log("adding touch");
+           // console.log("adding touch");
 
 
 

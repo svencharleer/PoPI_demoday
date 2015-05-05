@@ -88,7 +88,7 @@ exports.init = function(ioWeb) {
             socket.join("informationListener");
         });
         socket.on("updatePositions", function (msg) {
-            console.log(msg);
+           // console.log(msg);
             if(pausePositions) return;
             var positions = JSON.parse(msg);
             userMgm.updateUserPositions(positions);
@@ -136,7 +136,7 @@ exports.init = function(ioWeb) {
             });
         }
         else {
-            console.log("out of rec" + data)
+            //console.log("out of rec" + data)
             broadcastInformation(country, data);
         }
 

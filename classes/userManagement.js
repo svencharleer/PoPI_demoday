@@ -39,7 +39,7 @@ exports.updateUser = function(id,data,color,position)
     if(color != undefined)
         users[id].color = color;
     if(position != undefined) {
-        console.log("user position updated");
+        //console.log("user position updated");
         users[id].position = {};
         users[id].position.x = position.x;
         users[id].position.y = position.y;
@@ -91,7 +91,7 @@ exports.updateUserPositions = function(positions)
         if(userId != undefined) {
             userId.alive = true;
             exports.updateUser(userId.userId, undefined, undefined, position);
-            console.log(userId.userId + " is still alive");
+            //console.log(userId.userId + " is still alive");
         }
         else if(hansolos[position.id] != undefined) {
 
@@ -108,7 +108,7 @@ exports.updateUserPositions = function(positions)
         if(!positionIdToUserId[p].alive)
         {
            //remove from the data points
-            exports.removeUser(positionIdToUserId[p].userId);
+            exports.removeUser(positionIdToUserId[p]);
             positionIdToUserId[p] = undefined;
             delete positionIdToUserId[p];
             console.log(positionIdToUserId[p].userId + " walked out");

@@ -4,6 +4,7 @@
     <title>eCloud</title>
       <script type="application/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
       <script type="application/javascript" src="javascripts/qrcode.min.js"></script>
+      <link href="http://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
     <link rel='stylesheet' href='/stylesheets/info.css' />
       <script src="/socket.io/socket.io.js"></script>
 
@@ -14,12 +15,57 @@
     <div id="results">
 
     </div>
-  <div id="info"></div>
-    <h1>System Information</h1>
-    <p>Number of users detected: <span id="nrOfTotal"></span></p>
-    <p>Number of users active: <span id="nrOfUsers"></span></p>
-    <p>Number of users inactive: <span id="nrOfSolos"></span></p>
-    <div id="queries"></div>
+  <div id="info">
+      <div id="info_demo">
+    <h2>.demo</h2>
+     <table> <tr><td><img src="/images/europeana_lib.png"/></td><td>
+    The Europeana Newspapers Project will provide some 18 million digitised newspaper pages, including 10 million pages of full-text content...
+        <br/><br/><em>more info at</em><br/>http://www.europeana-newspapers.eu
+             </td> </tr> </table>
+
+</div>
+      <div id="info_tech">
+          <h2>.technology</h2>
+    <p>Technologies used for demo:<br/>
+        <strong>MS Kinect - Node.js -
+            Processing.js - Socket.IO -
+            Microsoft WPF <br/> HTML5 - CSS3 - JavaScript - TUIO
+        </strong></p>
+          </div>
+  <div id="info_research">
+    <h2>.about_us</h2>
+    <p><strong>Augment</strong> research group</br>Human Computer Interaction<br/>Computer Science Department<br/>KU Leuven</p>
+    <p>https//augmenthuman.wordpress.com</p>
+    <table>
+        <tr>
+            <td><img class="member" src="/images/erik.png"/></td>
+            <td><img class="member" src="/images/joris.png"/></td>
+            <td><img class="member" src="/images/jose.png"/></td>
+            <td><img class="member" src="/images/sven.png"/></td>
+            <td><img class="member" src="/images/robin.png"/></td>
+            <td><img class="member" src="/images/yucheng.png"/></td>
+        </tr>
+        <tr>
+            <td>Erik Duval</td>
+            <td>Joris Klerkx</td>
+            <td>Jose Luis Santos</td>
+            <td>Sven Charleer</td>
+            <td>Robin De Croon</td>
+            <td>Yucheng Jin</td>
+        </tr>
+    </table>
+    </div>
+      <div id="info_info">
+      <h2>.system_status</h2>
+      <p><span class="nr" id="nrOfTotal"></span>  users detected..</p>
+      <p><span class="nr" id="nrOfUsers"></span> users active.. </p>
+      <p><span class="nr" id="nrOfSolos"></span> users inactive.. </p>
+          </div>
+          <div id="info_queries">
+      <h2>.recent_queries</h2>
+      <div id="queries"></div>
+              </div>
+</div>
   </body>
   <script type="application/javascript">
       var socket = io();
@@ -31,14 +77,42 @@
       var shows = [];
          socket.emit("registerInformation");
        socket.on("informationUpdate", function(users, show, res){
+
+           var nrOfUsers = Object.keys(users).length;
+           var resultsPerUser = 10;
+           switch(nrOfUsers)
+           {
+               case 0:
+               case 1:
+                   resultsPerUser = 12;
+                   break;
+               case 2:
+                   resultsPerUser = 6;
+                   break;
+               case 3:
+                   resultsPerUser = 4;
+                   break;
+               case 4:
+                   resultsPerUser = 3;
+                   break;
+               case 5:
+                   resultsPerUser = 2;
+                   break;
+               case 6:
+                   resultsPerUser = 2;
+               default:
+                   resultsPerUser = 1;
+
+
+           }
        shows.push(show);
            $("#results").html("");
       Object.keys(res).forEach(function(u){
           if(!$("#"+u).length)
-            $("#results").append($("<div id='" + u +"' ><h2 style='color:"+ users[u].color.replace("0xCC", "#")+"'>Query:"+ users[u].query + "</h3></div>").hide().fadeIn('slow'));
+            $("#results").append($("<div id='" + u +"' ></div>").hide().fadeIn('slow'));
           var i = 0;
           res[u].forEach(function(r){
-              if(i > 4) return true;
+              if(i >= resultsPerUser) return true;
               i++;
               console.log(r);
               //shows.forEach(function(s){
@@ -46,19 +120,22 @@
                   {
                       //if(!$("#"+s).length)
                           //$("#results").prepend($("<div id='"+ s+"'><h1>"+ s +"</h1></div>").hide().fadeIn('slow'));
-                     $("#"+u).append("<h3>"+ (r.TITLE != undefined ? r.TITLE[0] : "no title") + "</h3>");
-                      $("#"+u).append("<span>"
-                              + (r.CREATED != undefined ? r.CREATED[0] : "")
-                              + " "
+                      $("#"+u).append("<table><tr>"
+                              +"<td class='qr' id='qr" + u + i + "'></td><td class='resulttext'>"
+                              + "<h3>"+ (r.TITLE != undefined ? r.TITLE[0] : "no title") + "</h3>"
+                               + "<span class='year'>"
+                               + (r.CREATED != undefined ? r.CREATED[0] : "")
+                              + "</span> <span class='contributor'>"
                               + (r.CONTRIBUTOR != undefined ? r.CONTRIBUTOR[0] : "")
+                              + "</span>"
+                              + "<p>"+r.URI + "</p>"
+                              + "<p style='margin-top:3px;color:"+ users[u].color.replace("0xCC", "#")+"'><em>Query:"+ users[u].query + "</em></p>"
+                              + "</td></tr></table>");
 
-                              + "</span>");
-                      $("#"+u).append("<p>"+r.URI + "</p>");
-                      $("#"+u).append("<div id='qr" + u + i + "'></div>")
                       var qrCode = new QRCode("qr"+u + i, {
                           text: r.URI,
-                          width: 100,
-                          height: 100,
+                          width: 90,
+                          height: 90,
                           colorDark : "#000000",
                           colorLight : "#ffffff",
                           correctLevel : QRCode.CorrectLevel.H
@@ -67,10 +144,11 @@
 
 
                   }
-              //});
+
 
           })
       });
+          // $("#results").append("<h1>Results</h1>");
 
 
 
@@ -78,11 +156,14 @@
 
       socket.on("systemUpdate",function(msg){
         $("#nrOfTotal").text(msg.nrOfUsers+msg.nrOfSolos);
-        $("#nrOfUsers").text(msg.nrOfUser);
+        $("#nrOfUsers").text(msg.nrOfUsers);
         $("#nrOfSolos").text(msg.nrOfSolos);
         $("#queries").html("");
+          var l = 0;
         msg.queries.forEach(function(q){
+            if(l > 20) return false;
             $("#queries").append(q + "</br>");
+            l++;
         });
 
       });

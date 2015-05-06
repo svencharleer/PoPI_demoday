@@ -3,8 +3,8 @@
  */
 var users = {};
 //.id, .data, .color
-var colors = ["0xCC8CFF6B","0xCCfff3a2","0xCCff1313","0xCC00deff","0xCCff03f0"];
-var availableColors = [true,true,true,true,true];
+var colors = ["0xCC8CFF6B","0xCCfff3a2","0xCCff1313","0xCC00deff","0xCCff03f0","0xCCFFC7EF"];
+var availableColors = [true,true,true,true,true,true];
 
 
 var positionIdToUserId = {};
@@ -221,5 +221,6 @@ exports.getFirstAvailableColor = function() {
 
 exports.colorAvailable = function(color, available)
 {
+    //if(colors.indexOf(color) < 0) return false;
     availableColors[colors.indexOf(color)] = available;
 }

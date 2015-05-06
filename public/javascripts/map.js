@@ -56,7 +56,7 @@ var generateMap = function()
 {
     map = L.map('map',{ zoomControl:false }).setView([50.9000, 18.3167], 5);
     L.tileLayer('http://api.tiles.mapbox.com/v4/svencharleer.2b20ff07/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic3ZlbmNoYXJsZWVyIiwiYSI6IllXNkdIaG8ifQ.ISDLLDx44LQ2JKuxebfqSA', {
-        attribution: 'Augment Human - HCI Research Group - KU Leuven',
+        attribution: 'Augment - Human Computer Interaction - Computer Science Department - KU Leuven',
         maxZoom: 18
     }).addTo(map);
 }

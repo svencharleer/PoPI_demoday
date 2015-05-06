@@ -58,7 +58,7 @@ exports.init = function(ioWeb) {
             pausePositions = true;
             console.log('user: ' + socket.id + ' queried ' + msg.query);
             userMgm.userQuery(socket.id, msg.query);
-            _queries.push(msg.query);
+            _queries.unshift(msg.query);
 
             paperLib.getPapersByAt(msg.query, 10, 0, function (data, err) {
 
@@ -66,7 +66,7 @@ exports.init = function(ioWeb) {
                 userMgm.updateUser(socket.id, data);
 
 
-                socket.emit("doQuery", "processing")
+                socket.emit("queryResults", data != undefined ? data[0].NoOfResults : 0 );
                 var msg = {users: userMgm.getUsers(), solos: userMgm.grabSolos()};
                 broadcastUpdate(msg);
                 userMgm.clearFlagsUser(socket.id);
@@ -88,7 +88,7 @@ exports.init = function(ioWeb) {
             socket.join("informationListener");
         });
         socket.on("updatePositions", function (msg) {
-           // console.log(msg);
+            //console.log(msg);
             if(pausePositions) return;
             var positions = JSON.parse(msg);
             userMgm.updateUserPositions(positions);
@@ -129,7 +129,16 @@ exports.init = function(ioWeb) {
         console.log(userKeys);
         if(userKeys.length > 0)
         {
-            var key = userKeys.pop();
+            var key = userKeys.pop();;
+            while(userMgm.getUsers()[key].query == undefined && userKeys.length > 0)
+            {
+                key = userKeys.pop();
+            }
+            if(userMgm.getUsers()[key].query  == undefined)
+            {
+                broadcastInformation(country, data);
+                return;
+            }
             paperLib.getPapersForCountry(userMgm.getUsers()[key].query, country, key, data, function (d, err) {
 
                 recursivePaperCall(userKeys, country, d);

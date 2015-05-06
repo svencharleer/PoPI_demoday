@@ -327,8 +327,9 @@ n
         handleTouches(processing);
 
         drawSelected(processing);
-        drawRealTable(processing);
         drawSolos(processing);
+        drawRealTable(processing);
+
         drawCountries(processing);
 
         //debug draw cursors

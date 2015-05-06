@@ -19,7 +19,9 @@
 
         var submit = function() {
             var userColors = ["#8CFF6B","#fff3a2","#ff1313","#00deff","#ff03f0"];
-           socket.emit("doQuery", {query:($("#query").val())});
+           if($("#query").val().length > 0)
+                socket.emit("doQuery", {query:($("#query").val())});
+            $("#query").val("");
         };
         socket.on("availableColors", function(colors){
             colors.forEach(function(color){
@@ -31,6 +33,10 @@
             $("#colors").hide();
             $("#form").show();
             $("body").attr("style","background-color:" + color.replace("0xCC", "#") );
+        });
+
+        socket.on("queryResults", function(nr){
+            $("#results").html(nr + " results found");
         });
 
         $(window).bind('unload', function(){
@@ -54,7 +60,9 @@
           </div>
           <input type="submit" onclick="javascript:submit();" class="btn btn-primary">
       </div>
+
       </div>
+      <div id="results"></div>
      </div>
 
 

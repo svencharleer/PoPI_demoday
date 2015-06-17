@@ -60,13 +60,13 @@ exports.init = function(ioWeb) {
             userMgm.userQuery(socket.id, msg.query);
             _queries.unshift(msg.query);
 
-            paperLib.getPapersByAt(msg.query, 10, 0, function (data, err) {
+            paperLib.byYearAndLanguage(msg.query, function (data, err) {
 
                 console.log('user: ' + socket.id + ' queried with results ' + data);
                 userMgm.updateUser(socket.id, data);
 
 
-                socket.emit("queryResults", data != undefined ? data[0].NoOfResults : 0 );
+                socket.emit("queryResults", data != undefined ? 0 : 0 );
                 var msg = {users: userMgm.getUsers(), solos: userMgm.grabSolos()};
                 broadcastUpdate(msg);
                 userMgm.clearFlagsUser(socket.id);

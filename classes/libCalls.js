@@ -12,7 +12,7 @@ var apiKey = "apuj4p2ogv9uq8phpo9mqqad3m";
 
 exports.countPapers = function(query,  callback)
 {
-    var param = "/opensearch/catalogue?format=json&q=" + query + "&key="+ apiKey + "&c=0&ff=(provider:6),(language:10)"
+    var param = "/opensearch/newspapers?format=json&q=" + query + "&key="+ apiKey + "&c=0&ff=(provider:6),(language:10)"
 
     rest.doGET("data.theeuropeanlibrary.org", param,
         function(data, err){
@@ -20,15 +20,26 @@ exports.countPapers = function(query,  callback)
         });
 }
 
+exports.byYearAndLanguage = function(query,  callback)
+{
+    var param = "/opensearch/newspapers?format=json&q=" + query + "&key="+ apiKey + "&c=0&ff=(year:1000),(language:1000),(country:1000)"
+
+    rest.doGET("data.theeuropeanlibrary.org", param,
+        function(data, err){
+            console.log(data);
+            callback(data[0].Facets, err)
+        });
+}
+
 //get by "by" papers at offset "at"
 exports.getPapersByAt = function(query, by, at,  callback)
 {
-    var param = "/opensearch/catalogue?format=json&q=" + encodeURI(query) + "&key="+ apiKey + "&c="+ by + "&s" + at +  "&ff=(country)"
+    var param = "/opensearch/newspapers?format=json&q=" + encodeURI(query) + "&key="+ apiKey + "&c="+ by + "&s" + at +  "&ff=(country)"
 
     rest.doGET("data.theeuropeanlibrary.org", param,
         function(data, err){
 
-            console.log(data);
+            //console.log(data);
             callback(data, err)
         });
 }
@@ -38,7 +49,7 @@ exports.getPapersForCountry = function(query, country, userid, originalData, cal
 {
 
 
-    var param = "/opensearch/catalogue?format=json&q=" + encodeURI(query) + "&key="+ apiKey + "&qf=(country,"+ country +")";
+    var param = "/opensearch/newspapers?format=json&q=" + encodeURI(query) + "&key="+ apiKey + "&qf=(country,"+ country +")";
     console.log(param);
     rest.doGET2("data.theeuropeanlibrary.org", param, originalData,
         function(data, originalData){

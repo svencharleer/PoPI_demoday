@@ -1,70 +1,55 @@
 /**
  * Created by svenc on 27/04/15.
  */
-var visualization = function () {
+
+var __p;
 
 var __canvas;
-var _users;
-var _solos;
-var _countries;
+
+var tween = function (x,y, dx, dy, t) {
+
+
+    return {x: dx*(t*t*t ) + x*(1- t*t*t ),
+        y: dy*(t*t*t ) + y*(1- t*t*t )};
+    n
+
+};
+
+
+var visualization = function () {
+
+
+
+
 var _tweens = {};
+
+
 
 //METHODS
 
-var _dataPoints = {};
+
+
 
 
     var handleTouches = function(processing)
     {
         try {
-            var sphereWidth = 22;
-            var sphereHeight = 13;
 
-            //check if anything is untouched
-            //if it is, delete
-            Object.keys(_dataPoints).forEach(function(d){
-                _dataPoints[d].touched = false;
+
+
+
+            Object.keys(_touches).forEach(function (t) {
+                var touch = _touches[t];
+                __countryHandler.countries().forEach(function(c){
+                    if(c.isTouched(touch))
+                        c.touch(touch);
+                })
+
             });
 
 
-            Object.keys(_users).forEach(function (k) {
-
-                if(_users[k].screenCoords == undefined) return;
-                Object.keys(_users[k].screenCoords).forEach(function (s) {
 
 
-                    //if within distance of center:
-                    var x = _users[k].screenCoords[s].x;
-                    var y = _users[k].screenCoords[s].y;
-                    Object.keys(_touches).forEach(function (t) {
-                        var touch = _touches[t];
-
-                        if (processing.dist(x, y, touch.x, touch.y) < 22) {
-                            //if it exists, do nothing
-                            if(_dataPoints[s] != undefined)
-                                _dataPoints[s].touched = true;
-                            else {
-                                _dataPoints[s] = {x: x, y: y, touched: true};
-                                //new touch! send to server!
-                                socket.emit("show", s);
-                            }
-
-                        }
-                        return false;
-                    });
-
-
-                });
-
-            })
-            //delete remainder
-            Object.keys(_dataPoints).forEach(function(d){
-                if(!_dataPoints[d].touched)
-                {
-                    _dataPoints[d] = undefined;
-                    delete _dataPoints[d];
-                }
-            });
         }
         catch(exc)
         {
@@ -72,13 +57,7 @@ var _dataPoints = {};
         }
     }
 
-    var drawCountries = function(processing)
-    {
-        _countries.forEach(function(country){
-            processing.fill(255);
-            processing.text(country.name, country.x, country.y-10, 1000,100);
-        });
-    }
+
 
     var convert01RangeToScreenCorners = function(x,y,_processing)
     {
@@ -102,211 +81,31 @@ var _dataPoints = {};
         y = y- v.y * 60;
         return {x:x, y: y, v:v};
     }
-    var drawSolos = function(_processing)
+
+
+
+
+
+
+
+
+    var drawCountryResults = function()
     {
-        try {
-            var screenWidth = $("#" + __canvas).width();
-            var screenHeight = $("#" + __canvas).height();
-            Object.keys(_solos).forEach(function (k) {
-                var solo = _solos[k];
-                var x= solo.x,y=solo.y;
-
-                var converted =convert01RangeToScreenCorners(x,y,_processing);
-                x= converted.x;
-                y = converted.y;
-
-                _processing.strokeWeight(5);
-                _processing.noFill();
-                _processing.stroke(parseInt(solo.color));
-                _processing.ellipse(x, y, 100, 100);
-
-                //draw welcome!
-                _processing.textAlign(_processing.CENTER);
-
-
-                _processing.pushMatrix();
-                _processing.translate(x,y);
-                if(x == -converted.v.x * 60) _processing.rotate(Math.PI/2);
-                else if(x == screenWidth-converted.v.x * 60) _processing.rotate(-Math.PI/2);
-                else if(y == -converted.v.y * 60) _processing.rotate(Math.PI);
-                _processing.translate(-25,0);
-                _processing.fill(parseInt(solo.color));
-                _processing.text("tinyurl.com/",0,-10,60,20);
-                _processing.text("heverlee",0,10,55,20);
-                _processing.popMatrix();
-
-                _processing.textAlign(_processing.LEFT);
-            });
-        }
-        catch(exc)
-        {
-            console.log(exc);
-        }
-
-
-    }
-
-    var oldTween = function(x,y, dx, dy, t)
-    {
-        return {x: t*dx + (1.0-t)*x
-                ,y: t*dy + (1.0-t)*y}
-    }
-
-    var tween = function (x,y, dx, dy, t) {
-
-
-        return {x: dx*(t*t*t ) + x*(1- t*t*t ),
-            y: dy*(t*t*t ) + y*(1- t*t*t )};
-n
-
-    };
-
-    var drawSelected = function(processing)
-    {
-        Object.keys(_dataPoints).forEach(function(d){
-            processing.fill(0);
-            processing.stroke(255);
-            processing.strokeWeight(3 * Math.abs(Math.cos(2*((processing.frameCount)/30.0))*Math.PI/2));
-
-            processing.ellipse(_dataPoints[d].x,_dataPoints[d].y, 100,100);
+        __countryHandler.countries().forEach(function(c) {
+            c.draw();
         });
+        if(__timelineHandler.timeline() != undefined) {
+            __timelineHandler.timeline().update();
+            __timelineHandler.timeline().draw();
+        }
 
     }
-    var drawRealTable = function(_processing)
-    {
-        var screenWidth =  $("#" + __canvas).width();
-        var screenHeight = $("#" + __canvas).height()
 
 
 
-        var origin = {};
-
-        Object.keys(_users).forEach(function (k) {
-            //draw generic thing
-
-            var converted = convert01RangeToScreenCorners(_users[k].position.x,_users[k].position.y,_processing);
-            origin = {x:converted.x, y: converted.y};
-            _processing.fill(parseInt(_users[k].color));
-            _processing.noStroke();
-            _processing.ellipse(converted.x, converted.y,10,10);
-            _processing.ellipse(converted.x-10, converted.y-10,10,10);
-            _processing.ellipse(converted.x+10, converted.y+10,10,10);
-            _processing.ellipse(converted.x-10, converted.y+10,10,10);
-            _processing.ellipse(converted.x+10, converted.y-10,10,10);
 
 
-            //stuff animates when an update happens
-            if(_users[k].dataUpdate)
-            {
-                _tweens[k] = 0;
-                _users[k].dataUpdate = false;
 
-            }
-
-
-            // draw the data points
-            if(_users[k].screenCoords != undefined) {
-                Object.keys(_users[k].screenCoords).forEach(function (s) {
-
-                    var sphereWidth = 22;
-                    var sphereHeight = 20;
-                    var padding = -5;
-                    var size = 6;
-                    var x = _users[k].screenCoords[s].x;
-                    var y = _users[k].screenCoords[s].y;
-
-
-                    //was it touched?
-                    var touched = false;
-                    if (_dataPoints[s] != undefined)
-                        touched = true;
-
-                    //first the data point
-                    {
-                        _processing.noFill();
-                        _processing.stroke(255);
-                        //_processing.ellipse(x,y,2*sphereWidth,2*sphereHeight)
-
-                        _processing.rectMode(_processing.CORNERS);
-
-
-                        _processing.strokeWeight(1);
-                        _processing.noFill(255);
-
-                        _processing.rect(x - sphereWidth / 2 - padding, y - sphereHeight / 2 - padding, x + sphereWidth / 2 + padding, y + sphereHeight / 2 + padding);
-                    }
-
-
-                    //then draw the user dot
-                    var userX = _users[k].position.x * screenWidth;
-                    var userY = _users[k].position.y * screenHeight;
-                    _processing.noStroke();
-                    _processing.strokeWeight(1);
-                    _processing.fill(parseInt(_users[k].color));
-
-                    var xDiff = ((userX - screenWidth / 2 ) / screenWidth );
-                    var yDiff = ((userY - screenHeight / 2) / screenHeight );
-                    var v = new _processing.PVector(xDiff, yDiff);
-                    v.normalize();
-
-                    if (touched) {
-                        sphereWidth *= 2;
-                        sphereHeight *= 2;
-                        size *= 2;
-                    }
-                    xDiff = v.x * sphereWidth / 2;
-                    yDiff = v.y * sphereHeight / 2;
-
-
-                    var dest = tween(origin.x, origin.y, x + xDiff, y + yDiff, _tweens[k]);
-                    _processing.ellipse(dest.x, dest.y, size, size)
-                    if (touched) {
-
-                        _processing.pushMatrix();
-
-                        var one = new _processing.PVector(1, 0);
-                        //var onetwo = new _processing.PVector(userX-screenWidth/2,-(userY-screenHeight/2));
-                        var onetwo = new _processing.PVector((userX - screenWidth / 2) / screenWidth, -(userY - screenHeight / 2) / screenHeight);
-                        var angle = _processing.PVector.angleBetween(onetwo, one);
-                        //if((onetwo.y < 0 && onetwo.x <0) || (onetwo.y > 0 && onetwo.x >0))
-
-                        if (onetwo.y < 0 || onetwo.x < 0)
-                            angle += _processing.PI / 2;
-                        if (onetwo.y > 0 && onetwo.x < 0)
-                            angle -= 3 * _processing.PI / 2;
-                        if (onetwo.y > 0 && onetwo.x > 0)
-                            angle = _processing.PI / 2 - angle;
-                        _processing.translate(x, y);
-
-                        _processing.rotate(angle + _processing.PI);
-
-                        _processing.translate(-15, 55);
-
-                        _processing.textAlign(_processing.CENTER);
-
-
-                        _processing.text(_users[k].data[s], 0, 0, 30, 20);
-                        _processing.popMatrix();
-                        _processing.textAlign(_processing.LEFT);
-                    }
-
-                });
-            }
-            if(_tweens[k] < 1)
-            {
-                //update anim
-                _tweens[k] += 1/(30*2);
-               // console.log(_processing.frameRate);
-                //console.log(_users[k].tween);
-            }
-            else
-            {
-                _tweens[k] = 1;
-            }
-        })
-
-
-    };
 
 
     var setup = function () {
@@ -326,11 +125,11 @@ n
 
         handleTouches(processing);
 
-        drawSelected(processing);
-        drawSolos(processing);
-        drawRealTable(processing);
+        //drawRealTable(processing);
+        drawCountryResults();
+        //drawCountries(processing);
 
-        drawCountries(processing);
+        //drawTimeLine(processing);
 
         //debug draw cursors
         Object.keys(_debugCursors).forEach(function(c)
@@ -368,7 +167,7 @@ n
 
 
 
-    var _p = {};
+
     var _touches = {};
     var _offset = {x: 0, y: 0};
     var _pOffset = undefined;
@@ -379,20 +178,12 @@ n
             __canvas = canvas;
 
             initProcessing();
-            var processing = Processing.getInstanceById(__canvas);
+            __p = Processing.getInstanceById(__canvas);
 
-            _p = processing;
-            _users = {};
-            _solos = {};
-            _countries = [];
+
 
         },
-        "update": function( users, solos, countries)
-        {
-            _users = users;
-            _solos = solos;
-            _countries = countries;
-        },
+
         "addTouch": function (id, x, y) {
 
             if(_pOffset == undefined) {

@@ -10,6 +10,8 @@
 
       <script src="javascripts/map.js"></script>
       <script src="javascripts/parsePaperData.js"></script>
+      <script src="javascripts/CountryResults.js"></script>
+      <script src="javascripts/Timeline.js"></script>
       <script src="javascripts/visualization.js"></script>
 
       <script type="application/javascript" src="bower_components/Processing.js/processing.js"></script>
@@ -56,16 +58,15 @@
 
         socket.emit("registerVisualization");
         socket.on("update", function (msg) {
-            //console.log(msg);
-            Object.keys(msg.users).forEach(function(user){
-                convertMapCoordToScreen(msg.users[user]);
-
-            });
+            initCountryLocations();
             __users = msg.users;
             __solos = msg.solos;
-            var countries = getCountries();
-            __vis.update(__users,__solos,countries);
-
+            var key = Object.keys(__users)[0];
+            if(__users[key] == undefined)
+                return;
+            var data = __users[key].data;
+            __countryHandler.update(data);
+            __timelineHandler.update(data);
         });
 
 
@@ -121,6 +122,16 @@
         client.on("removeTuioObject", onRemoveTuioObject);
         client.on("refresh", onRefresh);
         client.connect();
+
+        //add mouse click
+        $("body").mousedown(function(e){
+            var offset = $(this).offset();
+            __vis.addTouch("mouse",e.clientX - offset.left,e.clientY - offset.top);
+        });
+        $("body").mouseup(function(e){
+            var offset = $(this).offset();
+            __vis.removeTouch("mouse",e.clientX - offset.left,e.clientY - offset.top);
+        });
 
 
 

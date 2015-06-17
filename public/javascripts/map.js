@@ -20,6 +20,8 @@ var countryToCoordinates = {
     NOR:[8.3333,8.0000]
 };
 
+var countryToScreenCoordinates = {};
+
 var countryAbbrToName = {
     LVA: "Latvia",
     DEU: "Germany",
@@ -42,12 +44,12 @@ var map;
 
 var squares = {};
 
-var getCountries = function()
+var initCountryLocations = function()
 {
     var countries = [];
     Object.keys(countryToCoordinates).forEach(function(c){
         var point = map.latLngToLayerPoint(countryToCoordinates[c]);
-        countries.push({name: countryAbbrToName[c], x: point.x-20, y: point.y-20});
+        countryToScreenCoordinates[c] = {x: point.x, y: point.y};
     });
     return countries;
 }
@@ -67,7 +69,7 @@ var height = .6;
 var convertMapCoordToScreen = function(user)
 {
     if(user.data == undefined) return;
-    var countries = user.data[0].Facets[0]["RECORD_SPATIAL"];
+    var countries = user.data[2]["COUNTRY"];
     Object.keys(countries).forEach(function(cc) {
 
         if(countryToCoordinates[cc] == undefined)

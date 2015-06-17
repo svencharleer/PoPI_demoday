@@ -2,7 +2,42 @@
  * Created by svenc on 24/04/15.
  */
 
-var countryToCoordinates = {
+var _countries_loc_json;
+var __countriesToName;
+var languageToCountryCode = {
+    "ger": "DE",
+    "dut" : "NL",
+    "fre" : "FR",
+    "spa" : "ES",
+    "ice" : "IS",
+    "eng" : "GB",
+    "est" : "EE",
+    "ltz" : "LU",
+    "lat" : "LV",
+    "slv" : "SI",
+    "pol" : "PL",
+    "srp" : "RS",
+    "hrv" : "HR",
+     "rus": "RU",
+    "fin" : "FI",
+    "wel" : "GB",
+    "ita" : "IT",
+    "kal" : "GL",
+    "cze" : "CZ",
+    "swe" : "SE",
+    "fry" : "NL",
+    "gre" : "GR",
+    "fao" : "DK",
+    "cat" : "ES",
+    "heb" : "NL",
+    "hun": "HU",
+    "dan" : "DK",
+    "mul" : undefined,
+    "ind" : "NL",
+    "epo" : "ES"
+};
+
+/*var countryToCoordinates = {
   LVA: [57.0000,25.0000],
   DEU: [52.5167,13.3833],
   SWE: [57.3500,18.0667],
@@ -20,7 +55,7 @@ var countryToCoordinates = {
     NOR:[8.3333,8.0000]
 };
 
-var countryToScreenCoordinates = {};
+
 
 var countryAbbrToName = {
     LVA: "Latvia",
@@ -38,20 +73,39 @@ var countryAbbrToName = {
     HUN:"Hungary",
     CHE:"Switzerland",
     NOR:"Norway"
-}
+}*/
 
+var countryToScreenCoordinates = {};
 var map;
 
 var squares = {};
 
-var initCountryLocations = function()
+var initCountries = function(callback)
 {
-    var countries = [];
-    Object.keys(countryToCoordinates).forEach(function(c){
-        var point = map.latLngToLayerPoint(countryToCoordinates[c]);
-        countryToScreenCoordinates[c] = {x: point.x, y: point.y};
-    });
-    return countries;
+    $.getJSON("javascripts/countries_loc.json", function(json){
+        _countries_loc_json = json;
+        $.getJSON("javascripts/countries_name.json", function(json){
+            __countriesToName = json;
+
+            //files loaded, now process
+            Object.keys(languageToCountryCode).forEach(function(c){
+                var cc = languageToCountryCode[c];
+
+                if(cc != undefined && _countries_loc_json[cc.toLowerCase()] != undefined) {
+                    var point = map.latLngToLayerPoint(_countries_loc_json[cc.toLowerCase()]);
+                    countryToScreenCoordinates[cc] = {x: point.x, y: point.y};
+                }
+
+            });
+            callback();
+        })
+    })
+
+
+
+
+
+
 }
 
 var generateMap = function()
@@ -65,7 +119,7 @@ var generateMap = function()
 
 var width = 1.8;
 var height = .6;
-
+/*
 var convertMapCoordToScreen = function(user)
 {
     if(user.data == undefined) return;
@@ -88,7 +142,7 @@ var convertMapCoordToScreen = function(user)
         user.screenCoords[cc] = map.latLngToLayerPoint(coords); //convert
         user.data[cc] = countries[cc];
     });
-}
+}*/
 
 /*var addToMap = function(countryCode)
 {

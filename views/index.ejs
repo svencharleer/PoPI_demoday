@@ -8,11 +8,7 @@
     <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
       <script src="javascripts/Tween.js"></script>
 
-      <script src="javascripts/map.js"></script>
-      <script src="javascripts/parsePaperData.js"></script>
-      <script src="javascripts/CountryResults.js"></script>
-      <script src="javascripts/Timeline.js"></script>
-      <script src="javascripts/visualization.js"></script>
+
 
       <script type="application/javascript" src="bower_components/Processing.js/processing.js"></script>
       <script type="application/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
@@ -26,7 +22,11 @@
       <script src="socket.io/socket.io.js"></script>
       <script type="application/javascript" src="http://localhost:5000/libs/socket.io.js"></script>
 
-
+      <script src="javascripts/map.js"></script>
+      <script src="javascripts/parsePaperData.js"></script>
+      <script src="javascripts/CountryResults.js"></script>
+      <script src="javascripts/Timeline.js"></script>
+      <script src="javascripts/visualization.js"></script>
 
 
 
@@ -39,6 +39,7 @@
     var __vis;
     var __users;
     var __solos;
+    var __query;
     var loadAll = function() {
         var _width = $(window).width();
         var _height = $(window).height();
@@ -58,15 +59,19 @@
 
         socket.emit("registerVisualization");
         socket.on("update", function (msg) {
-            initCountryLocations();
-            __users = msg.users;
-            __solos = msg.solos;
-            var key = Object.keys(__users)[0];
-            if(__users[key] == undefined)
-                return;
-            var data = __users[key].data;
-            __countryHandler.update(data);
-            __timelineHandler.update(data);
+            initCountries(function(){
+                __users = msg.users;
+                __solos = msg.solos;
+
+                var key = Object.keys(__users)[0];
+                if(__users[key] == undefined)
+                    return;
+                var data = __users[key].data;
+                __query = __users[key].query;
+                __countryHandler.update(data);
+                __timelineHandler.update(data);
+            });
+
         });
 
 

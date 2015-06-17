@@ -25,26 +25,40 @@ var CountryResults = function()
         {
             return _countryCode;
         },
-        "isTouched" : function(touch){
-            if (__p.dist(touch.x, touch.y, _position.x, _position.y) < 22) {
 
-                return true;
-            }
-            return false;
-        },
-        "touch" : function(touch)
+        "touch" : function(touches)
         {
-            //first touch
-            if(_touched == undefined) {
-                _touched = touch;
-                console.log("touched");
-                _handler.callbackHandler(_countryCode, "on");
-                return;
-            }
-            if(_touched.id == touch.id)
-                return;
-            _handler.callbackHandler(_countryCode, "off");
-            _touched = undefined; //this object is on/off
+            var touchStillExists = false;
+            Object.keys(touches).forEach(function(t){
+                var touch = touches[t];
+                if(_touched != undefined && _touched.id == touch.id) {
+                    touchStillExists = true;
+                    return true;
+                }
+                if (_touched == undefined && __p.dist(touch.x, touch.y, _position.x, _position.y) < 22) {
+
+
+                        touchStillExists = true;
+                        _touched = touch;
+                        console.log("touched");
+
+                        if(_state == "highlight")
+                            _handler.callbackHandler(_countryCode, "off");
+                        else
+                            _handler.callbackHandler(_countryCode, "on");
+                        return true;
+
+
+
+                }
+            })
+            if(!touchStillExists) _touched = undefined;
+
+
+
+
+
+
 
 
         },
@@ -136,13 +150,18 @@ var CountryHandler = function()
             var _this = this;
             _countries = [];
             //country results
-            var countries = data[2]["COUNTRY"];
+            var countries = data[1]["LANGUAGE"];
             Object.keys(countries).forEach(function(c) {
 
                 var country = new CountryResults();
-                if(countryAbbrToName[c] == undefined) return; //
-                country.init(countryAbbrToName[c], c,
-                    {x: countryToScreenCoordinates[c].x, y: countryToScreenCoordinates[c].y},
+                if(languageToCountryCode[c] == undefined)
+                {
+                    console.log(c + " not found in language to countrycode");
+                    return;
+                }
+                var cc = languageToCountryCode[c];
+                country.init(__countriesToName[cc], c,
+                    {x: countryToScreenCoordinates[cc].x, y: countryToScreenCoordinates[cc].y},
                     {count:countries[c], query:""},
                     _this);
                 _countries.push(country);
@@ -160,7 +179,7 @@ var CountryHandler = function()
                 });
                 //that takes care of the visual
                 //send this select to the other components
-
+                __timelineHandler.subsetCall("language", countryCode);
             }
             else
             {

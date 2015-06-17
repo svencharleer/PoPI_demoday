@@ -38,14 +38,13 @@ var _tweens = {};
 
 
 
-            Object.keys(_touches).forEach(function (t) {
-                var touch = _touches[t];
+
                 __countryHandler.countries().forEach(function(c){
-                    if(c.isTouched(touch))
-                        c.touch(touch);
+                    c.touch(_touches);
+
                 })
 
-            });
+
 
 
 

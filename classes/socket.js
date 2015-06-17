@@ -60,7 +60,7 @@ exports.init = function(ioWeb) {
             userMgm.userQuery(socket.id, msg.query);
             _queries.unshift(msg.query);
 
-            paperLib.byYearAndLanguage(msg.query, function (data, err) {
+            paperLib.byYearAndLanguage(msg.query,"","", function (data, err) {
 
                 console.log('user: ' + socket.id + ' queried with results ' + data);
                 userMgm.updateUser(socket.id, data);
@@ -74,7 +74,23 @@ exports.init = function(ioWeb) {
 
             pausePositions = false;
         });
+        socket.on("doSubQuery", function(msg){
 
+            switch(msg.widget)
+            {
+                case "timeline":
+                {
+                    console.log("timeline call done " + msg.widget);
+                    paperLib.byYearAndLanguage(msg.query,msg.facetType, msg.facetValue, function(data, err){
+                        console.log("response to timeline is being sent");
+                        ioWeb.sockets.in('visualizationListener').emit('subQueryResult_Timeline', data);
+                    });
+
+                    break;
+                }
+            }
+
+        });
 
         socket.on("registerVisualization", function (msg) {
             socket.join('visualizationListener');

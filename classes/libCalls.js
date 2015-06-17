@@ -20,16 +20,23 @@ exports.countPapers = function(query,  callback)
         });
 }
 
-exports.byYearAndLanguage = function(query,  callback)
+exports.byYearAndLanguage = function(query, facetType, facetValue,  callback)
 {
-    var param = "/opensearch/newspapers?format=json&q=" + query + "&key="+ apiKey + "&c=0&ff=(year:1000),(language:1000),(country:1000)"
-
+    var param;
+    if(facetType == "" || facetValue == "")
+        param = "/opensearch/newspapers?format=json&q=" + query + "&key="+ apiKey + "&c=0&ff=(year:1000),(language:1000),(country:1000)"
+    else
+        param = "/opensearch/newspapers?format=json&q=" + query + "&fq=(" + facetType + ","+ facetValue + ")&key="+ apiKey + "&c=0&ff=(year:1000),(language:1000),(country:1000)"
+    console.log(param);
     rest.doGET("data.theeuropeanlibrary.org", param,
         function(data, err){
-            console.log(data);
+            console.log("data: " +data);
+            console.log("error: " + err);
             callback(data[0].Facets, err)
         });
 }
+
+
 
 //get by "by" papers at offset "at"
 exports.getPapersByAt = function(query, by, at,  callback)

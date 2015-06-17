@@ -12,6 +12,7 @@ var TimeLine = function()
     var _touched = undefined;
     var _handler;
     var _state = "neutral";
+    var _subYears = [];
 
 
     return {
@@ -21,6 +22,10 @@ var TimeLine = function()
             _previousYears = _years;
             _years = years;
             _handler = handler;
+        },
+        "sub":function(years)
+        {
+            _subYears = years;
         },
 
         "isTouched" : function(touch){
@@ -91,6 +96,16 @@ var TimeLine = function()
                 height = (_tween *_tween) * height + (1.0-_tween)*(1.0-_tween) * previousHeight;
                 __p.rect(yearOffset * widthPerYear,screenHeight-paddingBottom, (yearOffset+1) * widthPerYear-paddingGraph, screenHeight - height -paddingBottom);
 
+            });
+            Object.keys(_subYears).forEach(function(d){
+                var year = parseInt(d);
+                var yearOffset = year - 1600;
+                var count = _subYears[d];
+                __p.fill(0xCCFB3A9A);
+                __p.noStroke();
+                __p.rectMode(__p.CORNERS);
+                var height = count/max * heightOfGraph;
+                __p.rect(yearOffset * widthPerYear,screenHeight-paddingBottom, (yearOffset+1) * widthPerYear-paddingGraph, screenHeight - height -paddingBottom);
 
             });
         }
@@ -100,6 +115,10 @@ var TimeLine = function()
 var TimelineHandler = function()
 {
     var _timeline = new TimeLine();
+    socket.on("subQueryResult_Timeline", function(data){
+        var years = data[0]["YEAR"];
+        _timeline.sub(years);
+    });
 
     return {
         "update": function(data)
@@ -113,6 +132,10 @@ var TimelineHandler = function()
         "callbackHandler" : function()
         {
 
+        },
+        "subsetCall": function(facetType, facetValue)
+        {
+            socket.emit("doSubQuery", {query:__query, widget:"timeline", facetType: facetType, facetValue:facetValue });
         },
         "timeline" : function()
         {

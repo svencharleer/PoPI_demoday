@@ -166,6 +166,10 @@ var CentralFilter = function()
         "save" : function()
         {
             //send stack to server to store in mongo?
+        },
+        "filterStack" : function()
+        {
+            return _filterStack;
         }
 
 
@@ -179,13 +183,15 @@ var CentralFilter = function()
 exports.__centralFilter = new CentralFilter();
 
 // tests
-/*__centralFilter.newFilter_Query("hitler");
-__centralFilter.newFilter_Facet("YEAR", 1940);
-__centralFilter.systemCall(function(d){console.log(JSON.stringify(d))});
-__centralFilter.newFilter_Facet("YEAR", 2099);
-__centralFilter.newFilter_Facet("COUNTRY", "FRA");
-__centralFilter.systemCall(function(d){console.log(JSON.stringify(d))});
-__centralFilter.disableFilter_Facet("YEAR", 2099);
-__centralFilter.systemCall(function(d){console.log(JSON.stringify(d))});
-__centralFilter.disableFilter_Query("test1");
-__centralFilter.systemCall(function(d){console.log(JSON.stringify(d))});*/
+/*
+exports.__centralFilter.newFilter_Query("hitler");
+exports.__centralFilter.newFilter_Facet("YEAR", 1940);
+exports.__centralFilter.systemCall(function(d){console.log(JSON.stringify(d))});
+exports.__centralFilter.newFilter_Facet("YEAR", 2099);
+exports.__centralFilter.newFilter_Facet("COUNTRY", "FRA");
+exports.__centralFilter.systemCall(function(d){console.log(JSON.stringify(d))});
+exports.__centralFilter.disableFilter_Facet("YEAR", 2099);
+exports.__centralFilter.systemCall(function(d){console.log(JSON.stringify(d))});
+exports.__centralFilter.disableFilter_Query("test1");
+exports.__centralFilter.systemCall(function(d){console.log(JSON.stringify(d))});
+*/

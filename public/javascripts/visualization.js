@@ -90,9 +90,7 @@ var _tweens = {};
 
     var drawCountryResults = function()
     {
-        __countryHandler.countries().forEach(function(c) {
-            c.draw();
-        });
+        __countryHandler.draw();
         if(__timelineHandler.timeline() != undefined) {
             __timelineHandler.timeline().update();
             __timelineHandler.timeline().draw();

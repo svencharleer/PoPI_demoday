@@ -45,7 +45,7 @@ exports.doGET2 = function(host, path, originalData, callback, auth ) {
     return;
 }
 
-exports.doGET = function(host, path, callback, auth) {
+exports.doGET = function(host, path, extra, callback, auth) {
 
     var options = {
         host: host,
@@ -82,7 +82,7 @@ exports.doGET = function(host, path, callback, auth) {
                 console.log(dataPerPage);
                 totalData = [];
             }
-            callback(totalData);
+            callback(totalData,extra);
 
 
 

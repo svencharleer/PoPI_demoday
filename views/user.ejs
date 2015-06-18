@@ -12,17 +12,29 @@
 
     <script type="application/javascript">
         var socket = io();
-
+        socket.emit("registerFilterActivities");
 
         var submit = function() {
            if($("#query").val().length > 0)
                 socket.emit("addFilter_Query", {query:($("#query").val())});
             $("#query").val("");
         };
+        var reset = function() {
+
+            socket.emit("resetFilter");
+
+        };
 
 
         socket.on("queryResults", function(nr){
             $("#results").html(nr + " results found");
+        });
+        socket.on("filterUpdate",function(stack){
+            var htmlString = "";
+            stack.forEach(function(s){
+                htmlString += "<br/>" + JSON.stringify(s);
+            });
+            $("#results").html(htmlString);
         });
 
         $(window).bind('unload', function(){
@@ -42,6 +54,7 @@
           <input id="query" type="search" class="form-control" placeholder="Search something"/>
           </div>
           <input type="submit" onclick="javascript:submit();" class="btn btn-primary">
+          <input type="reset" onclick="javascript:reset();" class="btn btn-primary">
       </div>
 
       </div>

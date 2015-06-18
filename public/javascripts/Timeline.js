@@ -116,7 +116,7 @@ var TimelineHandler = function()
 {
     var _timeline = new TimeLine();
     socket.on("subQueryResult_Timeline", function(data){
-        var years = data[0]["YEAR"];
+        var years = data.Facets[0]["YEAR"];
         _timeline.sub(years);
     });
 
@@ -126,7 +126,7 @@ var TimelineHandler = function()
             var _this = this;
 
 
-            var years = data[0]["YEAR"];
+            var years = data.Facets[0]["YEAR"];
             _timeline.init(years, _this);
         },
         "callbackHandler" : function()

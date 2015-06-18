@@ -26,6 +26,7 @@
       <script src="javascripts/parsePaperData.js"></script>
       <script src="javascripts/CountryResults.js"></script>
       <script src="javascripts/Timeline.js"></script>
+      <script src="javascripts/Console.js"></script>
       <script src="javascripts/visualization.js"></script>
 
 
@@ -60,14 +61,8 @@
         socket.emit("registerVisualization");
         socket.on("update", function (msg) {
             initCountries(function(){
-                __users = msg.users;
-                __solos = msg.solos;
 
-                var key = Object.keys(__users)[0];
-                if(__users[key] == undefined)
-                    return;
-                var data = __users[key].data;
-                __query = __users[key].query;
+                var data = msg;
                 __countryHandler.update(data);
                 __timelineHandler.update(data);
             });

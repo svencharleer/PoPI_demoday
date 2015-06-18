@@ -97,6 +97,7 @@ var _tweens = {};
             __timelineHandler.timeline().update();
             __timelineHandler.timeline().draw();
         }
+        __consoleHandler.console().draw();
 
     }
 

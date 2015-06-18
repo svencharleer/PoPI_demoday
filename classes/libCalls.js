@@ -26,13 +26,13 @@ exports.byYearAndLanguage = function(query, facetType, facetValue,  callback)
     if(facetType == "" || facetValue == "")
         param = "/opensearch/newspapers?format=json&q=" + query + "&key="+ apiKey + "&c=0&ff=(year:1000),(language:1000),(country:1000)"
     else
-        param = "/opensearch/newspapers?format=json&q=" + query + "&fq=(" + facetType + ","+ facetValue + ")&key="+ apiKey + "&c=0&ff=(year:1000),(language:1000),(country:1000)"
+        param = "/opensearch/newspapers?format=json&q=" + query + "&fq=(" + facetType + ","+ facetValue + ")&key="+ apiKey + "&c=50&ff=(year:1000),(language:1000),(country:1000)"
     console.log(param);
     rest.doGET("data.theeuropeanlibrary.org", param,
         function(data, err){
             console.log("data: " +data);
             console.log("error: " + err);
-            callback(data[0].Facets, err)
+            callback(data[0], err)
         });
 }
 
@@ -69,3 +69,36 @@ exports.getPapersForCountry = function(query, country, userid, originalData, cal
         });
 }
 
+
+exports.filteredQuery = function(call,  callback)
+{
+    var param;
+    var queries = call.queries;
+    var facets = call.facets;
+    var queryString = "";
+    queries.forEach(function(q){
+        queryString += encodeURIComponent(q.toString()) + "%20";
+    });
+    //console.log(queryString);
+    var facetString = "";
+    console.log(JSON.stringify(facets));
+    Object.keys(facets).forEach(function(f){
+
+        facets[f].forEach(function(k){
+            facetString+="(" + f.toLowerCase() + "," + k + ")";
+            facetString+="AND";
+        });
+
+    })
+    //console.log(facetString);
+
+    param = "/opensearch/newspapers?format=json&q=" + queryString + "&fq=" +facetString + "&key="+ apiKey + "&c=0&ff=(year:1000),(language:1000),(country:1000)"
+    console.log(param);
+
+    rest.doGET("data.theeuropeanlibrary.org", param,
+        function(data, err){
+            //console.log("data: " +data);
+            //console.log("error: " + err);
+            callback(data[0], err)
+        });
+}

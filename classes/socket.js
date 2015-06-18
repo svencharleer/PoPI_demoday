@@ -4,6 +4,7 @@
 ///////////////////////////////////////////
 //         socket.io                  //
 ///////////////////////////////////////////
+var filter = require('../classes/CentralFilter.js');
 var paperLib = require('../classes/libCalls.js');
 var userMgm = require('../classes/userManagement.js');
 
@@ -74,23 +75,20 @@ exports.init = function(ioWeb) {
 
             pausePositions = false;
         });
-        socket.on("doSubQuery", function(msg){
+        socket.on("addFilter_Query", function(msg){
 
-            switch(msg.widget)
-            {
-                case "timeline":
-                {
-                    console.log("timeline call done " + msg.widget);
-                    paperLib.byYearAndLanguage(msg.query,msg.facetType, msg.facetValue, function(data, err){
-                        console.log("response to timeline is being sent");
-                        ioWeb.sockets.in('visualizationListener').emit('subQueryResult_Timeline', data);
-                    });
-
-                    break;
-                }
-            }
-
+            filter.__centralFilter.newFilter_Query(msg.query);
+            filter.__centralFilter.systemCall(function(data){
+                ioWeb.sockets.in('visualizationListener').emit('update', data);
+            });
         });
+        socket.on("addFilter_Facet", function(msg){
+
+            filter.__centralFilter.newFilter_Facet(msg.filterType, msg.filterValue);
+            filter.__centralFilter.systemCall(function(data){
+                ioWeb.sockets.in('visualizationListener').emit('subQueryResult_Timeline', data);
+            });
+         });
 
         socket.on("registerVisualization", function (msg) {
             socket.join('visualizationListener');

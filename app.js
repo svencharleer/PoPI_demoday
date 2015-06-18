@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var user = require('./routes/user');
 var kinect = require('./routes/kinect');
 var info = require('./routes/info');
 
@@ -27,7 +27,7 @@ app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 app.use('/', routes);
-app.use('/users', users);
+app.use('/user', user);
 app.use('/kinect', kinect);
 app.use('/info', info);
 // catch 404 and forward to error handler

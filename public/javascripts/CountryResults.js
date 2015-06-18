@@ -150,7 +150,7 @@ var CountryHandler = function()
             var _this = this;
             _countries = [];
             //country results
-            var countries = data[1]["LANGUAGE"];
+            var countries = data.Facets[1]["LANGUAGE"];
             Object.keys(countries).forEach(function(c) {
 
                 var country = new CountryResults();

@@ -98,7 +98,7 @@ var CentralFilter = function()
         }
         return r;
     }
-    function printActivity(layer) {
+    function getActivity(layer) {
         //get all facets, and their values, group them and ignore disabled ones
         if(layer == undefined)
             layer = _filterStack.length-1;
@@ -107,6 +107,7 @@ var CentralFilter = function()
         var facets = getFacets(layer); // this gets all of them
         console.log("q " + JSON.stringify(queries));
         console.log("f " + JSON.stringify(facets));
+        return {queries: queries, facets: facets};
 
 
     }
@@ -169,7 +170,7 @@ var CentralFilter = function()
         },
         "filterStack" : function()
         {
-            return _filterStack;
+            return getActivity();
         }
 
 

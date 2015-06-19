@@ -31,8 +31,11 @@
         });
         socket.on("filterUpdate",function(stack){
             var htmlString = "";
-            stack.forEach(function(s){
-                htmlString += "<br/>" + JSON.stringify(s);
+            stack.queries.forEach(function(s){
+                htmlString += " <span class='queryString enabled_" + s.enabled + "'>" + s.query + "</span>";
+            });
+            stack.facets.forEach(function(s){
+                htmlString += " <span class='facetString enabled_" + s.enabled + "'>" + s.facet.facetType + ": " + s.facet.facetValue   + "</span>";
             });
             $("#results").html(htmlString);
         });

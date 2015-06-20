@@ -124,18 +124,9 @@ var TimelineHandler = function()
         "update": function(data)
         {
             var _this = this;
-            var myData = {};
-            data.forEach(function(d){
-                if(d.exclude == "year")
-                {
-                    myData = d.result;
-                    return false;
-                }
-                if(d.exclude == "")
-                    myData = d.result;
-            })
 
-            var years = myData.Facets[0]["YEAR"];
+
+            var years = data.Facets[0]["YEAR"];
             _timeline.init(years, _this);
         },
         "callbackHandler" : function()

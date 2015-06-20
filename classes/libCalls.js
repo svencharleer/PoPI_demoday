@@ -73,30 +73,10 @@ exports.getPapersForCountry = function(query, country, userid, originalData, cal
 exports.filteredQuery = function(call,  cb)
 {
     var param;
-    var queries = call.queries;
-    var facets = call.facets;
-    var queryString = "";
-    queries.forEach(function(q){
-        queryString += encodeURIComponent(q.toString()) + "%20";
-    });
-    //console.log(queryString);
-    var facetStrings = []; //one for each facet exclude as each widget cannot filter itself
-    console.log(JSON.stringify(facets));
-    var facetNames = Object.keys(facets);
-    facetNames.forEach(function(toExclude){
-        var facetString = ""
-        Object.keys(facets).forEach(function(f){
-            if(f != toExclude) {
-                facets[f].forEach(function (k) {
-                    facetString += "(" + f.toLowerCase() + "," + k + ")";
-                    facetString += "AND";
-                });
-            }
+    var queries = call.queries();
+    var facets = call.facets();
+    var queryString = encodeURIComponent(queries);
 
-        })
-        facetStrings.push({exclude:toExclude, fstring:facetString});
-    });
-    //add one general one for the one widget that started, so that needs all the data
     var facetString = ""
     Object.keys(facets).forEach(function(f){
         facets[f].forEach(function (k) {
@@ -105,26 +85,18 @@ exports.filteredQuery = function(call,  cb)
         });
     })
     ;
-    facetStrings.push({exclude:"", fstring:facetString});
-    //console.log(JSON.stringify(facetStrings));
 
-    var results = [];
-    async.eachSeries(facetStrings,
-        function(facetString, callback){
-            param = "/opensearch/newspapers?format=json&q=" + queryString + "&fq=" +facetString.fstring + "&key="+ apiKey + "&c=0&ff=(year:1000),(language:1000),(country:1000)"
-            console.log(param);
 
-            rest.doGET("data.theeuropeanlibrary.org", param, facetString.exclude,
-                function(data, exclude, err){
-                    results.push({exclude:exclude, result: data[0]});
-                    callback();
-                });
-        },
-        function(err) {
-            cb(results);
-        }
+    param = "/opensearch/newspapers?format=json&q=" + queryString + "&fq=" + facetString + "&key="+ apiKey + "&c=0&ff=(year:1000),(language:1000),(country:1000)"
+    console.log(param);
 
-    );
+    rest.doGET("data.theeuropeanlibrary.org", param,
+        function(data, err){
+
+            cb(data[0]);
+        });
+
+
 
 
 }

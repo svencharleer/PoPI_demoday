@@ -140,23 +140,12 @@ var CountryHandler = function()
             var _this = this;
             _countries = [];
             //get correct filtered set (e.g. we don't want to grab the resultls that include the country filtering
-            var myData = {};
-            data.some(function(d){
-                if(d.exclude == "language")
-                {
-                    myData = d.result;
-                    console.log("excluded!");
-                    console.log(JSON.stringify(d.result.Facets));
-                    return true;
-                }
-                if(d.exclude == "")
-                    myData = d.result;
-            })
+
 
 
             //country results
 
-            var countries = myData.Facets[1]["LANGUAGE"];
+            var countries = data.Facets[1]["LANGUAGE"];
             Object.keys(countries).forEach(function(c) {
 
                 var country = new CountryResults();

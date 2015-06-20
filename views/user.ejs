@@ -29,14 +29,18 @@
         socket.on("queryResults", function(nr){
             $("#results").html(nr + " results found");
         });
-        socket.on("filterUpdate",function(stack){
+        socket.on("filterUpdate",function(results) {
             var htmlString = "";
-            stack.queries.forEach(function(s){
-                htmlString += " <span class='queryString enabled_" + s.enabled + "'>" + s.query + "</span>";
-            });
-            stack.facets.forEach(function(s){
-                htmlString += " <span class='facetString enabled_" + s.enabled + "'>" + s.facet.facetType + ": " + s.facet.facetValue   + "</span>";
-            });
+            results.forEach(function (stack) {
+
+                htmlString += " <span class='queryString'>" + stack.queries + "</span>";
+                Object.keys(stack.facets).forEach(function (s) {
+                    htmlString += " <span class='facetString'>" + s + ": " + stack.facets[s] + "</span>";
+                });
+                htmlString += " " + stack.data.NoOfResults + "<br/>";
+            })
+
+
             $("#results").html(htmlString);
         });
 

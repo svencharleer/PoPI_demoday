@@ -12,7 +12,7 @@ var CountryResults = function()
     var _state = "neutral";
     var _countryCode;
 
-    function drawWithColor(color)
+    function drawPapersWithColor(color)
     {
         __p.rectMode(__p.CORNERS);
         var x = _position.x;
@@ -56,6 +56,27 @@ var CountryResults = function()
             x++;y++;
 
         }
+    }
+    function drawWithColor(color)
+    {
+        var x = _position.x;
+        var y = _position.y;
+        var count = _results.count;
+
+        var surface = Math.log(count)*1000;
+        var radius = Math.sqrt((surface/Math.PI));
+
+        __p.fill(color);
+        __p.noStroke();
+        __p.ellipse(x,y,radius,radius);
+
+        __p.fill(255);
+        __p.text(_name, x-10,y-17);
+        __p.fill(color);
+
+        __p.stroke(255);
+        __p.text(count, x-10,y-5);
+
     }
 
 
@@ -102,13 +123,6 @@ var CountryResults = function()
             })
             if(!touchStillExists) _touched = undefined;
 
-
-
-
-
-
-
-
         },
         "highlight" : function(){
             _state = "highlight";
@@ -119,14 +133,14 @@ var CountryResults = function()
         "neutral" : function(){
             _state = "neutral";
         },
-        "draw" : function()
+        "draw" : function(layerIndex, nrOfLayers)
         {
-            drawWithColor(0xCCFB3A9A);
-        },
-        "drawDim" : function()
-        {
-            drawWithColor(125);
+            var color = tinycolor("#FB3A9A").toHsv();
+            color.v = color.v * (.3 +  ((nrOfLayers - layerIndex)/nrOfLayers) *.7);
+            var rgb = tinycolor(color).toRgb();
+            drawWithColor(__p.color(rgb.r, rgb.g, rgb.b));
         }
+
 
     }
 }
@@ -134,34 +148,45 @@ var CountryHandler = function()
 {
     var _countries = [];
     var _selectedCountries = [];
+
+    function updateLayer(countries, layer,_this)
+    {
+
+        _countries[layer] = [];
+        Object.keys(countries).forEach(function(c) {
+
+
+
+            var country = new CountryResults();
+            if(languageToCountryCode[c] == undefined)
+            {
+                console.log(c + " not found in language to countrycode");
+                return;
+            }
+            var cc = languageToCountryCode[c];
+            country.init(__countriesToName[cc], c,
+                {x: countryToScreenCoordinates[cc].x, y: countryToScreenCoordinates[cc].y},
+                {count:countries[c], query:""},
+                _this);
+            _countries[layer].push(country);
+
+        });
+    };
     return {
         "update": function(data)
         {
-            var _this = this;
+
             _countries = [];
-            //get correct filtered set (e.g. we don't want to grab the resultls that include the country filtering
+
+            if(data.length > 1) {
+                data[data.length - 2];
+                updateLayer(data[data.length - 2].data.Facets[1]["LANGUAGE"], 1, this);
+            }
+            updateLayer(data[data.length - 1].data.Facets[1]["LANGUAGE"],0,this);
 
 
 
-            //country results
 
-            var countries = data.Facets[1]["LANGUAGE"];
-            Object.keys(countries).forEach(function(c) {
-
-                var country = new CountryResults();
-                if(languageToCountryCode[c] == undefined)
-                {
-                    console.log(c + " not found in language to countrycode");
-                    return;
-                }
-                var cc = languageToCountryCode[c];
-                country.init(__countriesToName[cc], c,
-                    {x: countryToScreenCoordinates[cc].x, y: countryToScreenCoordinates[cc].y},
-                    {count:countries[c], query:""},
-                    _this);
-                _countries.push(country);
-
-            });
         },
         "callbackHandler" : function(countryCode)
         {
@@ -177,30 +202,20 @@ var CountryHandler = function()
                 _selectedCountries.push(countryCode);
             }
         },
-        "countries":function()
+        "activeLayer":function()
         {
-            return _countries;
+            if(_countries.length > 0)
+                return _countries[0];
+            return [];
         },
         "draw":function(){
+            for(var i = _countries.length-1;i>=0;i--)
+            {
+                _countries[i].forEach(function(country){
+                    country.draw(i, _countries.length);
+                })
+            }
 
-            _countries.forEach(function(country){
-                if(_selectedCountries.length > 0)
-                {
-                    if(_selectedCountries.indexOf(country.countryCode()) >= 0) {
-                        country.draw();
-                    }
-                    else
-                    {
-                        country.drawDim();
-                    }
-                }
-                else
-                {
-                    country.draw();
-                }
-
-
-            });
         }
 
 

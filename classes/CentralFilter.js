@@ -126,7 +126,7 @@ var CentralFilter = function()
         {
             paperLib.filteredQuery(getLastFilter(), function(data) {
                 getLastFilter().data(data);
-                callback(data);
+                callback(getActivity());
 
             });
             //STORE THE RESULT AT THE FILTER LEVEL TOO

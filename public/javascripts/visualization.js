@@ -39,7 +39,7 @@ var _tweens = {};
 
 
 
-                __countryHandler.countries().forEach(function(c){
+                __countryHandler.activeLayer().forEach(function(c){
                     c.touch(_touches);
 
                 })
@@ -91,10 +91,10 @@ var _tweens = {};
     var drawCountryResults = function()
     {
         __countryHandler.draw();
-        if(__timelineHandler.timeline() != undefined) {
-            __timelineHandler.timeline().update();
-            __timelineHandler.timeline().draw();
-        }
+
+
+            __timelineHandler.draw();
+
         __consoleHandler.console().draw();
 
     }

@@ -136,7 +136,9 @@ var TimelineHandler = function()
     return {
         "update": function(data)
         {
-
+            if(data.length > 2) {
+                updateLayer(data[data.length - 3].data.Facets[0]["YEAR"], 2,this);
+            }
             if(data.length > 1) {
                 updateLayer(data[data.length - 2].data.Facets[0]["YEAR"], 1,this);
             }

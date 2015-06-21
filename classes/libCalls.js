@@ -75,8 +75,10 @@ exports.filteredQuery = function(call,  cb)
     var param;
     var queries = call.queries();
     var facets = call.facets();
-    var queryString = encodeURIComponent(queries);
-
+    var queryString = "";
+    queries.forEach(function(q){
+        queryString+= '"' + encodeURIComponent(q) + '"';
+    });
     var facetString = ""
     Object.keys(facets).forEach(function(f){
         facets[f].forEach(function (k) {

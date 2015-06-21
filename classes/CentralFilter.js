@@ -6,7 +6,7 @@ var paperLib = require('../classes/libCalls.js');
     //every filter layer has either facet or query
 var Filter = function()
 {
-    var _queries = "";
+    var _queries = [];
     var _facets = {};
     var _data = undefined;
 
@@ -45,7 +45,7 @@ var Filter = function()
         "initWithQuery" : function(query, filter)
         {
             var queries = JSON.parse(JSON.stringify(filter.queries()));
-            queries += " " + query;
+            queries.push(query);
             _queries = queries;
 
             var facets = JSON.parse(JSON.stringify(filter.facets())); //copy by value
@@ -55,7 +55,9 @@ var Filter = function()
         "initWithoutQuery" : function(query, filter)
         {
             var queries = JSON.parse(JSON.stringify(filter.queries()));
-            queries= queries.replace(query,"");
+            var index = queries.indexOf(query);
+            if(index >=0)
+                queries.splice(index,1);
             _queries = queries;
 
             var facets = JSON.parse(JSON.stringify(filter.facets())); //copy by value

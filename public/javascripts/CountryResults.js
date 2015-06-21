@@ -178,8 +178,12 @@ var CountryHandler = function()
 
             _countries = [];
 
+            if(data.length > 2) {
+
+                updateLayer(data[data.length - 3].data.Facets[1]["LANGUAGE"], 2, this);
+            }
             if(data.length > 1) {
-                data[data.length - 2];
+
                 updateLayer(data[data.length - 2].data.Facets[1]["LANGUAGE"], 1, this);
             }
             updateLayer(data[data.length - 1].data.Facets[1]["LANGUAGE"],0,this);

@@ -8,14 +8,21 @@ var otherFilters = function(exclude,data)
 {
     var filters = [];
     data.forEach(function(layer) {
-        layer.data.some(function (d) {
-            if (d.exclude != exclude && d.exclude != "") {
-                filters.push(d.exclude)
+        try {
+            layer.data.some(function (d) {
+                if (d.exclude != exclude && d.exclude != "") {
+                    filters.push(d.exclude)
 
-            }
+                }
 
-        })
-        if(layer.queries.length > 0) filters.push("query");
+            })
+            if (layer.queries.length > 0) filters.push("query");
+        }
+        catch(exc)
+        {
+            console.log("otherFilters: layer does not contain data, sync prob?");
+            console.log(exc);
+        }
 
     });
     return filters;
@@ -23,16 +30,22 @@ var otherFilters = function(exclude,data)
 var getWidgetSpecificData = function(exclude,data)
 {
     var myData = {};
-    data.data.some(function(d){
-        if(d.exclude == exclude)
-        {
-            myData = d.result;
+    try {
+        data.data.some(function (d) {
+            if (d.exclude == exclude) {
+                myData = d.result;
 
-            return true;
-        }
-        if(d.exclude == "")
-            myData = d.result;
-    })
+                return true;
+            }
+            if (d.exclude == "")
+                myData = d.result;
+        })
+    }
+    catch(exc)
+    {
+        console.log("getWidgetSpecificData: data empty, sync prob?");
+        console.log(exc);
+    }
     return myData;
 }
 

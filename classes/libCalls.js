@@ -102,7 +102,7 @@ exports.filteredQuery = function(call,  cb)
     var facetString = ""
     Object.keys(facets).forEach(function(f) {
         facets[f].forEach(function (k) {
-            facetString += "(" + f.toLowerCase() + "," + k + ")";
+            facetString += "(" + f.toLowerCase() + "," + encodeURIComponent(k) + ")";
             facetString += "AND";
 
         })});
@@ -115,7 +115,7 @@ exports.filteredQuery = function(call,  cb)
         function (facetString, callback) {
 
 
-            param = "/opensearch/newspapers?format=json&q=" + queryString + "&fq=" + facetString.fstring + "&key=" + apiKey + "&c=0&ff=(year:1000),(language:1000),(country:1000)"
+            param = "/opensearch/newspapers?format=json&q=" + queryString + "&fq=" + facetString.fstring + "&key=" + apiKey + "&c=0&ff=(year:1000),(language:1000),(country:1000),(title:1000)"
             console.log(param);
 
             rest.doGET("data.theeuropeanlibrary.org", param, facetString.exclude,

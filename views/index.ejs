@@ -27,6 +27,7 @@
       <script src="javascripts/parsePaperData.js"></script>
       <script src="javascripts/CountryResults.js"></script>
       <script src="javascripts/Timeline.js"></script>
+      <script src="javascripts/Newspaper.js"></script>
       <script src="javascripts/Console.js"></script>
       <script src="javascripts/visualization.js"></script>
 
@@ -66,6 +67,7 @@
                 var data = msg;
                 __countryHandler.update(data);
                 __timelineHandler.update(data);
+                __newspaperHandler.update(data);
             });
 
         });

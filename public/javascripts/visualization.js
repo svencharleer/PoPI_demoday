@@ -43,6 +43,10 @@ var _tweens = {};
                     c.touch(_touches);
 
                 })
+            __newspaperHandler.activeLayer().forEach(function(c){
+                c.touch(_touches);
+
+            })
 
 
 
@@ -94,7 +98,7 @@ var _tweens = {};
 
 
             __timelineHandler.draw();
-
+        __newspaperHandler.draw();
         __consoleHandler.console().draw();
 
     }

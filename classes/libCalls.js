@@ -79,24 +79,58 @@ exports.filteredQuery = function(call,  cb)
     queries.forEach(function(q){
         queryString+= '"' + encodeURIComponent(q) + '"';
     });
+
+    var facetStrings = []; //one for each facet exclude as each widget cannot filter itself
+    console.log(JSON.stringify(facets));
+    var facetNames = Object.keys(facets);
+    facetNames.forEach(function(toExclude){
+        var facetString = ""
+        Object.keys(facets).forEach(function(f){
+            if(f != toExclude) {
+                facets[f].forEach(function (k) {
+                    facetString += "(" + f.toLowerCase() + "," + k + ")";
+                    facetString += "AND";
+                });
+            }
+
+        })
+        facetStrings.push({exclude:toExclude, fstring:facetString});
+    });
+    //add one general one for the one widget that started, so that needs all the data
+
+
     var facetString = ""
-    Object.keys(facets).forEach(function(f){
+    Object.keys(facets).forEach(function(f) {
         facets[f].forEach(function (k) {
             facetString += "(" + f.toLowerCase() + "," + k + ")";
             facetString += "AND";
-        });
-    })
-    ;
+
+        })});
+        ;
+    facetStrings.push({exclude: "", fstring: facetString});
+    //console.log(JSON.stringify(facetStrings));
+
+    var results = [];
+    async.eachSeries(facetStrings,
+        function (facetString, callback) {
 
 
-    param = "/opensearch/newspapers?format=json&q=" + queryString + "&fq=" + facetString + "&key="+ apiKey + "&c=0&ff=(year:1000),(language:1000),(country:1000)"
-    console.log(param);
+            param = "/opensearch/newspapers?format=json&q=" + queryString + "&fq=" + facetString.fstring + "&key=" + apiKey + "&c=0&ff=(year:1000),(language:1000),(country:1000)"
+            console.log(param);
 
-    rest.doGET("data.theeuropeanlibrary.org", param,
-        function(data, err){
+            rest.doGET("data.theeuropeanlibrary.org", param, facetString.exclude,
+                function (data, exclude, err) {
+                    results.push({exclude: exclude, result: data[0]});
+                    callback();
+                });
+        },
+        function (err) {
+            cb(results);
+        }
+    );
 
-            cb(data[0]);
-        });
+
+
 
 
 

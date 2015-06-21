@@ -4,6 +4,38 @@
 
 //var colors = ["0xCCFF3E3E","0xCC7C4EE8","0xCC33F0FF","0xCC91E870","0xCCFFE085"];
 var colors = ["0xCCFF358B","0xCC01B0F0","0xCCAEEE00","0xCCDC9EE8","0xCCFF5FD1"];
+var otherFilters = function(exclude,data)
+{
+    var filters = [];
+    data.forEach(function(layer) {
+        layer.data.some(function (d) {
+            if (d.exclude != exclude && d.exclude != "") {
+                filters.push(d.exclude)
+
+            }
+
+        })
+        if(layer.queries.length > 0) filters.push("query");
+
+    });
+    return filters;
+}
+var getWidgetSpecificData = function(exclude,data)
+{
+    var myData = {};
+    data.data.some(function(d){
+        if(d.exclude == exclude)
+        {
+            myData = d.result;
+
+            return true;
+        }
+        if(d.exclude == "")
+            myData = d.result;
+    })
+    return myData;
+}
+
 var CountryResults = function()
 {
 
@@ -172,6 +204,7 @@ var CountryHandler = function()
 {
     var _countries = [];
     var _selectedCountries = [];
+    var _otherFilters = [];
 
     function updateLayer(countries, layer,_this, original,previous) //oroginal added to support drawing of all countries on all layers, evn
     {
@@ -205,18 +238,21 @@ var CountryHandler = function()
         "update": function(data)
         {
 
+
+            var myData = getWidgetSpecificData("language", data[0]);
+            _otherFilters = otherFilters("language", data); // see if there are other filters, needed for coloring correctly
             _countries = [];
-            var originalLayer = data[0].data.Facets[1]["LANGUAGE"];
+            var originalLayer = myData.Facets[1]["LANGUAGE"];
 
 
             var previousLayer = {};
             if(data.length > 1)
-                previousLayer = data[data.length-2].data.Facets[1]["LANGUAGE"];
+                previousLayer = getWidgetSpecificData("language", data[data.length-2]).Facets[1]["LANGUAGE"];
             updateLayer(originalLayer,0,this,originalLayer,originalLayer);
 
             if(data.length > 1) {
 
-                updateLayer(data[data.length - 1].data.Facets[1]["LANGUAGE"], 1, this,originalLayer,previousLayer);
+                updateLayer(getWidgetSpecificData("language", data[data.length - 1]).Facets[1]["LANGUAGE"], 1, this,originalLayer,previousLayer);
             }
 
 
@@ -244,44 +280,48 @@ var CountryHandler = function()
                 return _countries[0];
             return [];
         },
-        "draw":function(){
+        "draw":function() {
             var allCountries = {};
-            for(var i = _countries.length-1;i>=0;i--)
-            {
-                _countries[i].forEach(function(country){
-                   // country.draw(i, _countries.length);
-                    if(allCountries[country.countryCode()] == undefined)
+            for (var i = _countries.length - 1; i >= 0; i--) {
+                _countries[i].forEach(function (country) {
+                    // country.draw(i, _countries.length);
+                    if (allCountries[country.countryCode()] == undefined)
                         allCountries[country.countryCode()] = [];
-                    allCountries[country.countryCode()].push({c: country, i:i});
+                    allCountries[country.countryCode()].push({c: country, i: i});
                 })
             }
-            Object.keys(allCountries).forEach(function(k){
+            Object.keys(allCountries).forEach(function (k) {
                 //sort
-                allCountries[k].sort(function(a,b){
-                    if(a.c.count() < b.c.count())
+                allCountries[k].sort(function (a, b) {
+                    if (a.c.count() < b.c.count())
                         return 1;
-                    if(a.c.count() > b.c.count())
+                    if (a.c.count() > b.c.count())
                         return -1;
-                    if(a.i < b.i)
+                    if (a.i < b.i)
                         return 1;
-                    if(a.i > b.i)
+                    if (a.i > b.i)
                         return -1;
                     return 0;
                 })
-                allCountries[k].forEach(function(country,i,a){
-                    //var prevCount = i == _countries.length-1 && i >0 ? a[i-1].c.count() : country.c.count();
+                allCountries[k].forEach(function (country, i, a) {
+                    var color = 0;
+                    if ((_selectedCountries.indexOf(country.c.countryCode()) >= 0 && i == _countries.length-1) ||
+                        (_otherFilters.length > 0 && i == _countries.length-1)) //if it's the top layer we draw, and other filters active, all goes blue there
+                        color = 1;
                     country.c.animate();
-                    if(_selectedCountries.length == 0 ||_selectedCountries.indexOf(country.c.countryCode())>=0)
-                        country.c.draw(country.i, _countries.length);
+
+                    if (_selectedCountries.indexOf(country.c.countryCode()) >= 0 || _selectedCountries.length == 0)
+                        country.c.draw(color, _countries.length);
                     else
-                        country.c.drawDim(country.i, _countries.length);
+                        country.c.drawDim(color, _countries.length);
+
+
+
                 });
+
+
             });
-
-
-
         }
-
 
 
     }

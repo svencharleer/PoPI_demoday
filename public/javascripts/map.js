@@ -20,21 +20,21 @@ var languageToCountryCode = {
     "hrv" : "HR",
      "rus": "RU",
     "fin" : "FI",
-    "wel" : "GB",
+    //"wel" : "GB",
     "ita" : "IT",
     "kal" : "GL",
     "cze" : "CZ",
     "swe" : "SE",
-    "fry" : "NL",
+    //"fry" : "NL",
     "gre" : "GR",
     "fao" : "DK",
     "cat" : "ES",
-    "heb" : "NL",
+    //"heb" : "NL",
     "hun": "HU",
     "dan" : "DK",
-    "mul" : undefined,
-    "ind" : "NL",
-    "epo" : "ES"
+    "mul" : undefined
+    //"ind" : "NL",
+    //"epo" : "ES"
 };
 
 /*var countryToCoordinates = {

@@ -109,10 +109,11 @@ var TimeLine = function()
 
         "draw" : function(layerIndex, nrOfLayers)
         {
-            var color = tinycolor("#1EB0D3").toHsv();
+            /*var color = tinycolor("#1EB0D3").toHsv();
             color.v = color.v * (.3 +  ((nrOfLayers - layerIndex)/nrOfLayers) *.7);
             var rgb = tinycolor(color).toRgb();
-            drawWithColor(__p.color(rgb.r, rgb.g, rgb.b));
+            drawWithColor(__p.color(rgb.r, rgb.g, rgb.b));*/
+            drawWithColor(parseInt(colors[layerIndex]));
         }
 
 
@@ -136,13 +137,23 @@ var TimelineHandler = function()
     return {
         "update": function(data)
         {
-            if(data.length > 2) {
-                updateLayer(data[data.length - 3].data.Facets[0]["YEAR"], 2,this);
+            updateLayer(data[0].data.Facets[0]["YEAR"],0,this);
+            if(data.length == 1) {
+                while(_timelines.length > 1)
+                {
+                    _timelines.splice(1,1);
+
+                }
+
+                return;
             }
-            if(data.length > 1) {
-                updateLayer(data[data.length - 2].data.Facets[0]["YEAR"], 1,this);
+            var layers = 1;
+            for(var i=1;i<=layers&&i<data.length;i++)
+            {
+                updateLayer(data[data.length-i].data.Facets[0]["YEAR"], i,this);
             }
-            updateLayer(data[data.length - 1].data.Facets[0]["YEAR"],0,this);
+
+
 
 
 
@@ -159,11 +170,16 @@ var TimelineHandler = function()
             return [];
         },
         "draw":function(){
-            for(var i = _timelines.length-1;i>=0;i--)
+            if(_timelines.length > 0)
+            {
+                _timelines[0].animate();
+                _timelines[0].draw(0, _timelines.length);
+            }
+
+            for(var i = _timelines.length-1;i>0;i--)
             {
                 _timelines[i].animate();
                 _timelines[i].draw(i, _timelines.length);
-
             }
 
         }

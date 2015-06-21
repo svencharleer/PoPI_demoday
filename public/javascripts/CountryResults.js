@@ -1,6 +1,9 @@
 /**
  * Created by svenc on 17/06/15.
  */
+
+//var colors = ["0xCCFF3E3E","0xCC7C4EE8","0xCC33F0FF","0xCC91E870","0xCCFFE085"];
+var colors = ["0xCCFF358B","0xCC01B0F0","0xCCAEEE00","0xCCDC9EE8","0xCCFF5FD1"];
 var CountryResults = function()
 {
 
@@ -11,6 +14,8 @@ var CountryResults = function()
     var _handler;
     var _state = "neutral";
     var _countryCode;
+    var _prevCount = 0;
+    var _tween = 0;
 
     function drawPapersWithColor(color)
     {
@@ -61,12 +66,13 @@ var CountryResults = function()
     {
         var x = _position.x;
         var y = _position.y;
-        var count = _results.count;
+        var count = _tween * _results.count + (1.0-_tween) * _results.prevCount;
 
         var surface = Math.log(count)*1000;
         var radius = Math.sqrt((surface/Math.PI));
 
         __p.fill(color);
+
         __p.noStroke();
         __p.ellipse(x,y,radius,radius);
 
@@ -135,10 +141,28 @@ var CountryResults = function()
         },
         "draw" : function(layerIndex, nrOfLayers)
         {
-            var color = tinycolor("#FB3A9A").toHsv();
-            color.v = color.v * (.3 +  ((nrOfLayers - layerIndex)/nrOfLayers) *.7);
+            /*var color = tinycolor("#FB3A9A").toHsv();
+            color.h = color.h * (.3 +  ((nrOfLayers - layerIndex)/nrOfLayers) *.7);
             var rgb = tinycolor(color).toRgb();
-            drawWithColor(__p.color(rgb.r, rgb.g, rgb.b));
+            drawWithColor(__p.color(rgb.r, rgb.g, rgb.b));*/
+
+            drawWithColor(parseInt(colors[layerIndex]));
+        },
+        "drawDim": function(layerIndex, nrOfLayers)
+        {
+            var color = tinycolor(colors[layerIndex].replace("0xCC","#")).toHsv();
+             color.v = color.v * .3;
+             var rgb = tinycolor(color).toRgb();
+             drawWithColor(__p.color(rgb.r, rgb.g, rgb.b));
+
+        },
+        "count" : function(){return _results.count;},
+        "animate" : function()
+        {
+            if(_tween < 1.0)
+            {
+                _tween += .05;
+            }
         }
 
 
@@ -149,11 +173,11 @@ var CountryHandler = function()
     var _countries = [];
     var _selectedCountries = [];
 
-    function updateLayer(countries, layer,_this)
+    function updateLayer(countries, layer,_this, original,previous) //oroginal added to support drawing of all countries on all layers, evn
     {
 
         _countries[layer] = [];
-        Object.keys(countries).forEach(function(c) {
+        Object.keys(original).forEach(function(c) {
 
 
 
@@ -164,9 +188,14 @@ var CountryHandler = function()
                 return;
             }
             var cc = languageToCountryCode[c];
+            var count = 0;var prevCount =0;
+            if(countries[c] != undefined)
+                count = countries[c];
+            if(previous[c] != undefined)
+                prevCount = previous[c];
             country.init(__countriesToName[cc], c,
                 {x: countryToScreenCoordinates[cc].x, y: countryToScreenCoordinates[cc].y},
-                {count:countries[c], query:""},
+                {count:count, prevCount:prevCount, query:""},
                 _this);
             _countries[layer].push(country);
 
@@ -177,16 +206,19 @@ var CountryHandler = function()
         {
 
             _countries = [];
+            var originalLayer = data[0].data.Facets[1]["LANGUAGE"];
 
-            if(data.length > 2) {
 
-                updateLayer(data[data.length - 3].data.Facets[1]["LANGUAGE"], 2, this);
-            }
+            var previousLayer = {};
+            if(data.length > 1)
+                previousLayer = data[data.length-2].data.Facets[1]["LANGUAGE"];
+            updateLayer(originalLayer,0,this,originalLayer,originalLayer);
+
             if(data.length > 1) {
 
-                updateLayer(data[data.length - 2].data.Facets[1]["LANGUAGE"], 1, this);
+                updateLayer(data[data.length - 1].data.Facets[1]["LANGUAGE"], 1, this,originalLayer,previousLayer);
             }
-            updateLayer(data[data.length - 1].data.Facets[1]["LANGUAGE"],0,this);
+
 
 
 
@@ -213,12 +245,40 @@ var CountryHandler = function()
             return [];
         },
         "draw":function(){
+            var allCountries = {};
             for(var i = _countries.length-1;i>=0;i--)
             {
                 _countries[i].forEach(function(country){
-                    country.draw(i, _countries.length);
+                   // country.draw(i, _countries.length);
+                    if(allCountries[country.countryCode()] == undefined)
+                        allCountries[country.countryCode()] = [];
+                    allCountries[country.countryCode()].push({c: country, i:i});
                 })
             }
+            Object.keys(allCountries).forEach(function(k){
+                //sort
+                allCountries[k].sort(function(a,b){
+                    if(a.c.count() < b.c.count())
+                        return 1;
+                    if(a.c.count() > b.c.count())
+                        return -1;
+                    if(a.i < b.i)
+                        return 1;
+                    if(a.i > b.i)
+                        return -1;
+                    return 0;
+                })
+                allCountries[k].forEach(function(country,i,a){
+                    //var prevCount = i == _countries.length-1 && i >0 ? a[i-1].c.count() : country.c.count();
+                    country.c.animate();
+                    if(_selectedCountries.length == 0 ||_selectedCountries.indexOf(country.c.countryCode())>=0)
+                        country.c.draw(country.i, _countries.length);
+                    else
+                        country.c.drawDim(country.i, _countries.length);
+                });
+            });
+
+
 
         }
 

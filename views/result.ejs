@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>eCloud</title>
+      <script type="application/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+      <script src="/socket.io/socket.io.js"></script>
+
+    <script type="application/javascript">
+        var socket = io();
+        socket.emit("registerResults");
+
+
+
+
+        socket.on("update", function(uri){
+            $("#results").html(uri);
+            var iframe = document.getElementById("external");
+            iframe.src = uri;
+        });
+
+
+        $(window).bind('unload', function(){
+            socket.disconnect();
+        });
+
+    </script>
+
+  </head>
+  <body>
+  <iframe id="external" style="width:100%;height:100%;"></iframe>
+  <div>
+
+
+      <div id="results"></div>
+
+     </div>
+
+
+
+  <script type="application/javascript">
+
+  </script>
+  </body>
+</html>

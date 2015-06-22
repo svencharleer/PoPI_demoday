@@ -9,6 +9,8 @@ var routes = require('./routes/index');
 var user = require('./routes/user');
 var newspapers = require('./routes/newspapers');
 var timeline = require('./routes/timeline');
+var results = require('./routes/results');
+var result = require('./routes/result');
 var kinect = require('./routes/kinect');
 var info = require('./routes/info');
 
@@ -32,6 +34,8 @@ app.use('/', routes);
 app.use('/user', user);
 app.use('/newspapers', newspapers);
 app.use('/timeline', timeline);
+app.use('/results', results);
+app.use('/result', result);
 app.use('/kinect', kinect);
 app.use('/info', info);
 // catch 404 and forward to error handler

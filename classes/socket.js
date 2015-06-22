@@ -22,7 +22,9 @@ exports.init = function(ioWeb) {
         socket.on("registerFilterActivities", function (msg) {
             socket.join('filterActivitiesListener');
         })
-
+        socket.on("registerResults", function (msg) {
+            socket.join('resultListener');
+        })
         socket.on('disconnect', function () {
 
             console.log(socket.id + " disconnecting");
@@ -76,6 +78,10 @@ exports.init = function(ioWeb) {
                         filter.__centralFilter.filterStack());
                 }
             });
+        });
+        socket.on("showResult", function(msg){
+            console.log(msg);
+            ioWeb.sockets.in('resultListener').emit('update', msg);
         });
     });
 }

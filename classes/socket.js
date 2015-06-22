@@ -6,6 +6,8 @@
 ///////////////////////////////////////////
 var filter = require('../classes/CentralFilter.js');
 
+var processingRequests = 0;
+
 exports.init = function(ioWeb) {
 
     ioWeb.on('connection', function (socket) {
@@ -26,40 +28,53 @@ exports.init = function(ioWeb) {
             console.log(socket.id + " disconnecting");
 
         });
-        socket.on("addFilter_Query", function (msg) {
 
+        socket.on("addFilter_Query", function (msg) {
+            processingRequests++;
             filter.__centralFilter.newFilter_Query(msg.query);
             filter.__centralFilter.systemCall(function (data) {
-                ioWeb.sockets.in('visualizationListener').emit('update', data);
-                ioWeb.sockets.in('filterActivitiesListener').emit('filterUpdate',
-                    filter.__centralFilter.filterStack());
+                processingRequests--;
+                if(processingRequests == 0) {
+                    ioWeb.sockets.in('visualizationListener').emit('update', data);
+                    ioWeb.sockets.in('filterActivitiesListener').emit('filterUpdate',
+                        filter.__centralFilter.filterStack());
+                }
             });
         });
         socket.on("addFilter_Facet", function (msg) {
-
+            processingRequests++;
             filter.__centralFilter.newFilter_Facet(msg.facetType, msg.facetValue);
             filter.__centralFilter.systemCall(function (data) {
-                ioWeb.sockets.in('visualizationListener').emit('update', data);
-                ioWeb.sockets.in('filterActivitiesListener').emit('filterUpdate',
-                    filter.__centralFilter.filterStack());
+                processingRequests--;
+                if(processingRequests == 0) {
+                    ioWeb.sockets.in('visualizationListener').emit('update', data);
+                    ioWeb.sockets.in('filterActivitiesListener').emit('filterUpdate',
+                        filter.__centralFilter.filterStack());
+                }
             });
         });
         socket.on("removeFilter_Facet", function (msg) {
-
+            processingRequests++
             filter.__centralFilter.disableFilter_Facet(msg.facetType, msg.facetValue);
             filter.__centralFilter.systemCall(function (data) {
-                ioWeb.sockets.in('visualizationListener').emit('update', data);
-                ioWeb.sockets.in('filterActivitiesListener').emit('filterUpdate',
-                    filter.__centralFilter.filterStack());
+                processingRequests--;
+                if(processingRequests == 0) {
+                    ioWeb.sockets.in('visualizationListener').emit('update', data);
+                    ioWeb.sockets.in('filterActivitiesListener').emit('filterUpdate',
+                        filter.__centralFilter.filterStack());
+                }
             });
         });
         socket.on("resetFilter", function (msg) {
-
+            processingRequests++;
             filter.__centralFilter.reset();
             filter.__centralFilter.systemCall(function (data) {
-                ioWeb.sockets.in('visualizationListener').emit('update', data);
-                ioWeb.sockets.in('filterActivitiesListener').emit('filterUpdate',
-                    filter.__centralFilter.filterStack());
+                processingRequests--;
+                if(processingRequests == 0) {
+                    ioWeb.sockets.in('visualizationListener').emit('update', data);
+                    ioWeb.sockets.in('filterActivitiesListener').emit('filterUpdate',
+                        filter.__centralFilter.filterStack());
+                }
             });
         });
     });

@@ -1,43 +1,43 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>eCloud</title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
 
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
     <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-      <script src="javascripts/Tween.js"></script>
+    <script src="javascripts/Tween.js"></script>
 
 
 
-      <script type="application/javascript" src="bower_components/Processing.js/processing.js"></script>
-      <script type="application/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
-      <script type="application/javascript" src="bower_components/lodash/lodash.js"></script>
-      <script type="application/javascript" src="bower_components/tinycolor/tinycolor.js"></script>
+    <script type="application/javascript" src="bower_components/Processing.js/processing.js"></script>
+    <script type="application/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="application/javascript" src="bower_components/lodash/lodash.js"></script>
+    <script type="application/javascript" src="bower_components/tinycolor/tinycolor.js"></script>
 
-      <script type="application/javascript" src="javascripts/Tuio.js"></script>
-      <script src="socket.io/socket.io.js"></script>
-      <script type="application/javascript">
-          var socket = io();
-      </script>
-      <script src="socket.io/socket.io.js"></script>
-      <script type="application/javascript" src="http://localhost:5000/libs/socket.io.js"></script>
+    <script type="application/javascript" src="javascripts/Tuio.js"></script>
+    <script src="socket.io/socket.io.js"></script>
+    <script type="application/javascript">
+        var socket = io();
+    </script>
+    <script src="socket.io/socket.io.js"></script>
+    <script type="application/javascript" src="http://localhost:5000/libs/socket.io.js"></script>
 
-      <script src="javascripts/map.js"></script>
-      <script src="javascripts/parsePaperData.js"></script>
-      <script src="javascripts/CountryResults.js"></script>
-      <script src="javascripts/Timeline.js"></script>
-      <script src="javascripts/Newspaper.js"></script>
-      <script src="javascripts/Console.js"></script>
-      <script src="javascripts/visualization.js"></script>
+    <script src="javascripts/map.js"></script>
+    <script src="javascripts/parsePaperData.js"></script>
+    <script src="javascripts/CountryResults.js"></script>
+    <script src="javascripts/Timeline.js"></script>
+    <script src="javascripts/Newspaper.js"></script>
+    <script src="javascripts/Console.js"></script>
+    <script src="javascripts/visualization.js"></script>
 
 
 
-  </head>
-  <body onload="javascript:loadAll();">
-   <div id="map"></div>
-  <canvas id="overlay"></canvas>
-  </body>
+</head>
+<body onload="javascript:loadAll();">
+<div id="map"></div>
+<canvas id="overlay"></canvas>
+</body>
 <script type="application/javascript">
     var __vis;
     var __users;
@@ -48,13 +48,11 @@
         var _height = $(window).height();
         $("#overlay").width(_width);
         $("#overlay").height(_height);
-        $("#map").width(_width);
-        $("#map").height(_height);
 
 
 
-        generateMap();
-        var modules = [__countryHandler];
+
+        var modules = [__timelineHandler];
         __vis = new visualization();
         __vis.init("overlay", modules);
 
@@ -62,14 +60,14 @@
 
         socket.emit("registerVisualization");
         socket.on("update", function (msg) {
-            initCountries(function(){
+
 
                 var data = msg;
                 modules.forEach(function(m){
                     m.update(data);
                 });
 
-            });
+
 
         });
 
@@ -132,9 +130,23 @@
             var offset = $(this).offset();
             __vis.addTouch("mouse",e.clientX - offset.left,e.clientY - offset.top);
         });
+        $("body").touchStart(function(e){
+            var touches = e.changedTouches;
+            for (var i = 0; i < touches.length; i++) {
+                __vis.addTouch(touches[i].identifier,touches[i].pageX, touches[i].pageY);
+            }
+
+        });
         $("body").mouseup(function(e){
             var offset = $(this).offset();
             __vis.removeTouch("mouse",e.clientX - offset.left,e.clientY - offset.top);
+        });
+        $("body").touchend(function(e){
+            var touches = e.changedTouches;
+            for (var i = 0; i < touches.length; i++) {
+                __vis.removeTouch(touches[i].identifier,touches[i].pageX, touches[i].pageY);
+            }
+
         });
 
 

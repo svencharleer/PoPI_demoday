@@ -70,7 +70,7 @@ exports.getPapersForCountry = function(query, country, userid, originalData, cal
 }
 
 
-exports.filteredQuery = function(call,  cb)
+exports.filteredQuery = function(call, filterId, cb)
 {
     var param;
     var queries = call.queries();
@@ -88,7 +88,7 @@ exports.filteredQuery = function(call,  cb)
         Object.keys(facets).forEach(function(f){
             if(f != toExclude) {
                 facets[f].forEach(function (k) {
-                    facetString += "(" + f.toLowerCase() + "," + k + ")";
+                    facetString += "(" + f.toLowerCase() + "," + encodeURIComponent(k) + ")";
                     facetString += "AND";
                 });
             }
@@ -125,7 +125,7 @@ exports.filteredQuery = function(call,  cb)
                 });
         },
         function (err) {
-            cb(results);
+            cb(results,filterId);
         }
     );
 

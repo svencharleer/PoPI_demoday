@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var user = require('./routes/user');
+var newspapers = require('./routes/newspapers');
+var timeline = require('./routes/timeline');
 var kinect = require('./routes/kinect');
 var info = require('./routes/info');
 
@@ -28,6 +30,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 app.use('/', routes);
 app.use('/user', user);
+app.use('/newspapers', newspapers);
+app.use('/timeline', timeline);
 app.use('/kinect', kinect);
 app.use('/info', info);
 // catch 404 and forward to error handler

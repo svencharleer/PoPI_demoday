@@ -28,14 +28,15 @@ var Newspaper = function()
         __p.fill(color);
 
         __p.noStroke();
+        __p.rectMode(__p.CORNERS);
         __p.rect(x,y,x+length, y +10);
 
-        __p.fill(255);
-        __p.text(_name, x-10,y-17);
-        __p.fill(color);
+        __p.fill(0xCC4F4F51);
+        __p.text(_name, x-10,y-5,200,20);
 
-        __p.stroke(255);
-        __p.text(count, x-10,y-5);
+        __p.fill(color);
+        __p.noStroke();
+        __p.text(count, x-50,y-5);
 
     }
 
@@ -123,7 +124,7 @@ var NewspaperHandler = function()
             if(previous[c] != undefined)
                 prevCount = previous[c];
             newspaper.init(c,
-                {x: 100, y: i * 15},
+                {x: 100 + parseInt(i/30) * 200, y: (i % 30)*30},
                 {count:count, prevCount:prevCount, query:""},
                 _this);
             _newspapers[layer].push(newspaper);

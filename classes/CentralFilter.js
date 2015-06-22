@@ -126,8 +126,8 @@ var CentralFilter = function()
         },
         "systemCall" : function(callback, layer)
         {
-            paperLib.filteredQuery(getLastFilter(), function(data) {
-                getLastFilter().data(data);
+            paperLib.filteredQuery(getLastFilter(),_filterStack.length-1, function(data, filterId) {
+                _filterStack[filterId].data(data);
                 callback(getActivity());
 
             });

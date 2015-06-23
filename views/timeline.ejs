@@ -130,24 +130,28 @@
             var offset = $(this).offset();
             __vis.addTouch("mouse",e.clientX - offset.left,e.clientY - offset.top);
         });
-        $("body").touchStart(function(e){
+        $("body").mousemove(function(e){
+            var offset = $(this).offset();
+            __vis.updateTouch("mouse",e.clientX - offset.left,e.clientY - offset.top);
+        });
+        /*$("body").touchstart(function(e){
             var touches = e.changedTouches;
             for (var i = 0; i < touches.length; i++) {
                 __vis.addTouch(touches[i].identifier,touches[i].pageX, touches[i].pageY);
             }
 
-        });
+        });*/
         $("body").mouseup(function(e){
             var offset = $(this).offset();
             __vis.removeTouch("mouse",e.clientX - offset.left,e.clientY - offset.top);
         });
-        $("body").touchend(function(e){
+        /*$("body").touchend(function(e){
             var touches = e.changedTouches;
             for (var i = 0; i < touches.length; i++) {
                 __vis.removeTouch(touches[i].identifier,touches[i].pageX, touches[i].pageY);
             }
 
-        });
+        });*/
 
 
 

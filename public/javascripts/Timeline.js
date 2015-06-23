@@ -3,47 +3,41 @@
  */
 var TimeLine = function()
 {
-
+    var BASEYEAR = 1600;
+    var YEARS = 400;
     var _max = 10;
     var _name = "undefined";
     var _position = {x:100, y:100};
+    var _size = {w:100,h:100};
     var _years = [];
     var _previousYears = [];
     var _tween;
-    var _touched = undefined;
+    var _touchedLeft = undefined;
+    var _touchedMiddle = undefined;
+    var _touchedRight = undefined;
     var _handler;
     var _state = "neutral";
     var _subYears = [];
+    var _selector = [0,YEARS];
+    var _widthPerYear = 0;
     function drawWithColor(color)
     {
         var paddingBottom = 50;
         var paddingGraph = 1;
 
 
-        var screenWidth =  $("#" + __canvas).width();
-        var screenHeight = $("#" + __canvas).height()
-        var heightOfGraph = screenHeight/6;
+
+        var heightOfGraph = _size.h/6;
         //make it 400 years
-        var widthPerYear = screenWidth / 400;
-        /*var vals = [];
-        Object.keys(_years).forEach(function(k){
-                vals.push(_years[k]);
-            }
-        )
-        var prevVals = [];
-        Object.keys(_previousYears).forEach(function(k){
-                prevVals.push(_previousYears[k]);
-            }
-        )
-        var max = Math.max.apply(Math, vals);
-        var previousMax = Math.max.apply(Math, prevVals);
-        */
-        for(var i = 0; i < 400; i+=10)
+        _widthPerYear = _size.w / YEARS;
+        __p.pushMatrix();
+        __p.translate(_position.x, _position.y);
+        for(var i = 0; i < YEARS; i+=10)
         {
-            var year = 1600+i;
+            var year = BASEYEAR+i;
             __p.pushMatrix()
 
-            __p.translate(i * widthPerYear,screenHeight-paddingBottom);
+            __p.translate(i * _widthPerYear,_size.h-paddingBottom);
             __p.rotate(Math.PI/2);
             __p.textSize(8);
             __p.text(year,0,0);
@@ -51,11 +45,10 @@ var TimeLine = function()
         }
 
 
-        for(var i = 0; i < 400; i++)
+        for(var i = 0; i < YEARS; i++)
         {
-
             var yearOffset = i;
-            var year = i + 1600;
+            var year = i + BASEYEAR;
             var count = _years[year] != undefined ? _years[year] : 0;
             var prevCount = (_previousYears != undefined && _previousYears[year] != undefined) ? _previousYears[year] : 0;
 
@@ -67,37 +60,211 @@ var TimeLine = function()
             var height = logCount/_max * heightOfGraph;
             var previousHeight = logprevCount/_max * heightOfGraph;
             height = (_tween) * height + (1.0-_tween) * previousHeight;
-            __p.rect(yearOffset * widthPerYear,screenHeight-paddingBottom, (yearOffset+1) * widthPerYear-paddingGraph, screenHeight - height -paddingBottom);
+            __p.rect(yearOffset * _widthPerYear,_size.h-paddingBottom, (yearOffset+1) * _widthPerYear-paddingGraph, _size.h - height -paddingBottom);
 
         };
+        __p.popMatrix();
+    }
+    function drawSelector()
+    {
+        __p.pushMatrix();
+        __p.translate(_position.x, _position.y);
+        __p.stroke(parseInt(colors[3]))
+        var width = (_selector[1] - _selector[0])/5;
 
+
+        __p.noStroke();
+        __p.fill(0xCCADADB2);
+        __p.rect(_selector[0],0, _selector[0] + width, _size.h);
+        __p.stroke(parseInt(colors[1]))
+        __p.line(_selector[0],0, _selector[0] + width, 0);
+
+
+        __p.noStroke();
+        __p.fill(0xCC848488);
+        __p.rect(_selector[0]  + width,0, _selector[1] - width, _size.h);
+        __p.stroke(parseInt(colors[2]))
+        __p.line(_selector[0]  + width,0, _selector[1] - width, 0);
+
+        __p.noStroke();
+        __p.fill(0xCCADADB2);
+        __p.rect(_selector[1]  - width,0, _selector[1], _size.h);
+        __p.stroke(parseInt(colors[3]))
+        __p.line(_selector[1]  - width,0, _selector[1],0);
+
+
+
+        __p.popMatrix();
     }
 
+
     return {
-        "init" : function( years, handler)
+        "init" : function(x,y,w,h, years, handler, reset)
         {
+            _position.x = x;
+            _position.y = y;
+            _size.w = w;
+            _size.h = h;
             _tween = 0;
             _previousYears = JSON.parse(JSON.stringify(_years));
             _years = JSON.parse(JSON.stringify(years));
             _handler = handler;
             console.log(JSON.stringify(_previousYears));
+            //if(reset == true)
+            {
+                _selector = [_position.x,_size.w];
+            }
+            _widthPerYear = _size.w / YEARS;
         },
         "sub":function(years)
         {
             _subYears = years;
         },
 
-        "isTouched" : function(touch){
-            if (__p.dist(touch.x, touch.y, _position.x, _position.y) < 22) {
+        "touch" : function(touches) {
+            //only update when we let go
+            //if it's full width, select small section around finger
+            //split in 3 parts, move, enlarge left enlarge right
+            if(_touchedLeft != undefined)
+                _touchedLeft.alive = false;
+            if(_touchedRight != undefined)
+                _touchedRight.alive = false;
+            if(_touchedMiddle != undefined)
+                _touchedMiddle.alive = false;
 
-                return true;
+            //old touches
+            Object.keys(touches).some(function (t) {
+                var touch = touches[t];
+                var ids = [_touchedLeft != undefined ? _touchedLeft.id : -1,
+                        _touchedRight != undefined ? _touchedRight.id : -1,
+                        _touchedMiddle!= undefined ? _touchedMiddle.id : -1
+                        ];
+                switch(touch.id)
+                {
+                    case ids[2]:
+                        console.log(touch.x,_touchedMiddle.x);
+                        _touchedMiddle.xChange = touch.x - _touchedMiddle.x;
+                        _touchedMiddle.x = touch.x;
+
+                        _touchedMiddle.alive = true;
+                        console.log("MIDDLE STILL EXISTS");
+
+                        break;
+                    case ids[0]:
+                        _touchedLeft.xChange = touch.x - _touchedLeft.x;
+                        _touchedLeft.x = touch.x;
+                        _touchedLeft.alive = true;
+                        console.log("LEFT STILL EXISTS");
+
+                        break;
+                    case ids[1]:
+                        _touchedRight.xChange = touch.x - _touchedRight.x;
+                        _touchedRight.x = touch.x;
+                        _touchedRight.alive = true;
+                        console.log("RIGHT STILL EXISTS " + _touchedRight.x);
+
+                        break;
+
+                }
+                if (_touchedLeft != undefined && _touchedRight != undefined && _touchedMiddle != undefined &&_touchedLeft.alive && _touchedRight.alive && _touchedMiddle.alive)
+                    return true;
+            });
+            Object.keys(touches).some(function (t) {
+                var touch = touches[t];
+                //skip when a touch is being handled already
+                var ids = [_touchedLeft != undefined ? _touchedLeft.id : -1,
+                        _touchedRight != undefined ? _touchedRight.id : -1,
+                        _touchedMiddle!= undefined ? _touchedMiddle.id : -1
+                ];
+                if(ids.indexOf(touch.id) >= 0) return;
+
+                if (_touchedLeft == undefined ) {
+                    //find if there's a left touch
+                    var widthLeftArea = ((_selector[1] - _selector[0]) / 5);
+                    var leftArea = [_selector[0] + _position.x, _selector[0] +widthLeftArea  + _position.x];
+                    if (touch.x >= leftArea[0]  && touch.x <= leftArea[1]) {
+                        _touchedLeft = JSON.parse(JSON.stringify(touch));
+                        _touchedLeft.alive = true;
+                        _touchedLeft.xChange = 0;
+                        console.log("LEFT");
+                    }
+
+                }
+                if (_touchedRight == undefined) {
+                    //find if there's a right touch
+                    var widthRightArea = ((_selector[1] - _selector[0]) / 5);
+                    var rightArea = [_selector[1] - widthRightArea + _position.x, _selector[1] + _position.x ];
+                    if (touch.x >= rightArea[0] && touch.x <= rightArea[1]) {
+                        _touchedRight = JSON.parse(JSON.stringify(touch));
+                        _touchedRight.alive = true;
+                        _touchedRight.xChange = 0;
+                        console.log("RIGHT");
+                    }
+
+                }
+                if (_touchedMiddle == undefined) {
+                    //find if there's a middle touch
+                    var widthMiddleArea = ((_selector[1] - _selector[0]) / 5);
+                    var rightArea = [_selector[0] + widthMiddleArea + _position.x, _selector[1] - widthMiddleArea + _position.x];
+                    if (touch.x >= rightArea[0] && touch.x <= rightArea[1]) {
+                        _touchedMiddle = JSON.parse(JSON.stringify(touch));
+                        _touchedMiddle.alive = true;
+                        _touchedMiddle.xChange = 0;
+                        console.log("MIDDLE");
+                    }
+
+                }
+
+
+            });
+            if (_touchedLeft != undefined && _touchedLeft.alive) {
+                _selector[0] += _touchedLeft.xChange;
+
             }
-            return false;
-        },
-        "touch" : function(touch)
-        {
+            if (_touchedRight != undefined && _touchedRight.alive) {
+                _selector[1] += _touchedRight.xChange;
+            }
+            if (_touchedMiddle != undefined &&_touchedMiddle.alive) {
 
 
+                _selector[0] += _touchedMiddle.xChange;
+                _selector[1] += _touchedMiddle.xChange;
+
+
+            }
+
+            //end of screen left selector
+            if(_selector[0] < 0)
+                _selector[0] = 0;
+            if(_selector[0] + 200 > YEARS * _widthPerYear)
+                _selector[0] = YEARS * _widthPerYear - 200;
+            //size of selector
+            if(_selector[1] - _selector[0] < 200)
+                _selector[1] +=  200 - (_selector[1] - _selector[0]);
+            //end of screen right selector
+            if(_selector[1] > YEARS * _widthPerYear)
+                _selector[1] = YEARS * _widthPerYear;
+
+
+            var wasAnythingAlive = false;
+            if (_touchedLeft != undefined && !_touchedLeft.alive) {
+                _touchedLeft = undefined;
+                //console.log("left gone");
+                wasAnythingAlive = true;
+            }
+            if (_touchedRight != undefined && !_touchedRight.alive) {
+                _touchedRight = undefined;
+                //console.log("right gone");
+                wasAnythingAlive = true;
+            }
+            if (_touchedMiddle != undefined && !_touchedMiddle.alive) {
+                _touchedMiddle = undefined;
+                //console.log("middle gone");
+                wasAnythingAlive = true;
+            }
+            //only update if none are touched, but one just was let go
+            if (wasAnythingAlive && _touchedLeft == undefined && _touchedRight == undefined && _touchedMiddle == undefined)
+                _handler.callbackHandler(_selector);
         },
         "animate" : function()
         {
@@ -113,7 +280,9 @@ var TimeLine = function()
             color.v = color.v * (.3 +  ((nrOfLayers - layerIndex)/nrOfLayers) *.7);
             var rgb = tinycolor(color).toRgb();
             drawWithColor(__p.color(rgb.r, rgb.g, rgb.b));*/
+            drawSelector();
             drawWithColor(parseInt(colors[layerIndex]));
+
         }
 
 
@@ -131,7 +300,7 @@ var TimelineHandler = function()
 
         if(_timelines[layer] == undefined)
             _timelines[layer] = new TimeLine();
-        _timelines[layer].init(years, _this);
+        _timelines[layer].init(100,100, 1000,400,years, _this);
     }
 
     return {
@@ -165,9 +334,7 @@ var TimelineHandler = function()
         },
         "activeLayer":function()
         {
-            if(_timelines.length > 0)
-                return _timelines[0];
-            return [];
+            return _timelines;
         },
         "draw":function(){
             if(_timelines.length > 0)

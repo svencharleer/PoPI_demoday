@@ -1,13 +1,13 @@
 /**
  * Created by svenc on 23/06/15.
  */
-/* @pjs font='/stylesheets/Thin.otf'; */
+
 var LoadingIcon = function()
 {
     var _tween = 0;
     var _tweenUpdate = .02;
 
-    var _font= undefined;
+
 
 
     return {
@@ -17,8 +17,7 @@ var LoadingIcon = function()
         },
         "draw":function(x,y)
         {
-            if(_font == undefined)
-                _font = __p.createFont('/stylesheets/Thin.otf', 32);
+
             __p.pushMatrix();
                  __p.rectMode(__p.CORNER);
                 __p.translate(x,y);
@@ -44,7 +43,7 @@ var LoadingIcon = function()
                 __p.popMatrix();
                 __p.translate(15,6);
                 __p.fill(255 * _tween);
-                __p.textFont(_font);
+                __p.textFont(__fontThin);
                 __p.textSize(15);
                 __p.text("loading",0,0);
             __p.popMatrix();

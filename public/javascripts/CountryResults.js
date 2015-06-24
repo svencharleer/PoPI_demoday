@@ -69,6 +69,8 @@ var CountryResults = function()
         var y = _position.y;
         var count = _results.count;
         __p.fill(255);
+        __p.textFont(__fontThin);
+
         __p.text(_name, x-10,y-17);
         __p.fill(color);
 
@@ -107,13 +109,13 @@ var CountryResults = function()
 
         }
     }
-    function drawWithColor(color)
+    function drawWithColor(color,layerIndex)
     {
         var x = _position.x;
         var y = _position.y;
         var count = _tween * _results.count + (1.0-_tween) * _results.prevCount;
-
-        var surface = Math.log(count)*1000;
+        if(count < 0) count = 0;
+        var surface = Math.log(count)*200;
         var radius = Math.sqrt((surface/Math.PI));
 
         __p.fill(color);
@@ -121,12 +123,21 @@ var CountryResults = function()
         __p.noStroke();
         __p.ellipse(x,y,radius,radius);
 
-        __p.fill(255);
-        __p.text(_name, x-10,y-17);
-        __p.fill(color);
+        //only draw country name once
+            __p.fill(200);
+            __p.textFont(__fontThin);
+            __p.textSize(12);
+            __p.text(_name, x - 10, y - 15);
+        __p.textFont(__fontHeavy);
+        __p.textSize(12);
+        var offset = 26;
+        if(layerIndex != 0) {
+            offset = 38;
 
-        __p.stroke(255);
-        __p.text(count, x-10,y-5);
+            __p.textSize(16);
+        }
+        __p.fill(color);
+        __p.text(parseInt(count), x-10,y-offset);
 
     }
 
@@ -191,7 +202,7 @@ var CountryResults = function()
             var rgb = tinycolor(color).toRgb();
             drawWithColor(__p.color(rgb.r, rgb.g, rgb.b));*/
 
-            drawWithColor(parseInt(colors[layerIndex]));
+            drawWithColor(parseInt(colors[layerIndex]),layerIndex);
         },
         "drawDim": function(layerIndex, nrOfLayers)
         {

@@ -1,9 +1,12 @@
 /**
  * Created by svenc on 27/04/15.
  */
+/* @pjs font='/stylesheets/Thin.otf,/stylesheets/Heavy.otf''; */
 
 var __p;
 var __canvas;
+var __fontThin;
+var __fontHeavy;
 
 
 var visualization = function () {
@@ -110,7 +113,11 @@ var visualization = function () {
                 _extras = extras;
             initProcessing();
             __p = Processing.getInstanceById(__canvas);
+            if(__fontHeavy == undefined)
+                __fontHeavy = __p.createFont('Heavy', 32);
 
+            if(__fontThin == undefined)
+                __fontThin = __p.createFont('Thin', 32);
 
 
         },

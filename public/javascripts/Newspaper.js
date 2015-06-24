@@ -8,7 +8,7 @@ var Newspaper = function()
 {
 
     var _name = "undefined";
-    var _position = {x:100, y:100};
+    var _position = {x:10, y:10};
     var _results = {count:0, prevCount:0};
     var _touched = undefined;
     var _handler;
@@ -16,28 +16,47 @@ var Newspaper = function()
     var _tween = 0;
 
 
-    function drawWithColor(color)
+    function drawWithColor(color,layerIndex)
     {
         var x = _position.x;
         var y = _position.y;
         var count = _tween * _results.count + (1.0-_tween) * _results.prevCount;
+        if(count < 0) count = 0;
+        var length = 0;
 
-        var length = Math.log(count)*10;
-
+        if(count > 1)
+            length = Math.log(count)*10;
+        if(length < 0)
+        {
+            console.log("t",count, length);
+        }
 
         __p.fill(color);
 
         __p.noStroke();
-        __p.rectMode(__p.CORNERS);
-        __p.rect(x,y,x+length, y +10);
+        __p.rectMode(__p.CORNER);
+        if(layerIndex != 0)
+            __p.rect(x,y+7,length,4);
+        else
+            __p.rect(x,y+5,length, 2);
 
-        __p.fill(0xCC4F4F51);
-        __p.text(_name, x-10,y-5,200,20);
+        __p.textFont(__fontThin);
+        __p.textSize(12);
+        __p.fill(255);
+        __p.text(_name, x,y-5,200,20);
 
         __p.fill(color);
         __p.noStroke();
-        __p.text(count, x-50,y-5);
-
+        if(layerIndex == 0) {
+            __p.textFont(__fontThin);
+            __p.textSize(12);
+            __p.text(parseInt(count), x - 50, y - 5);
+        }
+        else {
+            __p.textFont(__fontHeavy);
+            __p.textSize(14);
+            __p.text(parseInt(count), x - 50, y + 5);
+        }
     }
 
 
@@ -83,7 +102,7 @@ var Newspaper = function()
 
         "draw" : function(layerIndex, nrOfLayers)
         {
-            drawWithColor(parseInt(colors[layerIndex]));
+            drawWithColor(parseInt(colors[layerIndex]),layerIndex);
         },
         "drawDim": function(layerIndex, nrOfLayers)
         {
@@ -98,8 +117,10 @@ var Newspaper = function()
         {
             if(_tween < 1.0)
             {
-                _tween += .05;
+                _tween += .1;
             }
+            if(_tween > 1.0)
+                _tween = 1;
         }
 
 
@@ -123,8 +144,9 @@ var NewspaperHandler = function()
                 count = newspapers[c];
             if(previous[c] != undefined)
                 prevCount = previous[c];
+
             newspaper.init(c,
-                {x: 100 + parseInt(i/30) * 200, y: (i % 30)*30},
+                {x: 10 + parseInt(i%4) * 240, y: 10 + parseInt(i/4)*30},
                 {count:count, prevCount:prevCount, query:""},
                 _this);
             _newspapers[layer].push(newspaper);

@@ -43,7 +43,7 @@ var LoadingIcon = function()
                 __p.popMatrix();
                 __p.translate(15,6);
                 __p.fill(255 * _tween);
-                __p.textFont(__fontThin);
+                __p.textFont(__fontHeavy);
                 __p.textSize(15);
                 __p.text("loading",0,0);
             __p.popMatrix();

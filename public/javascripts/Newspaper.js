@@ -26,10 +26,6 @@ var Newspaper = function()
 
         if(count > 1)
             length = Math.log(count)*10;
-        if(length < 0)
-        {
-            console.log("t",count, length);
-        }
 
         __p.fill(color);
 

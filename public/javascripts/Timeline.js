@@ -37,8 +37,9 @@ var TimeLine = function()
                 var year = BASEYEAR+i;
                 __p.pushMatrix()
 
-                __p.translate(i * _widthPerYear,_size.h-paddingBottom);
-                __p.rotate(Math.PI/2);
+                __p.translate(i * _widthPerYear,_size.h-paddingBottom+5);
+                __p.rotate(Math.PI/3);
+                __p.fill(255);
                 __p.textSize(8);
                 __p.text(year,0,0);
                 __p.popMatrix();
@@ -52,14 +53,19 @@ var TimeLine = function()
                 var count = _years[year] != undefined ? _years[year] : 0;
                 var prevCount = (_previousYears != undefined && _previousYears[year] != undefined) ? _previousYears[year] : 0;
 
-                __p.fill(color);
+                //if out of range of selector, make grey
+                if(_selector[0] > yearOffset * _widthPerYear || _selector[1] < yearOffset * _widthPerYear )
+                    __p.fill(255);
+                else
+                    __p.fill(color);
                 __p.noStroke();
-                __p.rectMode(__p.CORNERS);
+
                 var logCount = count > 0 ? Math.log(count) : 0;
                 var logprevCount = prevCount > 0 ? Math.log(prevCount) : 0;
                 var height = logCount/_max * heightOfGraph;
                 var previousHeight = logprevCount/_max * heightOfGraph;
                 height = (_tween) * height + (1.0-_tween) * previousHeight;
+                __p.rectMode(__p.CORNERS);
                 __p.rect(yearOffset * _widthPerYear,_size.h-paddingBottom, (yearOffset+1) * _widthPerYear-paddingGraph, _size.h - height -paddingBottom);
 
             };
@@ -68,6 +74,7 @@ var TimeLine = function()
     function drawSelector()
     {
         __p.pushMatrix();
+            __p.rectMode(__p.CORNERS);
             __p.translate(_position.x, _position.y);
             __p.stroke(parseInt(colors[3]))
             var width = (_selector[1] - _selector[0])/5;
@@ -78,6 +85,9 @@ var TimeLine = function()
             __p.rect(_selector[0],0, _selector[0] + width, _size.h);
             __p.stroke(parseInt(colors[1]))
             __p.line(_selector[0],0, _selector[0] + width, 0);
+            __p.textFont(__fontHeavy);
+            __p.textSize(32);
+            __p.text(parseInt(1600+_selector[0]/_widthPerYear),_selector[0],0 );
 
 
             __p.noStroke();
@@ -91,6 +101,7 @@ var TimeLine = function()
             __p.rect(_selector[1]  - width,0, _selector[1], _size.h);
             __p.stroke(parseInt(colors[3]))
             __p.line(_selector[1]  - width,0, _selector[1],0);
+            __p.text(parseInt(1600+_selector[1]/_widthPerYear),_selector[1]-80,0 );
 
 
 
@@ -112,7 +123,7 @@ var TimeLine = function()
             console.log(JSON.stringify(_previousYears));
             //if(reset == true)
             {
-                _selector = [_position.x,_size.w];
+                _selector = [0,_size.w];
             }
             _widthPerYear = _size.w / YEARS;
         },
@@ -300,7 +311,9 @@ var TimelineHandler = function()
 
         if(_timelines[layer] == undefined)
             _timelines[layer] = new TimeLine();
-        _timelines[layer].init(100,100, 1000,400,years, _this);
+        var w = $(window).width();
+        var h = $(window).height();
+        _timelines[layer].init(w *.1,h *.1, w - w *.2,h - h *.2,years, _this);
     }
 
     return {

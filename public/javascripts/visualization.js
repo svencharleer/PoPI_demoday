@@ -33,6 +33,13 @@ var visualization = function () {
 
     }
 
+    var drawExtras = function()
+    {
+        _extras.forEach(function(m){m.draw()})
+
+
+    }
+
 
     var setup = function () {
         var processing = Processing.getInstanceById(__canvas);
@@ -47,9 +54,11 @@ var visualization = function () {
 
         var processing = Processing.getInstanceById(__canvas);
         processing.background(0,0);
+        //processing.smooth();
 
         handleTouches(processing);
         drawModules();
+        drawExtras();
 
         //debug draw cursors
         Object.keys(_debugCursors).forEach(function(c)
@@ -62,7 +71,7 @@ var visualization = function () {
         });
 
 
-        processing.smooth();
+
     };
 
 
@@ -92,10 +101,13 @@ var visualization = function () {
     var _pOffset = undefined;
     var _debugCursors = [];
     var _modules = [];
+    var _extras = [];
     return {
-        "init": function (canvas, modules) {
+        "init": function (canvas, modules, extras) {
             __canvas = canvas;
             _modules = modules;
+            if(extras != undefined)
+                _extras = extras;
             initProcessing();
             __p = Processing.getInstanceById(__canvas);
 

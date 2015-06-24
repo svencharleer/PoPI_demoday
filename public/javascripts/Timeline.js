@@ -31,66 +31,66 @@ var TimeLine = function()
         //make it 400 years
         _widthPerYear = _size.w / YEARS;
         __p.pushMatrix();
-        __p.translate(_position.x, _position.y);
-        for(var i = 0; i < YEARS; i+=10)
-        {
-            var year = BASEYEAR+i;
-            __p.pushMatrix()
+            __p.translate(_position.x, _position.y);
+            for(var i = 0; i < YEARS; i+=10)
+            {
+                var year = BASEYEAR+i;
+                __p.pushMatrix()
 
-            __p.translate(i * _widthPerYear,_size.h-paddingBottom);
-            __p.rotate(Math.PI/2);
-            __p.textSize(8);
-            __p.text(year,0,0);
-            __p.popMatrix();
-        }
+                __p.translate(i * _widthPerYear,_size.h-paddingBottom);
+                __p.rotate(Math.PI/2);
+                __p.textSize(8);
+                __p.text(year,0,0);
+                __p.popMatrix();
+            }
 
 
-        for(var i = 0; i < YEARS; i++)
-        {
-            var yearOffset = i;
-            var year = i + BASEYEAR;
-            var count = _years[year] != undefined ? _years[year] : 0;
-            var prevCount = (_previousYears != undefined && _previousYears[year] != undefined) ? _previousYears[year] : 0;
+            for(var i = 0; i < YEARS; i++)
+            {
+                var yearOffset = i;
+                var year = i + BASEYEAR;
+                var count = _years[year] != undefined ? _years[year] : 0;
+                var prevCount = (_previousYears != undefined && _previousYears[year] != undefined) ? _previousYears[year] : 0;
 
-            __p.fill(color);
-            __p.noStroke();
-            __p.rectMode(__p.CORNERS);
-            var logCount = count > 0 ? Math.log(count) : 0;
-            var logprevCount = prevCount > 0 ? Math.log(prevCount) : 0;
-            var height = logCount/_max * heightOfGraph;
-            var previousHeight = logprevCount/_max * heightOfGraph;
-            height = (_tween) * height + (1.0-_tween) * previousHeight;
-            __p.rect(yearOffset * _widthPerYear,_size.h-paddingBottom, (yearOffset+1) * _widthPerYear-paddingGraph, _size.h - height -paddingBottom);
+                __p.fill(color);
+                __p.noStroke();
+                __p.rectMode(__p.CORNERS);
+                var logCount = count > 0 ? Math.log(count) : 0;
+                var logprevCount = prevCount > 0 ? Math.log(prevCount) : 0;
+                var height = logCount/_max * heightOfGraph;
+                var previousHeight = logprevCount/_max * heightOfGraph;
+                height = (_tween) * height + (1.0-_tween) * previousHeight;
+                __p.rect(yearOffset * _widthPerYear,_size.h-paddingBottom, (yearOffset+1) * _widthPerYear-paddingGraph, _size.h - height -paddingBottom);
 
-        };
+            };
         __p.popMatrix();
     }
     function drawSelector()
     {
         __p.pushMatrix();
-        __p.translate(_position.x, _position.y);
-        __p.stroke(parseInt(colors[3]))
-        var width = (_selector[1] - _selector[0])/5;
+            __p.translate(_position.x, _position.y);
+            __p.stroke(parseInt(colors[3]))
+            var width = (_selector[1] - _selector[0])/5;
 
 
-        __p.noStroke();
-        __p.fill(0xCCADADB2);
-        __p.rect(_selector[0],0, _selector[0] + width, _size.h);
-        __p.stroke(parseInt(colors[1]))
-        __p.line(_selector[0],0, _selector[0] + width, 0);
+            __p.noStroke();
+            __p.fill(0xCCADADB2);
+            __p.rect(_selector[0],0, _selector[0] + width, _size.h);
+            __p.stroke(parseInt(colors[1]))
+            __p.line(_selector[0],0, _selector[0] + width, 0);
 
 
-        __p.noStroke();
-        __p.fill(0xCC848488);
-        __p.rect(_selector[0]  + width,0, _selector[1] - width, _size.h);
-        __p.stroke(parseInt(colors[2]))
-        __p.line(_selector[0]  + width,0, _selector[1] - width, 0);
+            __p.noStroke();
+            __p.fill(0xCC848488);
+            __p.rect(_selector[0]  + width,0, _selector[1] - width, _size.h);
+            __p.stroke(parseInt(colors[2]))
+            __p.line(_selector[0]  + width,0, _selector[1] - width, 0);
 
-        __p.noStroke();
-        __p.fill(0xCCADADB2);
-        __p.rect(_selector[1]  - width,0, _selector[1], _size.h);
-        __p.stroke(parseInt(colors[3]))
-        __p.line(_selector[1]  - width,0, _selector[1],0);
+            __p.noStroke();
+            __p.fill(0xCCADADB2);
+            __p.rect(_selector[1]  - width,0, _selector[1], _size.h);
+            __p.stroke(parseInt(colors[3]))
+            __p.line(_selector[1]  - width,0, _selector[1],0);
 
 
 
@@ -337,6 +337,7 @@ var TimelineHandler = function()
             return _timelines;
         },
         "draw":function(){
+
             if(_timelines.length > 0)
             {
                 _timelines[0].animate();

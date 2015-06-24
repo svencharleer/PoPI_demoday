@@ -32,7 +32,9 @@ exports.init = function(ioWeb) {
         });
 
         socket.on("addFilter_Query", function (msg) {
+
             processingRequests++;
+            ioWeb.sockets.in('visualizationListener').emit("busy");
             filter.__centralFilter.newFilter_Query(msg.query);
             filter.__centralFilter.systemCall(function (data) {
                 processingRequests--;
@@ -45,6 +47,7 @@ exports.init = function(ioWeb) {
         });
         socket.on("addFilter_Facet", function (msg) {
             processingRequests++;
+            ioWeb.sockets.in('visualizationListener').emit("busy");
             filter.__centralFilter.newFilter_Facet(msg.facetType, msg.facetValue);
             filter.__centralFilter.systemCall(function (data) {
                 processingRequests--;
@@ -56,7 +59,8 @@ exports.init = function(ioWeb) {
             });
         });
         socket.on("removeFilter_Facet", function (msg) {
-            processingRequests++
+            processingRequests++;
+            ioWeb.sockets.in('visualizationListener').emit("busy");
             filter.__centralFilter.disableFilter_Facet(msg.facetType, msg.facetValue);
             filter.__centralFilter.systemCall(function (data) {
                 processingRequests--;
@@ -69,6 +73,7 @@ exports.init = function(ioWeb) {
         });
         socket.on("resetFilter", function (msg) {
             processingRequests++;
+            ioWeb.sockets.in('visualizationListener').emit("busy");
             filter.__centralFilter.reset();
             filter.__centralFilter.systemCall(function (data) {
                 processingRequests--;

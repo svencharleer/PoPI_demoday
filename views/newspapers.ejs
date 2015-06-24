@@ -29,6 +29,7 @@
     <script src="javascripts/Timeline.js"></script>
     <script src="javascripts/Newspaper.js"></script>
     <script src="javascripts/Console.js"></script>
+    <script src="javascripts/LoadingIcon.js"></script>
     <script src="javascripts/visualization.js"></script>
 
 
@@ -50,11 +51,12 @@
         $("#overlay").height(_height);
 
 
-
+        __loadingHandler.init(_width-100,10);
 
         var modules = [__newspaperHandler];
+        var extras = [__loadingHandler];
         __vis = new visualization();
-        __vis.init("overlay", modules);
+        __vis.init("overlay", modules,extras);
 
         //connect to socket.io
 
@@ -66,10 +68,13 @@
                 modules.forEach(function(m){
                     m.update(data);
                 });
-
+            __loadingHandler.hide();
 
 
         });
+        socket.on("busy",function(){
+            __loadingHandler.show();
+        })
 
 
 

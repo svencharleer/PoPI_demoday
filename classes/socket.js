@@ -5,7 +5,7 @@
 //         socket.io                  //
 ///////////////////////////////////////////
 var filter = require('../classes/CentralFilter.js');
-
+var rest = require('../classes/RESTful.js');
 var processingRequests = 0;
 
 exports.init = function(ioWeb) {
@@ -17,6 +17,7 @@ exports.init = function(ioWeb) {
         console.log('Client connected with id: ' + socket.id + " from " + address.address + ":" + address.port);
 
         socket.on("registerVisualization", function (msg) {
+            console.log("visualization active");
             socket.join('visualizationListener');
         })
         socket.on("registerFilterActivities", function (msg) {
@@ -34,6 +35,7 @@ exports.init = function(ioWeb) {
         socket.on("addFilter_Query", function (msg) {
 
             processingRequests++;
+            ioWeb.sockets.emit("test");
             ioWeb.sockets.in('visualizationListener').emit("busy");
             filter.__centralFilter.newFilter_Query(msg.query);
             filter.__centralFilter.systemCall(function (data) {
@@ -86,7 +88,10 @@ exports.init = function(ioWeb) {
         });
         socket.on("showResult", function(msg){
             console.log(msg);
-            ioWeb.sockets.in('resultListener').emit('update', msg);
+            rest.scrapeURLFromEuropeana(msg,function(url){
+                ioWeb.sockets.in('resultListener').emit('update', url);
+            });
+
         });
     });
 }

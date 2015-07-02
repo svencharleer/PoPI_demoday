@@ -1,4 +1,7 @@
 var http = require('http');
+var curl = require("curlrequest");
+var cheerio = require("cheerio");
+
 
 exports.doGET2 = function(host, path, originalData, callback, auth ) {
 
@@ -144,4 +147,34 @@ exports.doGET_many = function(host, path, callback) {
 
     req.end();
     return;
+}
+
+exports.scrapeURLFromEuropeana = function(id, callback)
+{
+    var url = "http://www.theeuropeanlibrary.org//tel4/record/" + id;//"3000118643765";
+    console.log(url);
+
+    var options = { url: url, include: true };
+
+    curl.request(options, function (err, parts) {
+        parts = parts.split('\r\n');
+        var data = parts.pop()
+            , head = parts.pop();
+        //console.log(data);
+        var $ = cheerio.load(data);
+        //console.log(body);
+        //console.log($("#result-item ul.list a"));
+        $("#result-item ul.list a").each(function() {
+
+            var link = $(this);
+            var text = link.text();
+            var href = link.attr("href");
+            if(text == "Access Online") {
+                callback(href);
+                return true;
+            }
+        });
+        //callback("http://google.com");
+
+    });
 }

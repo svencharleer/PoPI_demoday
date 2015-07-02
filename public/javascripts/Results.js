@@ -146,7 +146,7 @@ var resultDummy = function()
                 __p.rectMode(__p.CORNER);
                 __p.stroke(255);
                 if(selected)
-                    __p.fill(colors[3])
+                    __p.fill(parseInt(colors[3]))
                 else
                     __p.noFill()
                 __p.rect(_position2.x * _tween + _position.x * (1.0 -_tween),
@@ -154,6 +154,7 @@ var resultDummy = function()
                             _size.w * _tween + _prevSize.w * (1.0 - _tween),
                             _size.h * _tween + _prevSize.h * (1.0 - _tween));
             }
+
         },
         "animate" : function()
         {
@@ -300,12 +301,12 @@ var ResultsHandler = function()
             //already selected?
             if(_selectedResults.indexOf(ID) >= 0)
             {
-                socket.emit("hideResult", URI);
+                socket.emit("hideResult", ID);
                 _selectedResults.splice(_selectedResults.indexOf(ID),1);
             }
             else
             {
-                socket.emit("showResult", URI);
+                socket.emit("showResult", ID);
                 _selectedResults.push(ID);
             }
         },
@@ -323,6 +324,13 @@ var ResultsHandler = function()
                     selected = true;
                 r.draw(selected);
             })
+            __p.fill(parseInt(colors[1]));
+            __p.textFont(__fontHeavy);
+            __p.textSize(40);
+            //var screenWidth =  $("#" + __canvas).width();
+            var screenHeight = $("#" + __canvas).height();
+
+            __p.text(_nrOfResults,10,screenHeight-20);
 
 
 

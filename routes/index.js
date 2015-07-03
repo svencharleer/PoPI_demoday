@@ -5,12 +5,15 @@ var lib = require('../classes/libCalls.js');
 exports.index = function(req, res) {
 
     var module = req.params.module;
+    var tabletop = req.params.tabletop != undefined ? true : false;
     var moduleString = "";
     var page = "visualisation";
+
     switch(module)
     {
         case "countries":
             moduleString = "__countryHandler";
+
             break;
         case "timeline":
             moduleString = "__timelineHandler";
@@ -33,7 +36,7 @@ exports.index = function(req, res) {
             moduleString = "__resultsHandler";
 
     }
-    res.render(page, {modules:moduleString});
+    res.render(page, {modules:moduleString, tabletop:tabletop});
 
 }
 

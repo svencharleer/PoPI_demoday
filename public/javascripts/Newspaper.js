@@ -2,6 +2,22 @@
  * Created by svenc on 17/06/15.
  */
 
+
+/**
+ * Generates a GUID string.
+ * @returns {String} The generated GUID.
+ * @example af8a8416-6e18-a307-bd9c-f2c947bbb3aa
+ * @author Slavik Meltser (slavik@meltser.info).
+ * @link http://slavik.meltser.info/?p=142
+ */
+function guid() {
+    function _p8(s) {
+        var p = (Math.random().toString(16)+"000000000").substr(2,8);
+        return s ? "-" + p.substr(0,4) + "-" + p.substr(4,4) : p ;
+    }
+    return _p8() + _p8(true) + _p8(true) + _p8();
+}
+
 //var colors = ["0xCCFF3E3E","0xCC7C4EE8","0xCC33F0FF","0xCC91E870","0xCCFFE085"];
 var Scrollbar = function()
 {
@@ -9,6 +25,8 @@ var Scrollbar = function()
     var _x, _y, _w,_h,_l;
     var _touched = undefined;
     var _handler;
+    var _guid;
+    var _this;
     return {
         "init" : function(x,y,w,h,l,handler)
         {
@@ -18,6 +36,8 @@ var Scrollbar = function()
             _h = h;
             _l = l;
             _handler = handler;
+            _guid = guid();
+            _this = this;
         },
         "draw" : function()
         {
@@ -37,7 +57,7 @@ var Scrollbar = function()
             //old touches
             Object.keys(touches).some(function (t) {
                 var touch = touches[t];
-
+                if(touch.owner != undefined && touch.owner != _guid) return false;
                 if(_touched != undefined &&  touch.id == _touched.id) {
                     _touched.yChange = touch.y - _touched.y;
                     _touched.x = touch.x;
@@ -53,7 +73,7 @@ var Scrollbar = function()
             Object.keys(touches).some(function (t) {
                 var touch = touches[t];
                 //skip when a touch is being handled already
-
+                if(touch.owner != undefined && touch.owner != _guid) return false;
                 if (_touched == undefined ) {
 
 
@@ -64,6 +84,8 @@ var Scrollbar = function()
                         _touched = JSON.parse(JSON.stringify(touch));
                         _touched.alive = true;
                         _touched.yChange = 0;
+                        touch.owner = _guid;
+                        touch.ownerObject = _this;
 
                     }
 
@@ -103,7 +125,8 @@ var Newspaper = function()
     var _handler;
 
     var _tween = 0;
-
+    var _this;
+    var _guid;
 
     function drawWithColor(color,layerIndex)
     {
@@ -154,11 +177,13 @@ var Newspaper = function()
         "init" : function(name, position, size, results, handler)
         {
             _name = name;
-
+            _this = this;
             _position = position;
             _size = size;
             _results = results;
             _handler = handler;
+            _guid = guid();
+
         },
         "title" : function()
         {
@@ -169,8 +194,9 @@ var Newspaper = function()
         {
 
             var touchStillExists = false;
-            Object.keys(touches).forEach(function(t){
+            Object.keys(touches).some(function(t){
                 var touch = touches[t];
+                if(touch.owner != undefined && touch.owner != _guid) return false;
                 if(_touched != undefined && _touched.id == touch.id) {
                     touchStillExists = true;
                     return true;
@@ -185,8 +211,11 @@ var Newspaper = function()
 
                         touchStillExists = true;
                         _touched = touch;
-                        console.log("touched");
-                        _handler.callbackHandler(_name);
+
+
+                        //own the touch!
+                        touch.owner = _guid;
+                        touch.ownerObject = _this;
                         return true;
 
 
@@ -195,6 +224,21 @@ var Newspaper = function()
             })
             if(!touchStillExists) _touched = undefined;
 
+        },
+        "untouch": function(touch)
+        {
+
+            if (_touched != undefined && _touched.id == touch.id
+                && touch.x > _position.x + _handler.moduleOffset().x + _handler.scrollOffset().x
+                && touch.x < _position.x + _size.w  + _handler.moduleOffset().x + _handler.scrollOffset().x
+                && touch.y> _position.y  + _handler.moduleOffset().y + _handler.scrollOffset().y
+                && touch.y < _position.y + _size.h  + _handler.moduleOffset().y + _handler.scrollOffset().y
+                )
+            {
+                _handler.callbackHandler(_name);
+
+            }
+            _touched = undefined;
         },
 
         "draw" : function(layerIndex, nrOfLayers)
@@ -206,7 +250,7 @@ var Newspaper = function()
             var color = tinycolor(colors[layerIndex].replace("0xCC","#")).toHsv();
              color.v = color.v * .3;
              var rgb = tinycolor(color).toRgb();
-             drawWithColor(__p.color(rgb.r, rgb.g, rgb.b));
+             drawWithColor(__p.color(rgb.r, rgb.g, rgb.b),layerIndex);
 
         },
         "count" : function(){return _results.count;},
@@ -307,9 +351,10 @@ var NewspaperHandler = function()
         "activeLayer":function()
         {
             var ar = [];
+            ar.push(_scroll);
             if(_newspapers.length > 0)
                 ar = ar.concat(_newspapers[0]);
-            ar.push(_scroll);
+
             return ar;
         },
         "draw":function() {

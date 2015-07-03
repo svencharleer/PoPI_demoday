@@ -41,60 +41,61 @@ var loadAll = function(modules) {
         console.log("disconnected");
     })
 
+    var client;
+    if(__tabletop) {
 
-
-    //TUIO STUFF
-    var client = new Tuio.Client({
+        //TUIO STUFF
+        client = new Tuio.Client({
             host: "http://localhost:5000"
         }),
 
-        onAddTuioCursor = function(addCursor) {
-            var x = addCursor.getScreenX(_width);
-            var y = addCursor.getScreenY(_height);
-            __vis.addTouch(addCursor.cursorId,x,y);
+            onAddTuioCursor = function (addCursor) {
+                var x = addCursor.getScreenX(_width);
+                var y = addCursor.getScreenY(_height);
+                __vis.addTouch(addCursor.cursorId, x, y);
 
-        },
+            },
 
-        onUpdateTuioCursor = function(updateCursor) {
-            var x = updateCursor.getScreenX(_width);
-            var y = updateCursor.getScreenY(_height);
-            __vis.updateTouch(updateCursor.cursorId,x,y);
-
-
-        },
-
-        onRemoveTuioCursor = function(removeCursor) {
-            //always remove, wherever finger is hovering
-            __vis.removeTouch(removeCursor.cursorId);
+            onUpdateTuioCursor = function (updateCursor) {
+                var x = updateCursor.getScreenX(_width);
+                var y = updateCursor.getScreenY(_height);
+                __vis.updateTouch(updateCursor.cursorId, x, y);
 
 
-        },
+            },
 
-        onAddTuioObject = function(addObject) {
-            //console.log(addObject);
-        },
+            onRemoveTuioCursor = function (removeCursor) {
+                //always remove, wherever finger is hovering
+                __vis.removeTouch(removeCursor.cursorId);
 
-        onUpdateTuioObject = function(updateObject) {
-            //console.log(updateObject);
-        },
 
-        onRemoveTuioObject = function(removeObject) {
-            //console.log(removeObject);
-        },
+            },
 
-        onRefresh = function(time) {
-            //console.log(time);
-        };
+            onAddTuioObject = function (addObject) {
+                //console.log(addObject);
+            },
 
-    client.on("addTuioCursor", onAddTuioCursor);
-    client.on("updateTuioCursor", onUpdateTuioCursor);
-    client.on("removeTuioCursor", onRemoveTuioCursor);
-    client.on("addTuioObject", onAddTuioObject);
-    client.on("updateTuioObject", onUpdateTuioObject);
-    client.on("removeTuioObject", onRemoveTuioObject);
-    client.on("refresh", onRefresh);
-    client.connect();
+            onUpdateTuioObject = function (updateObject) {
+                //console.log(updateObject);
+            },
 
+            onRemoveTuioObject = function (removeObject) {
+                //console.log(removeObject);
+            },
+
+            onRefresh = function (time) {
+                //console.log(time);
+            };
+
+        client.on("addTuioCursor", onAddTuioCursor);
+        client.on("updateTuioCursor", onUpdateTuioCursor);
+        client.on("removeTuioCursor", onRemoveTuioCursor);
+        client.on("addTuioObject", onAddTuioObject);
+        client.on("updateTuioObject", onUpdateTuioObject);
+        client.on("removeTuioObject", onRemoveTuioObject);
+        client.on("refresh", onRefresh);
+        client.connect();
+    }
     //add mouse click
     $("body").mousedown(function(e){
         var offset = $(this).offset();

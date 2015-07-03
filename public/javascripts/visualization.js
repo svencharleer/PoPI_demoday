@@ -152,7 +152,15 @@ var visualization = function () {
         },
         "removeTouch" :function (id, x, y) {
 
+            console.log("remove touch")
+            console.log(_touches[id])
+            if(_touches[id] != undefined && _touches[id].owner != undefined)
+            {
 
+                //warn the owner that the touch stopped
+                if(_touches[id].ownerObject.untouch != undefined)
+                    _touches[id].ownerObject.untouch(_touches[id]);
+            }
             _touches[id] = undefined;
             delete _touches[id];
             _debugCursors[id] = undefined;

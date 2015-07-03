@@ -303,7 +303,7 @@ var TimelineHandler = function()
 {
     var _timelines = [];
     socket.on("subQueryResult_Timeline", function(data){
-        var years = data.Facets[0]["YEAR"];
+        var years = data["YEAR"];
         _timeline.sub(years);
     });
     function updateLayer(years, layer,_this)
@@ -319,7 +319,7 @@ var TimelineHandler = function()
     return {
         "update": function(data)
         {
-            updateLayer(getWidgetSpecificData("year", data[0]).Facets[0]["YEAR"],0,this);
+            updateLayer(getWidgetSpecificData("year", data[0])["YEAR"],0,this);
             if(data.length == 1) {
                 while(_timelines.length > 1)
                 {
@@ -332,7 +332,7 @@ var TimelineHandler = function()
             var layers = 1;
             for(var i=1;i<=layers&&i<data.length;i++)
             {
-                updateLayer(getWidgetSpecificData("year", data[data.length-i]).Facets[0]["YEAR"], i,this);
+                updateLayer(getWidgetSpecificData("year", data[data.length-i])["YEAR"], i,this);
             }
 
 

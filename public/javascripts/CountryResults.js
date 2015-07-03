@@ -266,17 +266,17 @@ var CountryHandler = function()
             var myData = getWidgetSpecificData("language", data[0]);
             _otherFilters = otherFilters("language", data); // see if there are other filters, needed for coloring correctly
             _countries = [];
-            var originalLayer = myData.Facets[1]["LANGUAGE"];
+            var originalLayer = myData["LANGUAGE"];
 
 
             var previousLayer = {};
             if(data.length > 1)
-                previousLayer = getWidgetSpecificData("language", data[data.length-2]).Facets[1]["LANGUAGE"];
+                previousLayer = getWidgetSpecificData("language", data[data.length-2])["LANGUAGE"];
             updateLayer(originalLayer,0,this,originalLayer,originalLayer);
 
             if(data.length > 1) {
 
-                updateLayer(getWidgetSpecificData("language", data[data.length - 1]).Facets[1]["LANGUAGE"], 1, this,originalLayer,previousLayer);
+                updateLayer(getWidgetSpecificData("language", data[data.length - 1])["LANGUAGE"], 1, this,originalLayer,previousLayer);
             }
 
 

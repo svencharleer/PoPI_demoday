@@ -316,17 +316,17 @@ var NewspaperHandler = function()
             var myData = getWidgetSpecificData("title", data[0]);
             _otherFilters = otherFilters("title", data); // see if there are other filters, needed for coloring correctly
             _newspapers = [];
-            var originalLayer = myData.Facets[3]["TITLE"];
+            var originalLayer = myData["TITLE"];
 
 
             var previousLayer = {};
             if(data.length > 1)
-                previousLayer = getWidgetSpecificData("title", data[data.length-2]).Facets[3]["TITLE"];
+                previousLayer = getWidgetSpecificData("title", data[data.length-2])["TITLE"];
             updateLayer(originalLayer,0,this,originalLayer,originalLayer);
 
             if(data.length > 1) {
 
-                updateLayer(getWidgetSpecificData("title", data[data.length - 1]).Facets[3]["TITLE"], 1, this,originalLayer,previousLayer);
+                updateLayer(getWidgetSpecificData("title", data[data.length - 1])["TITLE"], 1, this,originalLayer,previousLayer);
             }
 
 

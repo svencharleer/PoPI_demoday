@@ -14,6 +14,9 @@ db_connection.once('open', function callback () {
 
     console.log("Connected to the database");
 
+
+
+
 });
 
 
@@ -21,43 +24,105 @@ var Schema = mongoose.Schema;
 
 var paperSchema = new Schema({
     //_id: String,
-    groupID: String,
-    userID: String,
-    startTime: Date,
-    endTime: Date,
-    meta: {
-        distance: Number,       //meters
-        averageSpeed: Number,   //km/hour
-        maxSpeed: Number,       //km/hour
-        other: [Schema.Types.Mixed]  //free to do anything
-    },
-    sensorData: [
-        {
-            "sensorID": Number,   //Check http://ariadne.cs.kuleuven.be/wiki/index.php/PEnO3-1415
-            "timestamp": Date,
-            "data": [Schema.Types.Mixed]  //free to do anything
-        }
-    ]
-},{collection:"biketrips"});
+    PROVIDER_ID: String,
+    LANGUAGE: String,
+    COLLECTION_ID: Number,
+    COUNTRY: String,
+    FULL_TEXT: String,
+    DATE: Date,
+    ID: String,
+    CREATED: String,
+    TITLE: String,
+    URI: String
+},{collection:"papers"});
 
-var imageSchema = new Schema({
-    imageName: String,
-    tripID : String,
-    userID : String
-    // raw: Schema.Types.Mixed  //encode as base64
-},{collection:"files"});
 
-var Trip = mongoose.model('Trip',tripSchema);
-var Image = mongoose.model('Image',imageSchema);
+var Paper = mongoose.model('Paper',paperSchema);
 
-exports.Trip = Trip;
-exports.Image = Image;
+exports.Paper = Paper;
+
 
 /***************** QUERY METHODS *********************/
 
-var queryAll = function() {
+exports.queryAll = function() {
 
-    var query = Trip.find({});
-    //query.select({_id: 0});
+    var query = Paper.find({});
     return query;
 };
+
+exports.countText = function(queries, facets, callback) {
+
+
+    var match = {};
+    var queryString = "";
+    queries.some(function(q){
+        queryString += '\"' +q + '\" ';
+    })
+    if(queries.length > 0)
+        match["$text"] = {$search: queryString};
+    if(facets["COUNTRY"]!= undefined)
+        match["COUNTRY"] = facets["COUNTRY"];
+    if(facets["LANGUAGE"]!= undefined)
+        match["LANGUAGE"] = facets["LANGUAGE"];
+    if(facets["TITLE"]!= undefined)
+        match["TITLE"] = facets["TITLE"];
+    if(facets["YEAR"]!= undefined)
+        match["YEAR"] = facets["YEAR"];
+
+    match = {$match:match};
+    //console.log(match);
+    Paper.aggregate([match,
+        {"$group":{_id:
+                {LANGUAGE:"$LANGUAGE",COUNTRY:"$COUNTRY",TITLE:"$TITLE", YEAR:{$year:"$DATE"}},
+                    count: { $sum : 1 }}}],
+        function(err,data){
+            //aggregate it like the API does (although seperately might be interesting for cooler vis
+            var facets = {LANGUAGE:{}, TITLE:{}, COUNTRY:{}, YEAR:{}};
+            data.some(function(d) {
+                console.log(d);
+                Object.keys(facets).some(function (f) {
+
+                    if (facets[f][d._id[f]] == undefined)
+                        facets[f][d._id[f]] = 0;
+                    facets[f][d._id[f]] += d.count;
+                })
+            });
+
+
+            callback(err,facets);
+        });
+
+
+};
+
+
+
+exports.countText_byCountry = function(text, callback) {
+    Paper.aggregate([{$match:{$text:{$search: text}}},
+        {"$group":{_id:
+        {COUNTRY:"$COUNTRY"},
+            count: { $sum : 1 }}}], callback)
+};
+
+exports.countText_byLanguage = function(text, callback) {
+    Paper.aggregate([{$match:{$text:{$search: text}}},
+        {"$group":{_id:
+        {LANGUAGE:"$LANGUAGE"},
+            count: { $sum : 1 }}}], callback)
+};
+
+exports.countText_byTitle = function(text, callback) {
+    Paper.aggregate([{$match:{$text:{$search: text}}},
+        {"$group":{_id:
+        {TITLE:"$TITLE"},
+            count: { $sum : 1 }}}], callback)
+};
+
+exports.countText_Total = function(text, callback) {
+    Paper.count({$text:{$search: text}}
+        , callback)
+};
+
+
+
+

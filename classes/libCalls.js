@@ -6,6 +6,7 @@
  */
 var async = require("async");
 var rest = require('../classes/RESTful.js');
+var db = require('../classes/db.js')
 
 var apiKey = "apuj4p2ogv9uq8phpo9mqqad3m";
 
@@ -43,7 +44,7 @@ exports.getPapersByAt = function(query, by, at,  callback)
 {
     var param = "/opensearch/newspapers?format=json&q=" + encodeURI(query) + "&key="+ apiKey + "&c="+ by + "&s" + at +  "&ff=(country)"
 
-    rest.doGET("data.theeuropeanlibrary.org", param,
+    rest.doGET("data.theeuropeanlibrary.org", param, null,
         function(data, err){
 
             //console.log(data);
@@ -75,6 +76,7 @@ exports.filteredQuery = function(call, filterId, cb)
     var param;
     var queries = call.queries();
     var facets = call.facets();
+    console.log(JSON.stringify(facets))
     var queryString = "";
     queries.forEach(function(q){
         queryString+= '"' + encodeURIComponent(q) + '"';
@@ -133,6 +135,58 @@ exports.filteredQuery = function(call, filterId, cb)
 
 
 
+
+
+
+
+}
+
+exports.filteredQueryLOCAL = function(call, filterId, cb)
+{
+    var queries = call.queries();
+    var facets = call.facets();
+
+    var facetLists = [];
+    var facetNames = Object.keys(facets);
+    facetNames.forEach(function(toExclude){
+        var facet = {};
+        Object.keys(facets).forEach(function(f){
+
+            if(f.toUpperCase() != toExclude) {
+                facets[f].forEach(function (k) {
+                    facet[f.toUpperCase()] = k;
+                })
+            }
+        })
+        facetLists.push({exclude:toExclude, facets:facet});
+    });
+    //add one general one for the one widget that started, so that needs all the data
+
+
+    var facet = {};
+    Object.keys(facets).forEach(function(f) {
+        facets[f].forEach(function (k) {
+            facet[f.toUpperCase()] = k;
+        })});
+    ;
+    facetLists.push({exclude: "", facets:facet});
+    console.log("facets " + JSON.stringify(facetLists));
+    var results = [];
+    async.eachSeries(facetLists,
+        function (f, callback) {
+            db.countText(queries, f.facets,
+                function(e,d) {
+                    results.push({exclude: f.exclude, result: d});
+                    callback();
+                });
+        },
+        function (err) {
+            console.log("calls done")
+            if(err != undefined) console.log("error:" + err);
+            //console.log(JSON.stringify(results));
+            cb(results,filterId);
+        }
+    );
 
 
 

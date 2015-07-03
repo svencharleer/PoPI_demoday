@@ -11,7 +11,7 @@ var recursive = function(data){
     //console.log(NoOfResults);
     if(data[0].NoOfResults > NoOfResults)
     {
-        rest.getPapersByAt("hitler", 1000, NoOfResults,  recursive);
+        rest.getPapersByAt("leuven", 100, NoOfResults,  recursive);
     }
     else
     {
@@ -19,4 +19,4 @@ var recursive = function(data){
     }
 }
 
-rest.getPapersByAt("hitler", 1000, 0,recursive);
+rest.getPapersByAt("leuven", 100, 0,recursive);

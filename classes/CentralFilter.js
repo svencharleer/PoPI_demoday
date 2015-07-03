@@ -126,7 +126,7 @@ var CentralFilter = function()
         },
         "systemCall" : function(callback, layer)
         {
-            paperLib.filteredQuery(getLastFilter(),_filterStack.length-1, function(data, filterId) {
+            paperLib.filteredQueryLOCAL(getLastFilter(),_filterStack.length-1, function(data, filterId) {
                 _filterStack[filterId].data(data);
                 callback(getActivity());
 

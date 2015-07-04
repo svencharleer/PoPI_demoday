@@ -277,7 +277,7 @@ var ResultsHandler = function()
     socket.on("resultUpdate", function(msg)
     {
 
-        console.log(msg);
+        //console.log(msg);
 
         var screenWidth = $("#" + __canvas).width();
         var screenHeight = $("#" + __canvas).height()

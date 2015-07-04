@@ -153,7 +153,7 @@ function convertQueryAndFacets(call) {
         var facet = {};
         Object.keys(facets).forEach(function (f) {
 
-            if (f.toUpperCase() != toExclude) {
+            if (f != toExclude) {
                 facets[f].forEach(function (k) {
                     facet[f.toUpperCase()] = k;
                 })
@@ -182,8 +182,10 @@ exports.filteredQueryLOCAL = function(call, filterId, cb) {
     var results = [];
     async.eachSeries(facetLists,
         function (f, callback) {
+            console.log("LOCAL: " + JSON.stringify(f.exclude) + " " + JSON.stringify(f.facets))
             db.countText(queries, f.facets,
                 function (e, d) {
+
                     results.push({exclude: f.exclude, result: d});
                     callback();
                 });

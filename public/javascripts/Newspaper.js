@@ -18,6 +18,9 @@ function guid() {
     return _p8() + _p8(true) + _p8(true) + _p8();
 }
 
+var __blockSVG = undefined;
+var __blockHSVG = undefined;
+
 //var colors = ["0xCCFF3E3E","0xCC7C4EE8","0xCC33F0FF","0xCC91E870","0xCCFFE085"];
 var Scrollbar = function()
 {
@@ -128,10 +131,10 @@ var Newspaper = function()
     var _this;
     var _guid;
 
-    function drawWithColor(color,layerIndex)
+    function drawWithColor(color,layerIndex,selected)
     {
-        var x = _position.x;
-        var y = _position.y;
+        var x =_position.x
+        var y =_position.y
         var count = _tween * _results.count + (1.0-_tween) * _results.prevCount;
         if(count < 0) count = 0;
         var length = 0;
@@ -141,34 +144,38 @@ var Newspaper = function()
 
         __p.noFill();
 
-        __p.stroke(255);
-        __p.rectMode(__p.CORNER);
-        __p.rect(x,y,_size.w,_size.h);
+        var svg = selected ? __blockHSVG : __blockSVG;
+        __p.shapeMode(__p.CORNER);
+        if(layerIndex == 0)
+            __p.shape(svg,x,y,_size.w,_size.h);
 
         __p.fill(color);
 
         __p.noStroke();
         if(layerIndex != 0)
-            __p.rect(x+2,y+20,length,4);
+            __p.rect(x+2,y+58,length,4);
         else
-            __p.rect(x+2,y+14,length, 2);
+            __p.rect(x+2,y+37,length, 4);
 
+        __p.textAlign(__p.LEFT,__p.TOP)
         __p.textFont(__fontThin);
-        __p.textSize(12);
-        __p.fill(255);
-        __p.text(_name, x+2,y+2,200,20);
+        __p.textSize(14);
+        __p.fill(0);
+        if(layerIndex == 0)
+         __p.text(_name, x+7,y+10,170,20);
 
         __p.fill(color);
         __p.noStroke();
+        __p.textAlign(__p.CENTER,__p.CENTER)
         if(layerIndex == 0) {
-            __p.textFont(__fontThin);
-            __p.textSize(12);
-            __p.text(parseInt(count), x + _size.w- 50, y - 14);
+            __p.textFont(__fontHeavy);
+            __p.textSize(20);
+            __p.text(parseInt(count), x + _size.w- 120, y, 30, _size.h-12);
         }
         else {
             __p.textFont(__fontHeavy);
-            __p.textSize(14);
-            __p.text(parseInt(count), x + _size.w- 50, y + 20);
+            __p.textSize(20);
+            __p.text(parseInt(count), x + _size.w- 55, y, 30, _size.h-12);
         }
     }
 
@@ -183,6 +190,13 @@ var Newspaper = function()
             _results = results;
             _handler = handler;
             _guid = guid();
+            if(__blockSVG == undefined){
+                __blockSVG = __p.loadShape("/images/block.svg");
+            }
+            if(__blockHSVG == undefined){
+                __blockHSVG = __p.loadShape("/images/block_selected.svg");
+            }
+
 
         },
         "title" : function()
@@ -241,16 +255,14 @@ var Newspaper = function()
             _touched = undefined;
         },
 
-        "draw" : function(layerIndex, nrOfLayers)
+        "drawSelected" : function(layerIndex, nrOfLayers)
         {
-            drawWithColor(parseInt(colors[layerIndex]),layerIndex);
+            drawWithColor(parseInt(colors[layerIndex]),layerIndex, true);
         },
-        "drawDim": function(layerIndex, nrOfLayers)
+        "draw": function(layerIndex, nrOfLayers)
         {
-            var color = tinycolor(colors[layerIndex].replace("0xCC","#")).toHsv();
-             color.v = color.v * .3;
-             var rgb = tinycolor(color).toRgb();
-             drawWithColor(__p.color(rgb.r, rgb.g, rgb.b),layerIndex);
+
+             drawWithColor(parseInt(colors[layerIndex]),layerIndex,false);
 
         },
         "count" : function(){return _results.count;},
@@ -263,7 +275,9 @@ var Newspaper = function()
             if(_tween > 1.0)
                 _tween = 1;
         },
-        "position": function(){return _position;}
+        "position": function(){return _position;},
+        "setPosition": function(x,y){_position.x = x; _position.y = y}
+
 
     }
 }
@@ -275,12 +289,38 @@ var NewspaperHandler = function()
     var _offset = {x:100,y:40};
     var _width = 1024;
     var _height = 400;
-    var _itemWidth = 500;
-    var _itemHeight = 30;
+    var _itemWidth = 326;
+    var _itemHeight = 73;
     var _margin = 10;
     var _scroll = new Scrollbar();
     var _lastElementY = 0;
+    var _multilayer = false;
+    var _allNewspapers = {};
+    var _keysSorted = [];
+    function sortPapers()
+    {
 
+        _allNewspapers = {};
+        for (var i = _newspapers.length - 1; i >= 0; i--) {
+            _newspapers[i].forEach(function (np) {
+                // country.draw(i, _countries.length);
+                if (_allNewspapers[np.title()] == undefined)
+                    _allNewspapers[np.title()] = [];
+                _allNewspapers[np.title()].unshift({c: np, i: i});
+            })
+        }
+        _keysSorted = Object.keys(_allNewspapers);
+        //sort
+        _keysSorted.sort(function (a, b) {
+            var sortLayer = _multilayer ? 1 : 0 ;
+            if (_allNewspapers[a][sortLayer].c.count() < _allNewspapers[b][sortLayer].c.count())
+                return 1;
+            if (_allNewspapers[a][sortLayer].c.count() > _allNewspapers[b][sortLayer].c.count())
+                return -1;
+
+            return 0;
+        })
+    }
 
     function updateLayer(newspapers, layer,_this, original,previous) //oroginal added to support drawing of all countries on all layers, evn
     {
@@ -288,7 +328,7 @@ var NewspaperHandler = function()
         var nrPerLine = parseInt(_width/_itemWidth);
 
         _newspapers[layer] = [];
-        var lastElementY = 0;
+       console.log(JSON.stringify(original));
         Object.keys(original).forEach(function(c,i) {
             var newspaper = new Newspaper();
 
@@ -299,7 +339,7 @@ var NewspaperHandler = function()
                 prevCount = previous[c];
 
             newspaper.init(c,
-                {x:  i%nrPerLine * _itemWidth, y:  parseInt(i/nrPerLine)*_itemHeight},{w:_itemWidth, h:_itemHeight},
+                {x:0,y:0},{w:_itemWidth, h:_itemHeight},
                 {count:count, prevCount:prevCount, query:""},
                 _this);
             _newspapers[layer].push(newspaper);
@@ -320,8 +360,12 @@ var NewspaperHandler = function()
 
 
             var previousLayer = {};
-            if(data.length > 1)
-                previousLayer = getWidgetSpecificData("title", data[data.length-2])["TITLE"];
+            if(data.length > 1) {
+                previousLayer = getWidgetSpecificData("title", data[data.length - 2])["TITLE"];
+                _multilayer = true
+            }
+            else
+                _multilayer = false;
             updateLayer(originalLayer,0,this,originalLayer,originalLayer);
 
             if(data.length > 1) {
@@ -329,7 +373,7 @@ var NewspaperHandler = function()
                 updateLayer(getWidgetSpecificData("title", data[data.length - 1])["TITLE"], 1, this,originalLayer,previousLayer);
             }
 
-
+            sortPapers();
 
 
 
@@ -366,42 +410,30 @@ var NewspaperHandler = function()
             __p.translate(0,-_scroll.offset()*_lastElementY);
 
 
-            var allNewspapers = {};
-            for (var i = _newspapers.length - 1; i >= 0; i--) {
-                _newspapers[i].forEach(function (np) {
-                    // country.draw(i, _countries.length);
-                    if (allNewspapers[np.title()] == undefined)
-                        allNewspapers[np.title()] = [];
-                    allNewspapers[np.title()].push({c: np, i: i});
-                })
-            }
-            Object.keys(allNewspapers).forEach(function (k) {
-                //sort
-                allNewspapers[k].sort(function (a, b) {
-                    if (a.c.count() < b.c.count())
-                        return 1;
-                    if (a.c.count() > b.c.count())
-                        return -1;
-                    if (a.i < b.i)
-                        return 1;
-                    if (a.i > b.i)
-                        return -1;
-                    return 0;
-                })
-                allNewspapers[k].forEach(function (np, i, a) {
+
+            _keysSorted.forEach(function (k,j) {
+
+                _allNewspapers[k].forEach(function (np, i, a) {
                     var color = 0;
                     if ((_selectedNewspapers.indexOf(np.c.title()) >= 0 && i == _newspapers.length-1) ||
                         (_otherFilters.length > 0 && i == _newspapers.length-1)) //if it's the top layer we draw, and other filters active, all goes blue there
                         color = 1;
                     np.c.animate();
-
+                    var nrPerLine = parseInt(_width/_itemWidth);
+                    var x =  j%nrPerLine * _itemWidth;
+                    //console.log(i);
+                    var  y =  parseInt(j/nrPerLine)*_itemHeight;
+                    np.c.setPosition(x,y)
                     if(np.c.position().y - _scroll.offset()*_lastElementY < _height && np.c.position().y - _scroll.offset()*_lastElementY > 0)
 
 
-                    if (_selectedNewspapers.indexOf(np.c.title()) >= 0 || _selectedNewspapers.length == 0)
-                        np.c.draw(color, _newspapers.length);
+
+
+
+                    if (_selectedNewspapers.indexOf(np.c.title()) >= 0)
+                        np.c.drawSelected(color, _newspapers.length);
                     else
-                        np.c.drawDim(color, _newspapers.length);
+                        np.c.draw(color, _newspapers.length);
 
 
 

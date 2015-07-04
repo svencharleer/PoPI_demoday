@@ -80,7 +80,7 @@ exports.countText = function(queries, facets, callback) {
             //aggregate it like the API does (although seperately might be interesting for cooler vis
             var facets = {LANGUAGE:{}, TITLE:{}, COUNTRY:{}, YEAR:{}};
             data.some(function(d) {
-                console.log(d);
+                //console.log(d);
                 Object.keys(facets).some(function (f) {
 
                     if (facets[f][d._id[f]] == undefined)

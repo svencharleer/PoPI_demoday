@@ -4,6 +4,9 @@
 
 //var colors = ["0xCCFF3E3E","0xCC7C4EE8","0xCC33F0FF","0xCC91E870","0xCCFFE085"];
 
+var __newspaperSVG = undefined;
+var __newspaperHSVG = undefined;
+
 var ResultPaper = function()
 {
 
@@ -107,7 +110,8 @@ var resultDummy = function()
     var _handler;
     var _size = {w:1,h:1};
     var _prevSize = {w:1,h:1};
-
+    var _guid;
+    var _this;
     var _tween = 0;
     return {
         "init": function(x,y,handler)
@@ -120,6 +124,8 @@ var resultDummy = function()
             _prevSize.h = _size.h;
             _size = {w:1,h:1};
             _handler = handler;
+            _guid = guid();
+            _this = this;
         },
         "initWithContent": function(x,y,width, height,content,handler)
         {
@@ -132,6 +138,14 @@ var resultDummy = function()
             _size.h = height;
             _content = content;
             _handler = handler;
+            _guid = guid();
+            _this = this;
+            if(__newspaperSVG == undefined) {
+                __newspaperSVG = __p.loadShape("/images/newspaper.svg");
+            }
+            if(__newspaperHSVG == undefined){
+                __newspaperHSVG = __p.loadShape("/images/newspaper_highlight.svg");
+            }
         },
 
         "draw": function(selected)
@@ -145,16 +159,27 @@ var resultDummy = function()
             {
                 __p.rectMode(__p.CORNER);
                 __p.stroke(255);
+                var svg = __newspaperSVG;
                 if(selected)
-                    __p.fill(parseInt(colors[3]))
-                else
-                    __p.noFill()
-                __p.rect(_position2.x * _tween + _position.x * (1.0 -_tween),
+                    svg = __newspaperHSVG;
+
+                __p.shape(svg, _position2.x * _tween + _position.x * (1.0 -_tween),
                             _position2.y * _tween + _position.y * (1.0 -_tween),
                             _size.w * _tween + _prevSize.w * (1.0 - _tween),
                             _size.h * _tween + _prevSize.h * (1.0 - _tween));
-                __p.fill(255)
-                __p.text(_content.TITLE, _position2.x,_position2.y)
+                __p.fill(0)
+                __p.textFont(__fontThin);
+                __p.textSize(_size.h/8);
+                __p.text(_content.TITLE, _position2.x * _tween + _position.x * (1.0 -_tween)+2,
+                        _position2.y * _tween + _position.y * (1.0 -_tween)+2,
+                        _size.w * _tween + _prevSize.w * (1.0 - _tween)-2,
+                        _size.h/2 * _tween +  _prevSize.h/2 * (1.0 - _tween)-2)
+                __p.textSize(_size.h/3);
+                __p.textFont(__fontHeavy);
+                __p.text(new Date(_content.DATE).getFullYear(), _position2.x * _tween + _position.x * (1.0 -_tween)+2,
+                        _position2.y * _tween + _position.y * (1.0 -_tween)+2 +_size.h/2,
+                        _size.w * _tween + _prevSize.w * (1.0 - _tween)-2,
+                        _size.h/2 * _tween + _prevSize.h/2 * (1.0 - _tween)-2)
             }
 
         },
@@ -184,13 +209,19 @@ var resultDummy = function()
                     touchStillExists = true;
                     return true;
                 }
-                if (_touched == undefined && __p.dist(touch.x, touch.y, _position2.x, _position2.y) < 22) {
+                if (_touched == undefined &&
+                    touch.x > _position2.x &&
+                    touch.x < _position2.x +  _size.w &&
+                    touch.y > _position2.y &&
+                    touch.y < _position2.y +  _size.h) {
 
 
                     touchStillExists = true;
                     _touched = touch;
-                    console.log("touched");
-                    _handler.callbackHandler(_content.ID, _content.URI);
+                    //own the touch!
+                    touch.owner = _guid;
+                    touch.ownerObject = _this;
+                   // _handler.callbackHandler(_content.ID, _content.URI);
                     return true;
 
 
@@ -199,6 +230,20 @@ var resultDummy = function()
             })
             if(!touchStillExists) _touched = undefined;
 
+        },
+        "untouch": function(touch)
+        {
+
+            if (_touched != undefined && _touched.id == touch.id &&
+                touch.x > _position2.x &&
+                touch.x < _position2.x +  _size.w &&
+                touch.y > _position2.y &&
+                touch.y < _position2.y +  _size.h)
+            {
+                _handler.callbackHandler(_content.ID, _content.URI);
+
+            }
+            _touched = undefined;
         },
         "ID": function()
         {
@@ -238,7 +283,7 @@ var ResultsHandler = function()
         var screenHeight = $("#" + __canvas).height()
         var max = _nrOfResults;
         var previousMax = _nrOfPreviousResults > 10000 ? 10000 : _nrOfPreviousResults;
-        if (previousMax < 100 && previousMax > max) {
+        if (previousMax < 50 && previousMax > max) {
             for (var i = 0; i < previousMax - max; i++)
                 _results.pop();
         }
@@ -283,7 +328,7 @@ var ResultsHandler = function()
             var screenHeight = $("#" + __canvas).height()
             var max = _nrOfResults > 10000 ? 10000 : _nrOfResults;
             var previousMax = _nrOfPreviousResults > 10000 ? 10000 : _nrOfPreviousResults;
-            if(_nrOfResults < 100 && _nrOfResults >0)
+            if(_nrOfResults < 50 && _nrOfResults >0)
             {
                 //call server for actual results
                 socket.emit("getResults",{});
@@ -300,7 +345,7 @@ var ResultsHandler = function()
 
 
 
-                if (previousMax < 100) { //we had results before, but below 100, so reinit those as dots
+                if (previousMax < 50) { //we had results before, but below 100, so reinit those as dots
                     for (var i = 0; i < previousMax; i++) {
                         _results[i].init(Math.random() * screenWidth, Math.random() * screenHeight);
                     }
@@ -331,6 +376,7 @@ var ResultsHandler = function()
             }
             else
             {
+                _selectedResults = [];
                 socket.emit("showResult", ID);
                 _selectedResults.push(ID);
             }

@@ -210,7 +210,7 @@ exports.getResultsLOCAL = function(filter, cb)
         })
     });
 
-    facet = ({exclude: "", facets: facet});
+    //facet = ({exclude: "", facets: facet});
 
 
     db.getResults(queries, facet,

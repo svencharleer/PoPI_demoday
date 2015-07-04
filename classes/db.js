@@ -97,7 +97,10 @@ exports.countText = function(queries, facets, callback) {
 };
 
 exports.getResults = function(queries, facets, callback)
+
 {
+
+    console.log(facets);
     var match = {};
     var queryString = "";
     queries.some(function(q){
@@ -113,7 +116,7 @@ exports.getResults = function(queries, facets, callback)
         match["TITLE"] = facets["TITLE"];
     if(facets["YEAR"]!= undefined)
         match["YEAR"] = facets["YEAR"];
-
+    console.log("match for results: " + JSON.stringify(match))
     Paper.find(match, callback);
 }
 

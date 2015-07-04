@@ -12,7 +12,7 @@ var db_connection = mongoose.connection;
 db_connection.on('error', console.error.bind(console, 'connection error:'));
 db_connection.once('open', function callback () {
 
-    console.log("Connected to the database");
+    //console.log("Connected to the database");
 
 
 
@@ -70,6 +70,7 @@ exports.countText = function(queries, facets, callback) {
         match["YEAR"] = facets["YEAR"];
 
     match = {$match:match};
+    console.log(JSON.stringify(match));
     //console.log(match);
     Paper.aggregate([match,
         {"$group":{_id:
@@ -95,7 +96,26 @@ exports.countText = function(queries, facets, callback) {
 
 };
 
+exports.getResults = function(queries, facets, callback)
+{
+    var match = {};
+    var queryString = "";
+    queries.some(function(q){
+        queryString += '\"' +q + '\" ';
+    })
+    if(queries.length > 0)
+        match["$text"] = {$search: queryString};
+    if(facets["COUNTRY"]!= undefined)
+        match["COUNTRY"] = facets["COUNTRY"];
+    if(facets["LANGUAGE"]!= undefined)
+        match["LANGUAGE"] = facets["LANGUAGE"];
+    if(facets["TITLE"]!= undefined)
+        match["TITLE"] = facets["TITLE"];
+    if(facets["YEAR"]!= undefined)
+        match["YEAR"] = facets["YEAR"];
 
+    Paper.find(match, callback);
+}
 
 exports.countText_byCountry = function(text, callback) {
     Paper.aggregate([{$match:{$text:{$search: text}}},

@@ -93,6 +93,17 @@ exports.init = function(ioWeb) {
             });
 
         });
+        socket.on("getResults", function(msg){
+            try{
+            filter.__centralFilter.getResults(function(data){
+                ioWeb.sockets.in('visualizationListener').emit('resultUpdate', data);
+            })
+            }
+            catch(e)
+            {
+                console.log("getResults exc: " + e);
+            }
+        })
     });
 }
 

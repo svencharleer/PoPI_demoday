@@ -7,16 +7,25 @@ var results = [];
 
 var recursive = function(data){
     NoOfResults += data[0].Results.length;
-    results = results.concat(data[0].Results);
+    //results = results.concat(data[0].Results);
     //console.log(NoOfResults);
+    //console.log(results.length);
+    //console.log(data[0].NoOfResults);
+    data[0].Results.some(function(r,i){
+        console.log(JSON.stringify(r));
+        console.log(",")
+    });
+
     if(data[0].NoOfResults > NoOfResults)
     {
-        rest.getPapersByAt("leuven", 100, NoOfResults,  recursive);
+
+        rest.getPapersByAt("einstein", 100, NoOfResults,  recursive);
     }
     else
     {
-        console.log(JSON.stringify(results));
+        console.log("]");
+
     }
 }
-
-rest.getPapersByAt("leuven", 100, 0,recursive);
+console.log("[");
+rest.getPapersByAt("einstein", 100, 0,recursive);

@@ -153,6 +153,8 @@ var resultDummy = function()
                             _position2.y * _tween + _position.y * (1.0 -_tween),
                             _size.w * _tween + _prevSize.w * (1.0 - _tween),
                             _size.h * _tween + _prevSize.h * (1.0 - _tween));
+                __p.fill(255)
+                __p.text(_content.TITLE, _position2.x,_position2.y)
             }
 
         },
@@ -225,67 +227,90 @@ var ResultsHandler = function()
     var _nrOfPreviousResults = 0;
     var _results = [];
     var _selectedResults = [];
+    var _this;
+
+    socket.on("resultUpdate", function(msg)
+    {
+
+        console.log(msg);
+
+        var screenWidth = $("#" + __canvas).width();
+        var screenHeight = $("#" + __canvas).height()
+        var max = _nrOfResults;
+        var previousMax = _nrOfPreviousResults > 10000 ? 10000 : _nrOfPreviousResults;
+        if (previousMax < 100 && previousMax > max) {
+            for (var i = 0; i < previousMax - max; i++)
+                _results.pop();
+        }
+
+        var surface = screenHeight * screenWidth;
+        var surfacePerPaper = surface/_nrOfResults;
+        var scale = Math.sqrt(surfacePerPaper/(4*3)); //4:3 ratio of paper
+        var widthOfPaper = 3 * scale;
+        var heightOfPaper = 4 * scale;
+        var nrOfPapersPerWidth = parseInt(screenWidth/widthOfPaper)+1;
+
+        _results = [];
+        msg.some(function(d,i){
+            var r = new resultDummy();
+            r.initWithContent(((i) % nrOfPapersPerWidth) * widthOfPaper, parseInt((i) / nrOfPapersPerWidth) * heightOfPaper, widthOfPaper-10, heightOfPaper-10,
+                d,_this);
+            _results.push(r);
+        });
 
 
+
+
+    })
 
     return {
         "update": function(data)
         {
-            var _this = this;
+            _this = this;
             //if lower than 100 results, we can start showing details and load correct article
             //give ID to each result, so we know when they vanish
             //but cna't do that above 100 results
             //so 2 vis. 1 mess, 1 x 100 perfect results
             _nrOfPreviousResults = _nrOfResults;
             var data = getWidgetSpecificData("", data[data.length - 1]);
-            _nrOfResults = data.NoOfResults; //get the total
-            var resultData = data.Results;
-            var screenWidth =  $("#" + __canvas).width();
+
+            var total = 0; //get the total
+            Object.keys(data["LANGUAGE"]).some(function(l){
+                total += data["LANGUAGE"][l];
+            })
+            _nrOfResults = total;
+            var screenWidth = $("#" + __canvas).width();
             var screenHeight = $("#" + __canvas).height()
-
-
             var max = _nrOfResults > 10000 ? 10000 : _nrOfResults;
-            var l = _results.length;
-            if(max < 100)
+            var previousMax = _nrOfPreviousResults > 10000 ? 10000 : _nrOfPreviousResults;
+            if(_nrOfResults < 100 && _nrOfResults >0)
             {
-                if (l > max) {
-                    for (var i = 0; i < l - max; i++)
-                        _results.pop();
-                }
-                l = _results.length;
-                var surface = screenHeight * screenWidth;
-                var surfacePerPaper = surface/_nrOfResults;
-                var scale = Math.sqrt(surfacePerPaper/(4*3)); //4:3 ratio of paper
-                var widthOfPaper = 3 * scale;
-                var heightOfPaper = 4 * scale;
-                var nrOfPapersPerWidth = parseInt(screenWidth/widthOfPaper)+1;
-
-                for (var i = 0; i < l; i++) {
-                    var r = _results[i]
-                    r.initWithContent(((i) % nrOfPapersPerWidth) * widthOfPaper, parseInt(i / nrOfPapersPerWidth) * heightOfPaper, widthOfPaper-10, heightOfPaper-10,
-                        resultData[i],_this);
-
-                }
-                for (var i = 0; i < max - l; i++) {
-                    var r = new resultDummy();
-                    r.initWithContent(((i+l) % nrOfPapersPerWidth) * widthOfPaper, parseInt((i+l) / nrOfPapersPerWidth) * heightOfPaper, widthOfPaper-10, heightOfPaper-10,
-                        resultData[i+l],_this);
-                    _results.push(r);
-                }
+                //call server for actual results
+                socket.emit("getResults",{});
+                return;
 
             }
             else {
-                if(_nrOfPreviousResults < 100) { //we had results before, but below 100, so reinit those as dots
-                    for (var i = 0; i < l; i++) {
+
+
+
+
+
+
+
+
+
+                if (previousMax < 100) { //we had results before, but below 100, so reinit those as dots
+                    for (var i = 0; i < previousMax; i++) {
                         _results[i].init(Math.random() * screenWidth, Math.random() * screenHeight);
                     }
                 }
-                if (l > max) {
-                    for (var i = 0; i < l - max; i++)
+                if (previousMax > max) {
+                    for (var i = 0; i < previousMax - max; i++)
                         _results.pop();
                 }
                 else {
-                    for (var i = 0; i < max - l; i++) {
+                    for (var i = 0; i < max - previousMax; i++) {
                         var r = new resultDummy();
                         r.init(Math.random() * screenWidth, Math.random() * screenHeight)
                         _results.push(r);

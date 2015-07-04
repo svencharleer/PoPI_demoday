@@ -134,6 +134,11 @@ var CentralFilter = function()
             //STORE THE RESULT AT THE FILTER LEVEL TOO
 
         },
+        "getResults" : function(callback)
+        {
+            paperLib.getResultsLOCAL(getLastFilter(), callback);
+
+        },
         "reset" : function()
         {
             _filterStack = [new Filter()];

@@ -42,8 +42,8 @@ exports.byYearAndLanguage = function(query, facetType, facetValue,  callback)
 //get by "by" papers at offset "at"
 exports.getPapersByAt = function(query, by, at,  callback)
 {
-    var param = "/opensearch/newspapers?format=json&q=" + encodeURI(query) + "&key="+ apiKey + "&c="+ by + "&s" + at +  "&ff=(country)"
-
+    var param = "/opensearch/newspapers?format=json&q=" + encodeURI(query) + "&key="+ apiKey + "&c="+ by + "&s=" + at +  "&ff=(country)"
+    //console.log(param);
     rest.doGET("data.theeuropeanlibrary.org", param, null,
         function(data, err){
 
@@ -141,54 +141,79 @@ exports.filteredQuery = function(call, filterId, cb)
 
 }
 
-exports.filteredQueryLOCAL = function(call, filterId, cb)
-{
+
+
+function convertQueryAndFacets(call) {
     var queries = call.queries();
     var facets = call.facets();
 
     var facetLists = [];
     var facetNames = Object.keys(facets);
-    facetNames.forEach(function(toExclude){
+    facetNames.forEach(function (toExclude) {
         var facet = {};
-        Object.keys(facets).forEach(function(f){
+        Object.keys(facets).forEach(function (f) {
 
-            if(f.toUpperCase() != toExclude) {
+            if (f.toUpperCase() != toExclude) {
                 facets[f].forEach(function (k) {
                     facet[f.toUpperCase()] = k;
                 })
             }
         })
-        facetLists.push({exclude:toExclude, facets:facet});
+        facetLists.push({exclude: toExclude, facets: facet});
     });
     //add one general one for the one widget that started, so that needs all the data
 
 
     var facet = {};
-    Object.keys(facets).forEach(function(f) {
+    Object.keys(facets).forEach(function (f) {
         facets[f].forEach(function (k) {
             facet[f.toUpperCase()] = k;
-        })});
+        })
+    });
     ;
-    facetLists.push({exclude: "", facets:facet});
+    facetLists.push({exclude: "", facets: facet});
     console.log("facets " + JSON.stringify(facetLists));
+    return {queries: queries, facetLists: facetLists};
+}
+exports.filteredQueryLOCAL = function(call, filterId, cb) {
+    var __ret = convertQueryAndFacets(call);
+    var queries = __ret.queries;
+    var facetLists = __ret.facetLists;
     var results = [];
     async.eachSeries(facetLists,
         function (f, callback) {
             db.countText(queries, f.facets,
-                function(e,d) {
+                function (e, d) {
                     results.push({exclude: f.exclude, result: d});
                     callback();
                 });
         },
         function (err) {
             console.log("calls done")
-            if(err != undefined) console.log("error:" + err);
+            if (err != undefined) console.log("error:" + err);
             //console.log(JSON.stringify(results));
-            cb(results,filterId);
+            cb(results, filterId);
         }
     );
+}
+
+exports.getResultsLOCAL = function(filter, cb)
+{
+    var queries = filter.queries();
+    var facets = filter.facets();
+    var facet = {};
+    Object.keys(facets).forEach(function (f) {
+        facets[f].forEach(function (k) {
+            facet[f.toUpperCase()] = k;
+        })
+    });
+
+    facet = ({exclude: "", facets: facet});
 
 
-
+    db.getResults(queries, facet,
+        function (e, d) {
+            cb(d);
+    });
 
 }

@@ -53,6 +53,21 @@ exports.init = function(ioWeb) {
                 }
             });
         });
+        socket.on("removeFilter_Query", function (msg) {
+
+            processingRequests++;
+            ioWeb.sockets.emit("test");
+            ioWeb.sockets.in('visualizationListener').emit("busy");
+            filter.__centralFilter.disableFilter_Query(msg.query);
+            filter.__centralFilter.systemCall(function (data) {
+                processingRequests--;
+                if(processingRequests == 0) {
+                    ioWeb.sockets.in('visualizationListener').emit('update', data);
+                    ioWeb.sockets.in('filterActivitiesListener').emit('filterUpdate',
+                        filter.__centralFilter.filterStack());
+                }
+            });
+        });
         socket.on("addFilter_Facet", function (msg) {
             processingRequests++;
             ioWeb.sockets.in('visualizationListener').emit("busy");

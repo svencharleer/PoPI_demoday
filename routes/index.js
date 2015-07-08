@@ -32,6 +32,10 @@ exports.index = function(req, res) {
             page = "result"
             moduleString = "";
             break;
+        case "history":
+            page = "history"
+            moduleString = "";
+            break;
         default:
             moduleString = "__resultsHandler";
 

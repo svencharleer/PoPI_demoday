@@ -3,11 +3,12 @@
   <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="viewport" content="width=device-width, initial-scale=1,minimal-ui">
     <title>eCloud</title>
       <script type="application/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
       <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
       <script src="/socket.io/socket.io.js"></script>
 
     <script type="application/javascript">
@@ -25,20 +26,25 @@
 
         };
 
+        var removeQuery = function(q){
+            socket.emit("removeFilter_Query",{query:q})
+        }
+
 
         socket.on("queryResults", function(nr){
             $("#results").html(nr + " results found");
         });
         socket.on("filterUpdate",function(results) {
             var htmlString = "";
-            results.forEach(function (stack) {
+            if(results[results.length-1].queries != undefined) {
 
-                htmlString += " <span class='queryString'>" + stack.queries + "</span>";
-                Object.keys(stack.facets).forEach(function (s) {
-                    htmlString += " <span class='facetString'>" + s + ": " + stack.facets[s] + "</span>";
-                });
-                htmlString += " " + stack.data.NoOfResults + "<br/>";
-            })
+                results[results.length-1].queries.forEach(function (q) {
+
+                    htmlString += " <span onclick='javascript:removeQuery(\"" + q + "\")' class='queryString'>X " + q + "</span>";
+
+
+                })
+            }
 
 
             $("#results").html(htmlString);
@@ -57,7 +63,7 @@
       <div class="form-group">
       <div id="form">
           <div class="form-group">
-          <label for="query">Query:</label>
+          <h1>nee .query</h1>
           <input id="query" type="search" class="form-control" placeholder="Search something"/>
           </div>
           <input type="submit" onclick="javascript:submit();" class="btn btn-primary">

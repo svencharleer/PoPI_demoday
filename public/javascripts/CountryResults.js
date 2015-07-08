@@ -316,6 +316,10 @@ var CountryHandler = function()
         "name": "CountryHandler",
         "update": function(data)
         {
+            if(data.length == 1) //it's a reset, only one filter layer means show all, means reset has been hit
+            {
+                _selectedCountries = []
+            }
 
             _max = 0;
             var myData = getWidgetSpecificData("language", data[0]);

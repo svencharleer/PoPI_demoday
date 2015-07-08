@@ -24,7 +24,7 @@
                 if(r.queries != undefined) {
                     r.queries.forEach(function (q) {
 
-                        htmlSubString += " <span class='queryString'>X " + q + "</span>";
+                        htmlSubString += " <span class='queryString'>" + q + "</span>";
 
 
                     })
@@ -32,7 +32,7 @@
                 if(r.facets != undefined) {
                     Object.keys(r.facets).forEach(function (q) {
 
-                        htmlSubString += " <span  class='facetString'>X " + q + " = " + r.facets[q] + "</span>";
+                        htmlSubString += " <span  class='facetString'>" + q + " = " + r.facets[q] + "</span>";
 
 
                     })
@@ -53,7 +53,7 @@
 
   </head>
   <body>
-
+  <h1>nee .history</h1>
       <div id="results"></div>
      </div>
 

@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="354cea81-af27-47bd-ac9f-31cbdd5016eb" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/Newspaper.js" afterPath="$PROJECT_DIR$/public/javascripts/Newspaper.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/images/nee.sketch" afterPath="$PROJECT_DIR$/public/images/nee.sketch" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/CountryResults.js" afterPath="$PROJECT_DIR$/public/javascripts/CountryResults.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/LoadingIcon.js" afterPath="$PROJECT_DIR$/public/javascripts/LoadingIcon.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ecloud_papers.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -28,8 +31,8 @@
       <file leaf-file-name="Results.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/javascripts/Results.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="5514" max-vertical-offset="7200">
-              <caret line="377" column="57" selection-start-line="376" selection-start-column="12" selection-end-line="377" selection-end-column="57" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="4329" max-vertical-offset="7200">
+              <caret line="293" column="18" selection-start-line="293" selection-start-column="4" selection-end-line="293" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -47,21 +50,41 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Newspaper.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Newspaper.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/javascripts/Newspaper.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.43661973" vertical-offset="2319" max-vertical-offset="7695">
-              <caret line="169" column="29" selection-start-line="169" selection-start-column="29" selection-end-line="169" selection-end-column="29" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="5469" max-vertical-offset="7695">
+              <caret line="388" column="11" selection-start-line="385" selection-start-column="9" selection-end-line="388" selection-end-column="11" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CountryResults.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="CountryResults.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/javascripts/CountryResults.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2826" max-vertical-offset="5430">
-              <caret line="202" column="60" selection-start-line="199" selection-start-column="13" selection-end-line="202" selection-end-column="60" />
+            <state vertical-scroll-proportion="0.43661973" vertical-offset="5829" max-vertical-offset="6360">
+              <caret line="401" column="45" selection-start-line="401" selection-start-column="45" selection-end-line="401" selection-end-column="45" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="style.less" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/stylesheets/style.less">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-11.25" vertical-offset="0" max-vertical-offset="915">
+              <caret line="18" column="27" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="27" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LoadingIcon.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/javascripts/LoadingIcon.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="139" max-vertical-offset="2550">
+              <caret line="22" column="58" selection-start-line="22" selection-start-column="58" selection-end-line="22" selection-end-column="58" />
               <folding />
             </state>
           </provider>
@@ -128,16 +151,16 @@
         <option value="$PROJECT_DIR$/scripts/papers.js" />
         <option value="$PROJECT_DIR$/classes/db.js" />
         <option value="$PROJECT_DIR$/classes/libCalls.js" />
-        <option value="$PROJECT_DIR$/public/javascripts/CountryResults.js" />
         <option value="$PROJECT_DIR$/public/stylesheets/style.less" />
         <option value="$PROJECT_DIR$/public/javascripts/visualization.js" />
         <option value="$PROJECT_DIR$/views/visualisation.ejs" />
         <option value="$PROJECT_DIR$/classes/CentralFilter.js" />
         <option value="$PROJECT_DIR$/classes/socket.js" />
-        <option value="$PROJECT_DIR$/public/javascripts/LoadingIcon.js" />
         <option value="$PROJECT_DIR$/public/javascripts/baseInit.js" />
         <option value="$PROJECT_DIR$/public/javascripts/Results.js" />
         <option value="$PROJECT_DIR$/public/javascripts/Newspaper.js" />
+        <option value="$PROJECT_DIR$/public/javascripts/LoadingIcon.js" />
+        <option value="$PROJECT_DIR$/public/javascripts/CountryResults.js" />
       </list>
     </option>
   </component>
@@ -865,14 +888,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/stylesheets/style.less">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.25" vertical-offset="0" max-vertical-offset="915">
-          <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../NaviFramework/NaviWorld.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.9" vertical-offset="615" max-vertical-offset="1500">
@@ -905,22 +920,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/LoadingIcon.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="124" max-vertical-offset="2550">
-          <caret line="23" column="45" selection-start-line="23" selection-start-column="45" selection-end-line="23" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/CountryResults.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2826" max-vertical-offset="5430">
-          <caret line="202" column="60" selection-start-line="199" selection-start-column="13" selection-end-line="202" selection-end-column="60" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/views/visualisation.ejs">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-13.0" vertical-offset="318" max-vertical-offset="855">
@@ -939,18 +938,42 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/Results.js">
+    <entry file="file://$PROJECT_DIR$/public/javascripts/Newspaper.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="5514" max-vertical-offset="7200">
-          <caret line="377" column="57" selection-start-line="376" selection-start-column="12" selection-end-line="377" selection-end-column="57" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="5469" max-vertical-offset="7695">
+          <caret line="388" column="11" selection-start-line="385" selection-start-column="9" selection-end-line="388" selection-end-column="11" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/Newspaper.js">
+    <entry file="file://$PROJECT_DIR$/public/javascripts/LoadingIcon.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.43661973" vertical-offset="2319" max-vertical-offset="7695">
-          <caret line="169" column="29" selection-start-line="169" selection-start-column="29" selection-end-line="169" selection-end-column="29" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="139" max-vertical-offset="2550">
+          <caret line="22" column="58" selection-start-line="22" selection-start-column="58" selection-end-line="22" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/Results.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="4329" max-vertical-offset="7200">
+          <caret line="293" column="18" selection-start-line="293" selection-start-column="4" selection-end-line="293" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/stylesheets/style.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-11.25" vertical-offset="0" max-vertical-offset="915">
+          <caret line="18" column="27" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/CountryResults.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.43661973" vertical-offset="5829" max-vertical-offset="6360">
+          <caret line="401" column="45" selection-start-line="401" selection-start-column="45" selection-end-line="401" selection-end-column="45" />
           <folding />
         </state>
       </provider>

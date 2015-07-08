@@ -20,10 +20,10 @@ var DCIcon = function()
             __p.fill(0xCCFF6C5C,100);
             __p.rect(0,0,__screenWidth,__screenHeight)
             __p.pushMatrix();
-            __p.translate(__screenWidth/2,__screenHeight/2);
+            __p.translate(__screenWidth/4,__screenHeight/4);
             __p.fill(0xCCFF6C5C,_tween  * 255);
             __p.textFont(__fontHeavy);
-            __p.textSize(200);
+            __p.textSize(100);
             __p.textAlign(__p.CENTER,__p.CENTER)
             __p.text("DISCONNECTED",0,0);
             __p.popMatrix();

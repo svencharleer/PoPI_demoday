@@ -128,11 +128,11 @@ var loadAll = function(modules) {
     $("body").mousedown(function(e){
 
         var offset = $(this).offset();
-        __vis.addTouch("mouse",(e.clientX - offset.left)*2,(e.clientY - offset.top)*2);
+        __vis.addTouch("mouse",(e.clientX - offset.left),(e.clientY - offset.top));
     });
     $("body").mousemove(function(e){
         var offset = $(this).offset();
-        __vis.updateTouch("mouse",(e.clientX - offset.left)*2,(e.clientY - offset.top)*2);
+        __vis.updateTouch("mouse",(e.clientX - offset.left),(e.clientY - offset.top));
     });
 
 
@@ -141,7 +141,7 @@ var loadAll = function(modules) {
 
         var touches = ev.originalEvent.changedTouches;
         for (var i = 0; i < touches.length; i++) {
-            __vis.addTouch(touches[i].identifier,touches[i].pageX, touches[i].pageY);
+            __vis.addTouch(touches[i].identifier,touches[i].pageX/2, touches[i].pageY/2);
         }
     }
     });
@@ -154,7 +154,7 @@ var loadAll = function(modules) {
      });*/
     $("body").mouseup(function(e){
         var offset = $(this).offset();
-        __vis.removeTouch("mouse",(e.clientX - offset.left)*2,(e.clientY - offset.top)*2);
+        __vis.removeTouch("mouse",(e.clientX - offset.left),(e.clientY - offset.top));
     });
     /*$("body").touchend(function(e){
      var touches = e.changedTouches;
@@ -167,7 +167,7 @@ var loadAll = function(modules) {
         ev.originalEvent.preventDefault();
         var touches = ev.originalEvent.changedTouches;
         for (var i = 0; i < touches.length; i++) {
-            __vis.removeTouch(touches[i].identifier,touches[i].pageX, touches[i].pageY);
+            __vis.removeTouch(touches[i].identifier,touches[i].pageX/2, touches[i].pageY/2);
         }
     }
     });
@@ -175,7 +175,7 @@ var loadAll = function(modules) {
         ev.originalEvent.preventDefault();
         var touches = ev.originalEvent.changedTouches;
         for (var i = 0; i < touches.length; i++) {
-            __vis.updateTouch(touches[i].identifier,touches[i].pageX, touches[i].pageY);
+            __vis.updateTouch(touches[i].identifier,touches[i].pageX/2, touches[i].pageY/2);
         }
     }
     });

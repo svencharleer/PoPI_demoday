@@ -4,8 +4,9 @@
 
 //var colors = ["0xCCFF3E3E","0xCC7C4EE8","0xCC33F0FF","0xCC91E870","0xCCFFE085"];
 
-var __newspaperSVG = undefined;
-var __newspaperHSVG = undefined;
+var __imgNewspaper = undefined;
+var __imgNewspaperHighlighted = undefined;
+var __imgNewspaperIcon = undefined;
 
 var ResultPaper = function()
 {
@@ -66,7 +67,7 @@ var ResultPaper = function()
 
                         touchStillExists = true;
                         _touched = touch;
-                        console.log("touched");
+                        //console.log("touched");
                         _handler.callbackHandler(_name);
                         return true;
 
@@ -140,12 +141,15 @@ var resultDummy = function()
             _handler = handler;
             _guid = guid();
             _this = this;
-            if(__newspaperSVG == undefined) {
-                __newspaperSVG = __p.loadShape("/images/newspaper.svg");
+            /*if(__imgNewspaper == undefined) {
+                __imgNewspaper = __p.loadImage("/images/newspaper_line.png");
             }
-            if(__newspaperHSVG == undefined){
-                __newspaperHSVG = __p.loadShape("/images/newspaper_highlight.svg");
+            if(__imgNewspaperHighlighted == undefined){
+                __imgNewspaperHighlighted = __p.loadImage("/images/newspaper_line_highlighted.png");
             }
+            if(__imgNewspaperIcon == undefined){
+                __imgNewspaperIcon = __p.loadImage("/images/newspaper_icon.png");
+            }*/
         },
 
         "draw": function(selected)
@@ -159,27 +163,40 @@ var resultDummy = function()
             {
                 __p.rectMode(__p.CORNER);
                 __p.stroke(255);
-                var svg = __newspaperSVG;
-                if(selected)
-                    svg = __newspaperHSVG;
+                __p.pushMatrix();
+                __p.translate(_position2.x,_position2.y)
+                __p.pushMatrix();
 
-                __p.shape(svg, _position2.x * _tween + _position.x * (1.0 -_tween),
-                            _position2.y * _tween + _position.y * (1.0 -_tween),
-                            _size.w * _tween + _prevSize.w * (1.0 - _tween),
-                            _size.h * _tween + _prevSize.h * (1.0 - _tween));
-                __p.fill(0)
+                __p.scale(.5)
+                var img = __imgNewspaper;
+                if(selected)
+                    img = __imgNewspaperHighlighted;
+
+               __p.image(img, 0,0            );
+
+
+
+                __p.image(__imgNewspaperIcon, 20,5);
+                //__p.tint(255)
+                __p.popMatrix();
+                __p.fill(255)
                 __p.textFont(__fontThin);
-                __p.textSize(_size.h/8);
-                __p.text(_content.TITLE, _position2.x * _tween + _position.x * (1.0 -_tween)+2,
-                        _position2.y * _tween + _position.y * (1.0 -_tween)+2,
-                        _size.w * _tween + _prevSize.w * (1.0 - _tween)-2,
-                        _size.h/2 * _tween +  _prevSize.h/2 * (1.0 - _tween)-2)
-                __p.textSize(_size.h/3);
+                __p.textSize(12);
+                __p.text(_content.TITLE, 10,50, _size.w,20)
+
                 __p.textFont(__fontHeavy);
-                __p.text(new Date(_content.DATE).getFullYear(), _position2.x * _tween + _position.x * (1.0 -_tween)+2,
-                        _position2.y * _tween + _position.y * (1.0 -_tween)+2 +_size.h/2,
-                        _size.w * _tween + _prevSize.w * (1.0 - _tween)-2,
-                        _size.h/2 * _tween + _prevSize.h/2 * (1.0 - _tween)-2)
+                var year = new Date(_content.DATE).getFullYear();
+                var colorOld = tinycolor("#DFB83C").toHsv();
+                var colorNew = tinycolor("#FFFFFF").toHsv();
+                var t = (_handler.yearRange().max - year)/(_handler.yearRange().max-_handler.yearRange().min);
+                colorNew.h = colorOld.h * t + colorNew.h * (1.0 - t);
+                colorNew.s = colorOld.s * t + colorNew.s * (1.0 - t);
+                colorNew.v = colorOld.v * t + colorNew.v * (1.0 - t);
+                var rgb = tinycolor(colorNew).toRgb();
+                __p.fill(__p.color(rgb.r, rgb.g, rgb.b))
+                __p.textSize(12);
+                __p.text(year,13,40)
+                __p.popMatrix();
             }
 
         },
@@ -210,10 +227,10 @@ var resultDummy = function()
                     return true;
                 }
                 if (_touched == undefined &&
-                    touch.x > _position2.x &&
-                    touch.x < _position2.x +  _size.w &&
-                    touch.y > _position2.y &&
-                    touch.y < _position2.y +  _size.h) {
+                    touch.x > _position2.x + _handler.offset().x &&
+                    touch.x < _position2.x +  _size.w + _handler.offset().x &&
+                    touch.y > _position2.y + _handler.offset().y &&
+                    touch.y < _position2.y +  _size.h + _handler.offset().y) {
 
 
                     touchStillExists = true;
@@ -221,6 +238,7 @@ var resultDummy = function()
                     //own the touch!
                     touch.owner = _guid;
                     touch.ownerObject = _this;
+
                    // _handler.callbackHandler(_content.ID, _content.URI);
                     return true;
 
@@ -235,10 +253,10 @@ var resultDummy = function()
         {
 
             if (_touched != undefined && _touched.id == touch.id &&
-                touch.x > _position2.x &&
-                touch.x < _position2.x +  _size.w &&
-                touch.y > _position2.y &&
-                touch.y < _position2.y +  _size.h)
+                touch.x > _position2.x + _handler.offset().x &&
+                touch.x < _position2.x +  _size.w + _handler.offset().x &&
+                touch.y > _position2.y + _handler.offset().y &&
+                touch.y < _position2.y +  _size.h + _handler.offset().y)
             {
                 _handler.callbackHandler(_content.ID, _content.URI);
 
@@ -273,6 +291,12 @@ var ResultsHandler = function()
     var _results = [];
     var _selectedResults = [];
     var _this;
+    var _imgTitle;
+    var _itemWidth = 200;
+    var _itemHeight = 80;
+    var _maxYear = 0;
+    var _minYear = 5000;
+    var _offset = {x:0, y:0};
 
     socket.on("resultUpdate", function(msg)
     {
@@ -282,23 +306,26 @@ var ResultsHandler = function()
         var screenWidth = $("#" + __canvas).width();
         var screenHeight = $("#" + __canvas).height()
         var max = _nrOfResults;
-        var previousMax = _nrOfPreviousResults > 10000 ? 10000 : _nrOfPreviousResults;
-        if (previousMax < 50 && previousMax > max) {
-            for (var i = 0; i < previousMax - max; i++)
-                _results.pop();
-        }
 
-        var surface = screenHeight * screenWidth;
+
+        /*var surface = screenHeight * screenWidth;
         var surfacePerPaper = surface/_nrOfResults;
         var scale = Math.sqrt(surfacePerPaper/(4*3)); //4:3 ratio of paper
         var widthOfPaper = 3 * scale;
         var heightOfPaper = 4 * scale;
-        var nrOfPapersPerWidth = parseInt(screenWidth/widthOfPaper)+1;
+        var nrOfPapersPerWidth = parseInt(screenWidth/widthOfPaper)+1;*/
 
+        var nrOfPapersPerWidth = parseInt(screenWidth/_itemWidth);
         _results = [];
+        msg.some(function(d) {
+            var y = new Date(d.DATE).getFullYear();
+            if(y > _maxYear) _maxYear = y;
+            if(y < _minYear) _minYear = y;
+        });
+        //console.log(_maxYear, _minYear);
         msg.some(function(d,i){
             var r = new resultDummy();
-            r.initWithContent(((i) % nrOfPapersPerWidth) * widthOfPaper, parseInt((i) / nrOfPapersPerWidth) * heightOfPaper, widthOfPaper-10, heightOfPaper-10,
+            r.initWithContent(((i) % nrOfPapersPerWidth) * _itemWidth, parseInt((i) / nrOfPapersPerWidth) * _itemHeight, _itemWidth, _itemHeight,
                 d,_this);
             _results.push(r);
         });
@@ -309,8 +336,31 @@ var ResultsHandler = function()
     })
 
     return {
+        "init" : function()
+        {
+            document.querySelector("canvas").getContext("2d").scale(2, 2);
+            _offset.y = 80;
+            if(_imgTitle == undefined)
+            {
+                _imgTitle = __p.loadImage("/images/title_results.png");
+            }
+            if(__imgNewspaper == undefined) {
+                __imgNewspaper = __p.loadImage("/images/newspaper_line.png");
+            }
+            if(__imgNewspaperHighlighted == undefined){
+                __imgNewspaperHighlighted = __p.loadImage("/images/newspaper_line_highlighted.png");
+            }
+            if(__imgNewspaperIcon == undefined){
+                __imgNewspaperIcon = __p.loadImage("/images/newspaper_icon.png");
+            }
+        },
         "update": function(data)
         {
+
+            if(data.length == 1) //it's a reset, only one filter layer means show all, means reset has been hit
+            {
+                _selectedResults = [];
+            }
             _this = this;
             //if lower than 100 results, we can start showing details and load correct article
             //give ID to each result, so we know when they vanish
@@ -326,9 +376,9 @@ var ResultsHandler = function()
             _nrOfResults = total;
             var screenWidth = $("#" + __canvas).width();
             var screenHeight = $("#" + __canvas).height()
-            var max = _nrOfResults > 10000 ? 10000 : _nrOfResults;
-            var previousMax = _nrOfPreviousResults > 10000 ? 10000 : _nrOfPreviousResults;
-            if(_nrOfResults < 50 && _nrOfResults >0)
+            var max = _nrOfResults > 100 ? 100 : _nrOfResults;
+            var previousMax = _nrOfPreviousResults > 100 ? 100 : _nrOfPreviousResults;
+            if(_nrOfResults < 35 && _nrOfResults >0)
             {
                 //call server for actual results
                 socket.emit("getResults",{});
@@ -357,7 +407,7 @@ var ResultsHandler = function()
                 else {
                     for (var i = 0; i < max - previousMax; i++) {
                         var r = new resultDummy();
-                        r.init(Math.random() * screenWidth, Math.random() * screenHeight)
+                        r.init(Math.random() * screenWidth, Math.random() * screenHeight);
                         _results.push(r);
                     }
                 }
@@ -384,10 +434,13 @@ var ResultsHandler = function()
         "activeLayer":function()
         {
 
-           return _results;
+           return  _results;
 
         },
         "draw":function() {
+
+            __p.pushMatrix()
+            __p.translate(_offset.x,_offset.y);
             _results.forEach(function(r){
                 r.animate();
                 var selected = false;
@@ -402,10 +455,16 @@ var ResultsHandler = function()
             var screenHeight = $("#" + __canvas).height();
 
             __p.text(_nrOfResults,10,screenHeight-20);
+            __p.popMatrix();
+            __p.pushMatrix();
+            __p.scale(.5)
+            __p.image(_imgTitle, 10,0)
+            __p.popMatrix();
 
 
-
-        }
+        },
+        "yearRange": function(){return {min:_minYear, max:_maxYear}},
+        "offset": function(){return _offset;}
 
 
     }

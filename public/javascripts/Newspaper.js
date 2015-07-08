@@ -156,43 +156,47 @@ var Newspaper = function()
         var y =_position.y
         var count = _tween * _results.count + (1.0-_tween) * _results.prevCount;
         if(count < 0) count = 0;
-        var length = count/_handler.max()*(_size.w-100);
+        var length = count/_handler.max()*(_size.w-50);
 
         __p.noFill();
+
+        __p.pushMatrix();
+        __p.translate(x,y)
+        __p.scale(.5)
 
         var svg = selected ? __blockHSVG : __blockSVG;
         //__p.shapeMode(__p.CORNER);
         if(layerIndex == 0)
-            __p.image(svg,x,y);//,_size.w,_size.h);
-
+            __p.image(svg,0,0);//,_size.w,_size.h);
+        __p.popMatrix();
         __p.fill(color);
 
         __p.noStroke();
         __p.rectMode(__p.CORNER);
         if(layerIndex != 0)
-            __p.rect(x+16,y+90,length,2);
+            __p.rect(x+8,y+45,length,2);
         else
-            __p.rect(x+16,y+72,length, 2);
+            __p.rect(x+8,y+36,length, 2);
 
         __p.textAlign(__p.LEFT,__p.TOP)
         __p.textFont(__fontThin);
-        __p.textSize(28);
+        __p.textSize(14);
         __p.fill(255);
         if(layerIndex == 0)
-         __p.text(_name, x+14,y+20,_size.w,40);
+         __p.text(_name, x+7,y+10,_size.w,20);
 
         __p.fill(color);
         __p.noStroke();
         __p.textAlign(__p.LEFT,__p.TOP)
         if(layerIndex == 0) {
             __p.textFont(__fontThin);
-            __p.textSize(20);
-            __p.text(parseInt(count), x + 16 + length + 4, y+72-12, 60, 24);
+            __p.textSize(10);
+            __p.text(parseInt(count), x + 8 + length + 2, y+36-6, 30, 12);
         }
         else {
             __p.textFont(__fontThin);
-            __p.textSize(20);
-            __p.text(parseInt(count),x + 16 + length + 4, y+90-4, 60, 24);
+            __p.textSize(10);
+            __p.text(parseInt(count),x + 8 + length + 2, y+45-2, 30, 12);
         }
     }
 
@@ -306,8 +310,8 @@ var NewspaperHandler = function()
     var _offset = {x:10,y:10};
     var _width = 1024;
     var _height = 400;
-    var _itemWidth = 364;
-    var _itemHeight = 124;
+    var _itemWidth = 182;
+    var _itemHeight = 62;
     var _margin = 10;
     var _scroll = new Scrollbar();
     var _lastElementY = 0;
@@ -368,14 +372,17 @@ var NewspaperHandler = function()
 
         });
 
-        _scroll.init(_width,0,60,_height,_lastElementY,_this);
+        _scroll.init(_width,0,30,_height,_lastElementY,_this);
     };
     return {
         "init": function()
         {
-          _width = __screenWidth-80;
-          _height = __screenHeight-160;
-          _offset.y =160;
+            document.querySelector("canvas").getContext("2d").scale(2, 2);
+            var screenWidth = $("#" + __canvas).width();
+            var screenHeight = $("#" + __canvas).height()
+          _width = screenWidth-40;
+          _height = screenHeight-80;
+          _offset.y =80;
           if(_imgTitle == undefined)
           {
               _imgTitle = __p.loadImage("/images/title_newspapers.png");
@@ -483,7 +490,10 @@ var NewspaperHandler = function()
             //title of screen
             //might want to do differently when showing more on one screen
             //but for now outside matrix
+            __p.pushMatrix()
+            __p.scale(.5)
             __p.image(_imgTitle, 10,0)
+            __p.popMatrix();
         },
         "moduleOffset":function(){return _offset},
         "scrollOffset" : function(){return {x:0, y:-_scroll.offset()*_lastElementY}},

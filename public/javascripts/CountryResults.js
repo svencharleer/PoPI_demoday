@@ -115,7 +115,7 @@ var CountryResults = function()
         var y = _position.y;
         var count = _tween * _results.count + (1.0-_tween) * _results.prevCount;
         if(count < 0) count = 0;
-        var surface = Math.log(count)*200;
+        var surface = count;
         var radius = Math.sqrt((surface/Math.PI));
 
         __p.fill(color);
@@ -259,6 +259,7 @@ var CountryHandler = function()
         });
     };
     return {
+        "name": "CountryHandler",
         "update": function(data)
         {
 

@@ -134,6 +134,10 @@ var CentralFilter = function()
             //STORE THE RESULT AT THE FILTER LEVEL TOO
 
         },
+        "systemCurrent" : function(callback)
+        {
+            callback(getActivity());
+        },
         "getResults" : function(callback)
         {
             paperLib.getResultsLOCAL(getLastFilter(), callback);

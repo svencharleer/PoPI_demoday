@@ -19,6 +19,12 @@ exports.init = function(ioWeb) {
         socket.on("registerVisualization", function (msg) {
             console.log("visualization active");
             socket.join('visualizationListener');
+            //give them current state of the system
+            filter.__centralFilter.systemCall(function (data) {
+                    socket.emit('update', data);
+
+            });
+
         })
         socket.on("registerFilterActivities", function (msg) {
             socket.join('filterActivitiesListener');

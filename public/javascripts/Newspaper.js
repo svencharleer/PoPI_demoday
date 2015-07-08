@@ -30,7 +30,11 @@ var Scrollbar = function()
     var _handler;
     var _guid;
     var _this;
+    var _imgArrowUp;
+    var _imgArrowDown;
+    var _initialized = false;
     return {
+        "initialized" : function() { return _initialized;},
         "init" : function(x,y,w,h,l,handler)
         {
             _x = x;
@@ -41,14 +45,27 @@ var Scrollbar = function()
             _handler = handler;
             _guid = guid();
             _this = this;
+            if(_imgArrowUp == undefined)
+                _imgArrowUp = __p.loadImage("/images/arrow_up.png");
+            if(_imgArrowDown == undefined)
+                _imgArrowDown = __p.loadImage("/images/arrow_down.png");
+            _initialized = true;
+
+
         },
         "draw" : function()
         {
-            __p.rectMode(__p.CORNER);
-            __p.fill(0);
-            __p.rect(_x,_y,_w,_h);
-            __p.fill(255);
-            __p.rect(_x,_y + _offset, _w,_h/_l*_h);
+            __p.noStroke();
+            __p.stroke(0xCC5E6C83);
+            __p.line(_x,_y,_x,_y+_h);
+            __p.line(_x+_w,_y,_x+_w,_y+_h);
+            __p.stroke(255);
+            __p.image(_imgArrowUp, _x+_w/2-_imgArrowUp.width/2,_y + _offset-_imgArrowUp.height/2);
+            __p.image(_imgArrowDown, _x+_w/2-_imgArrowUp.width/2,_y + _offset+_h/_l*_h-_imgArrowUp.height/2)
+
+            __p.line(_x,_y + _offset,_x,_y + _offset+_h/_l*_h);
+            __p.line(_x+_w,_y + _offset,_x+_w,_y + _offset+_h/_l*_h);
+
 
         },
         "touch" : function(touches) {
@@ -99,6 +116,8 @@ var Scrollbar = function()
             });
             if (_touched != undefined && _touched.alive) {
                 _offset += _touched.yChange;
+                if(_offset < 0) _offset = 0;
+                if(_offset > _h-_h/_l*_h) _offset = _h-_h/_l*_h;
 
             }
 
@@ -108,7 +127,7 @@ var Scrollbar = function()
                 _touched = undefined;
             }
         }  //_handler.callbackHandler(_selector);
-        ,"offset":function(){return _offset/_h;}
+        ,"offset":function(){return _offset/(_h-_h/_l*_h);}
 
 
     }
@@ -137,45 +156,43 @@ var Newspaper = function()
         var y =_position.y
         var count = _tween * _results.count + (1.0-_tween) * _results.prevCount;
         if(count < 0) count = 0;
-        var length = 0;
-
-        if(count > 1)
-            length = Math.log(count)*10;
+        var length = count/_handler.max()*(_size.w-100);
 
         __p.noFill();
 
         var svg = selected ? __blockHSVG : __blockSVG;
-        __p.shapeMode(__p.CORNER);
+        //__p.shapeMode(__p.CORNER);
         if(layerIndex == 0)
-            __p.shape(svg,x,y,_size.w,_size.h);
+            __p.image(svg,x,y);//,_size.w,_size.h);
 
         __p.fill(color);
 
         __p.noStroke();
+        __p.rectMode(__p.CORNER);
         if(layerIndex != 0)
-            __p.rect(x+2,y+58,length,4);
+            __p.rect(x+16,y+90,length,2);
         else
-            __p.rect(x+2,y+37,length, 4);
+            __p.rect(x+16,y+72,length, 2);
 
         __p.textAlign(__p.LEFT,__p.TOP)
         __p.textFont(__fontThin);
-        __p.textSize(14);
-        __p.fill(0);
+        __p.textSize(28);
+        __p.fill(255);
         if(layerIndex == 0)
-         __p.text(_name, x+7,y+10,170,20);
+         __p.text(_name, x+14,y+20,_size.w,40);
 
         __p.fill(color);
         __p.noStroke();
-        __p.textAlign(__p.CENTER,__p.CENTER)
+        __p.textAlign(__p.LEFT,__p.TOP)
         if(layerIndex == 0) {
-            __p.textFont(__fontHeavy);
+            __p.textFont(__fontThin);
             __p.textSize(20);
-            __p.text(parseInt(count), x + _size.w- 120, y, 30, _size.h-12);
+            __p.text(parseInt(count), x + 16 + length + 4, y+72-12, 60, 24);
         }
         else {
-            __p.textFont(__fontHeavy);
+            __p.textFont(__fontThin);
             __p.textSize(20);
-            __p.text(parseInt(count), x + _size.w- 55, y, 30, _size.h-12);
+            __p.text(parseInt(count),x + 16 + length + 4, y+90-4, 60, 24);
         }
     }
 
@@ -191,10 +208,10 @@ var Newspaper = function()
             _handler = handler;
             _guid = guid();
             if(__blockSVG == undefined){
-                __blockSVG = __p.loadShape("/images/block.svg");
+                __blockSVG = __p.loadImage("/images/block.png");
             }
             if(__blockHSVG == undefined){
-                __blockHSVG = __p.loadShape("/images/block_selected.svg");
+                __blockHSVG = __p.loadImage("/images/block_selected.png");
             }
 
 
@@ -286,17 +303,19 @@ var NewspaperHandler = function()
     var _newspapers = [];
     var _selectedNewspapers = [];
     var _otherFilters = [];
-    var _offset = {x:100,y:40};
+    var _offset = {x:10,y:10};
     var _width = 1024;
     var _height = 400;
-    var _itemWidth = 326;
-    var _itemHeight = 73;
+    var _itemWidth = 364;
+    var _itemHeight = 124;
     var _margin = 10;
     var _scroll = new Scrollbar();
     var _lastElementY = 0;
     var _multilayer = false;
     var _allNewspapers = {};
     var _keysSorted = [];
+    var _max = 0;
+    var _imgTitle;
     function sortPapers()
     {
 
@@ -338,6 +357,8 @@ var NewspaperHandler = function()
             if(previous[c] != undefined)
                 prevCount = previous[c];
 
+            //set max
+            if(_max < count) _max = count;
             newspaper.init(c,
                 {x:0,y:0},{w:_itemWidth, h:_itemHeight},
                 {count:count, prevCount:prevCount, query:""},
@@ -346,12 +367,28 @@ var NewspaperHandler = function()
             _lastElementY = parseInt(i/nrPerLine)*_itemHeight;
 
         });
-        _scroll.init(700,0,30,_height,_lastElementY,_this);
+
+        _scroll.init(_width,0,60,_height,_lastElementY,_this);
     };
     return {
+        "init": function()
+        {
+          _width = __screenWidth-80;
+          _height = __screenHeight-160;
+          _offset.y =160;
+          if(_imgTitle == undefined)
+          {
+              _imgTitle = __p.loadImage("/images/title_newspapers.png");
+          }
+
+        },
         "update": function(data)
         {
-
+            _max = 0;
+            if(data.length == 1) //it's a reset, only one filter layer means show all, means reset has been hit
+            {
+                _selectedNewspapers = [];
+            }
 
             var myData = getWidgetSpecificData("title", data[0]);
             _otherFilters = otherFilters("title", data); // see if there are other filters, needed for coloring correctly
@@ -405,7 +442,7 @@ var NewspaperHandler = function()
 
             __p.pushMatrix();
             __p.translate(_offset.x,_offset.y);
-            _scroll.draw();
+            if(_scroll.initialized()) _scroll.draw();
             __p.pushMatrix();
             __p.translate(0,-_scroll.offset()*_lastElementY);
 
@@ -422,9 +459,9 @@ var NewspaperHandler = function()
                     var nrPerLine = parseInt(_width/_itemWidth);
                     var x =  j%nrPerLine * _itemWidth;
                     //console.log(i);
-                    var  y =  parseInt(j/nrPerLine)*_itemHeight;
+                    var  y =  parseInt(j/nrPerLine)*(_itemHeight+10);
                     np.c.setPosition(x,y)
-                    if(np.c.position().y - _scroll.offset()*_lastElementY < _height && np.c.position().y - _scroll.offset()*_lastElementY > 0)
+                    if(np.c.position().y - _scroll.offset()*_lastElementY <= _height && np.c.position().y - _scroll.offset()*_lastElementY >= 0)
 
 
 
@@ -443,9 +480,14 @@ var NewspaperHandler = function()
             });
             __p.popMatrix();
             __p.popMatrix();
+            //title of screen
+            //might want to do differently when showing more on one screen
+            //but for now outside matrix
+            __p.image(_imgTitle, 10,0)
         },
         "moduleOffset":function(){return _offset},
-        "scrollOffset" : function(){return {x:0, y:-_scroll.offset()*_lastElementY}}
+        "scrollOffset" : function(){return {x:0, y:-_scroll.offset()*_lastElementY}},
+        "max": function(){return _max;}
 
 
 
@@ -453,4 +495,5 @@ var NewspaperHandler = function()
 }
 
 var __newspaperHandler = new NewspaperHandler()
+
 

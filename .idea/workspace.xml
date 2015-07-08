@@ -2,8 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="354cea81-af27-47bd-ac9f-31cbdd5016eb" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classes/db.js" afterPath="$PROJECT_DIR$/classes/db.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classes/libCalls.js" afterPath="$PROJECT_DIR$/classes/libCalls.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classes/CentralFilter.js" afterPath="$PROJECT_DIR$/classes/CentralFilter.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/CountryResults.js" afterPath="$PROJECT_DIR$/public/javascripts/CountryResults.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/Newspaper.js" afterPath="$PROJECT_DIR$/public/javascripts/Newspaper.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/baseInit.js" afterPath="$PROJECT_DIR$/public/javascripts/baseInit.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/images/block_selected.svg" afterPath="$PROJECT_DIR$/public/images/block_selected.svg" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classes/socket.js" afterPath="$PROJECT_DIR$/classes/socket.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/stylesheets/style.css" afterPath="$PROJECT_DIR$/public/stylesheets/style.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/stylesheets/style.less" afterPath="$PROJECT_DIR$/public/stylesheets/style.less" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/visualisation.ejs" afterPath="$PROJECT_DIR$/views/visualisation.ejs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ecloud_papers.iws" />
@@ -27,11 +34,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="CountryResults.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/javascripts/CountryResults.js">
+      <file leaf-file-name="visualization.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/javascripts/visualization.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="301" max-vertical-offset="5415">
-              <caret line="29" column="4" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="4" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1420" max-vertical-offset="2805">
+              <caret line="116" column="56" selection-start-line="116" selection-start-column="56" selection-end-line="116" selection-end-column="56" />
               <folding />
             </state>
           </provider>
@@ -40,40 +47,28 @@
       <file leaf-file-name="Newspaper.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/javascripts/Newspaper.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="5027" max-vertical-offset="6900">
-              <caret line="355" column="30" selection-start-line="355" selection-start-column="30" selection-end-line="355" selection-end-column="30" />
+            <state vertical-scroll-proportion="30.115385" vertical-offset="6588" max-vertical-offset="7545">
+              <caret line="389" column="41" selection-start-line="389" selection-start-column="41" selection-end-line="389" selection-end-column="41" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="db.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/classes/db.js">
+      <file leaf-file-name="Console.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/javascripts/Console.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1397" max-vertical-offset="2325">
-              <caret line="101" column="0" selection-start-line="101" selection-start-column="0" selection-end-line="101" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#40#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="libCalls.js" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/classes/libCalls.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.59057075" vertical-offset="2912" max-vertical-offset="3375">
-              <caret line="212" column="6" selection-start-line="212" selection-start-column="6" selection-end-line="212" selection-end-column="6" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="480" max-vertical-offset="1545">
+              <caret line="55" column="49" selection-start-line="55" selection-start-column="49" selection-end-line="55" selection-end-column="49" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="socket.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="socket.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/classes/socket.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1142" max-vertical-offset="1770">
-              <caret line="98" column="71" selection-start-line="98" selection-start-column="71" selection-end-line="98" selection-end-column="71" />
+            <state vertical-scroll-proportion="0.46394232" vertical-offset="137" max-vertical-offset="1860">
+              <caret line="22" column="45" selection-start-line="22" selection-start-column="45" selection-end-line="22" selection-end-column="45" />
               <folding />
             </state>
           </provider>
@@ -82,20 +77,20 @@
       <file leaf-file-name="visualisation.ejs" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/visualisation.ejs">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-10.625" vertical-offset="225" max-vertical-offset="825">
-              <caret line="32" column="37" selection-start-line="32" selection-start-column="37" selection-end-line="32" selection-end-column="37" />
+            <state vertical-scroll-proportion="-13.0" vertical-offset="318" max-vertical-offset="855">
+              <caret line="42" column="0" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
               <folding>
-                <marker date="1435941261000" expanded="true" signature="1055:1165" placeholder="{...}" />
+                <marker date="1436283314000" expanded="true" signature="1104:1214" placeholder="{...}" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="result.ejs" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/views/result.ejs">
+      <file leaf-file-name="NaviWorld.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../NaviFramework/NaviWorld.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-16.875" vertical-offset="75" max-vertical-offset="810">
-              <caret line="32" column="7" selection-start-line="32" selection-start-column="7" selection-end-line="32" selection-end-column="7" />
+            <state vertical-scroll-proportion="0.9" vertical-offset="615" max-vertical-offset="1500">
+              <caret line="38" column="1" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -104,8 +99,8 @@
       <file leaf-file-name="Results.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/javascripts/Results.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="4635" max-vertical-offset="6315">
-              <caret line="283" column="30" selection-start-line="283" selection-start-column="18" selection-end-line="283" selection-end-column="30" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="4184" max-vertical-offset="6315">
+              <caret line="282" column="53" selection-start-line="281" selection-start-column="7" selection-end-line="282" selection-end-column="53" />
               <folding />
             </state>
           </provider>
@@ -114,8 +109,8 @@
       <file leaf-file-name="baseInit.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/javascripts/baseInit.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="660" max-vertical-offset="2400">
-              <caret line="44" column="14" selection-start-line="44" selection-start-column="14" selection-end-line="44" selection-end-column="14" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="2080" max-vertical-offset="3075">
+              <caret line="66" column="10" selection-start-line="66" selection-start-column="10" selection-end-line="66" selection-end-column="10" />
               <folding />
             </state>
           </provider>
@@ -124,8 +119,18 @@
       <file leaf-file-name="CentralFilter.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/classes/CentralFilter.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1845" max-vertical-offset="2775">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1770" max-vertical-offset="2835">
               <caret line="138" column="36" selection-start-line="138" selection-start-column="36" selection-end-line="138" selection-end-column="36" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="style.less" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/stylesheets/style.less">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-11.25" vertical-offset="0" max-vertical-offset="915">
+              <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -167,7 +172,6 @@
         <option value="$PROJECT_DIR$/routes/result.js" />
         <option value="$PROJECT_DIR$/views/result.ejs" />
         <option value="$PROJECT_DIR$/views/index.ejs" />
-        <option value="$PROJECT_DIR$/public/stylesheets/style.less" />
         <option value="$PROJECT_DIR$/public/javascripts/map.js" />
         <option value="$PROJECT_DIR$/public/javascripts/LoadingIcon.js" />
         <option value="$PROJECT_DIR$/classes/RESTful.js" />
@@ -177,28 +181,29 @@
         <option value="$PROJECT_DIR$/routes/timeline.js" />
         <option value="$PROJECT_DIR$/public/javascripts/d3vis.js" />
         <option value="$PROJECT_DIR$/public/javascripts/Newspapers_d3.js" />
-        <option value="$PROJECT_DIR$/public/javascripts/visualization.js" />
-        <option value="$PROJECT_DIR$/public/javascripts/baseInit.js" />
         <option value="$PROJECT_DIR$/routes/index.js" />
         <option value="$PROJECT_DIR$/app.js" />
-        <option value="$PROJECT_DIR$/public/javascripts/CountryResults.js" />
         <option value="$PROJECT_DIR$/public/javascripts/Timeline.js" />
-        <option value="$PROJECT_DIR$/views/visualisation.ejs" />
         <option value="$PROJECT_DIR$/scripts/mongo_year.js" />
         <option value="$PROJECT_DIR$/scripts/papers.js" />
-        <option value="$PROJECT_DIR$/classes/CentralFilter.js" />
-        <option value="$PROJECT_DIR$/classes/socket.js" />
         <option value="$PROJECT_DIR$/public/javascripts/Results.js" />
-        <option value="$PROJECT_DIR$/public/javascripts/Newspaper.js" />
         <option value="$PROJECT_DIR$/classes/db.js" />
         <option value="$PROJECT_DIR$/classes/libCalls.js" />
+        <option value="$PROJECT_DIR$/public/javascripts/CountryResults.js" />
+        <option value="$PROJECT_DIR$/public/stylesheets/style.less" />
+        <option value="$PROJECT_DIR$/public/javascripts/visualization.js" />
+        <option value="$PROJECT_DIR$/views/visualisation.ejs" />
+        <option value="$PROJECT_DIR$/public/javascripts/Newspaper.js" />
+        <option value="$PROJECT_DIR$/public/javascripts/baseInit.js" />
+        <option value="$PROJECT_DIR$/classes/CentralFilter.js" />
+        <option value="$PROJECT_DIR$/classes/socket.js" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="48" />
+    <option name="x" value="38" />
     <option name="y" value="23" />
-    <option name="width" value="964" />
+    <option name="width" value="1242" />
     <option name="height" value="777" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -301,6 +306,10 @@
               <option name="myItemId" value="public" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="stylesheets" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -379,7 +388,7 @@
     <property name="recentsLimit" value="5" />
     <property name="restartRequiresConfirmation" value="true" />
     <property name="FullScreen" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/classes/db.js" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../NaviFramework/NaviWorld.html" />
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/svenc/OneDrive/development/ecloud_papers/public/javascripts/visualization.js" />
   </component>
   <component name="RecentsManager">
@@ -536,15 +545,16 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="48" y="23" width="964" height="777" extended-state="0" />
+    <frame x="38" y="23" width="1242" height="777" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26861313" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17226277" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2559653" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19666667" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26637554" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -554,7 +564,6 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329927" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329927" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -612,14 +621,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/public/javascripts/Timeline.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3672" max-vertical-offset="5685">
-          <caret line="270" column="27" selection-start-line="270" selection-start-column="27" selection-end-line="270" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/classes/RESTful.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1139" max-vertical-offset="2790">
@@ -649,7 +650,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="120" max-vertical-offset="810">
           <caret line="12" column="89" selection-start-line="12" selection-start-column="89" selection-end-line="12" selection-end-column="89" />
           <folding>
-            <marker date="1435941261000" expanded="true" signature="1055:1165" placeholder="{...}" />
+            <marker date="1436283314000" expanded="true" signature="1104:1214" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -762,14 +763,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/Console.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="480" max-vertical-offset="1545">
-          <caret line="55" column="49" selection-start-line="55" selection-start-column="49" selection-end-line="55" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="453">
@@ -795,13 +788,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="90">
           <caret line="0" column="50" selection-start-line="0" selection-start-column="50" selection-end-line="0" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/stylesheets/style.less">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.875" vertical-offset="0" max-vertical-offset="915">
-          <caret line="19" column="1" selection-start-line="19" selection-start-column="1" selection-end-line="19" selection-end-column="1" />
         </state>
       </provider>
     </entry>
@@ -895,14 +881,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/visualization.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1980" max-vertical-offset="2805">
-          <caret line="161" column="44" selection-start-line="161" selection-start-column="44" selection-end-line="161" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/classes/RESTful.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1753" max-vertical-offset="2790">
@@ -919,68 +897,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/baseInit.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2400">
-          <caret line="44" column="14" selection-start-line="44" selection-start-column="14" selection-end-line="44" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/Newspaper.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="5027" max-vertical-offset="6900">
-          <caret line="355" column="30" selection-start-line="355" selection-start-column="30" selection-end-line="355" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/CountryResults.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="301" max-vertical-offset="5415">
-          <caret line="29" column="4" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/visualisation.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.625" vertical-offset="225" max-vertical-offset="825">
-          <caret line="32" column="37" selection-start-line="32" selection-start-column="37" selection-end-line="32" selection-end-column="37" />
-          <folding>
-            <marker date="1435941261000" expanded="true" signature="1055:1165" placeholder="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/views/result.ejs">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-16.875" vertical-offset="75" max-vertical-offset="810">
           <caret line="32" column="7" selection-start-line="32" selection-start-column="7" selection-end-line="32" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/classes/socket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1097" max-vertical-offset="1770">
-          <caret line="98" column="71" selection-start-line="98" selection-start-column="71" selection-end-line="98" selection-end-column="71" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/classes/CentralFilter.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1845" max-vertical-offset="2775">
-          <caret line="138" column="36" selection-start-line="138" selection-start-column="36" selection-end-line="138" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/Results.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="4635" max-vertical-offset="6315">
-          <caret line="283" column="30" selection-start-line="283" selection-start-column="18" selection-end-line="283" selection-end-column="30" />
           <folding />
         </state>
       </provider>
@@ -997,8 +917,98 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/classes/libCalls.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.59057075" vertical-offset="2912" max-vertical-offset="3375">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2912" max-vertical-offset="3375">
           <caret line="212" column="6" selection-start-line="212" selection-start-column="6" selection-end-line="212" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/CountryResults.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="3644" max-vertical-offset="5430">
+          <caret line="253" column="66" selection-start-line="253" selection-start-column="66" selection-end-line="253" selection-end-column="66" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/Results.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="4184" max-vertical-offset="6315">
+          <caret line="282" column="53" selection-start-line="281" selection-start-column="7" selection-end-line="282" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/Console.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="480" max-vertical-offset="1545">
+          <caret line="55" column="49" selection-start-line="55" selection-start-column="49" selection-end-line="55" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/stylesheets/style.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-11.25" vertical-offset="0" max-vertical-offset="915">
+          <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../NaviFramework/NaviWorld.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.9" vertical-offset="615" max-vertical-offset="1500">
+          <caret line="38" column="1" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/visualization.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1420" max-vertical-offset="2805">
+          <caret line="116" column="56" selection-start-line="116" selection-start-column="56" selection-end-line="116" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/Newspaper.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="30.115385" vertical-offset="6588" max-vertical-offset="7545">
+          <caret line="389" column="41" selection-start-line="389" selection-start-column="41" selection-end-line="389" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/visualisation.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.0" vertical-offset="318" max-vertical-offset="855">
+          <caret line="42" column="0" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
+          <folding>
+            <marker date="1436283314000" expanded="true" signature="1104:1214" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/baseInit.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2080" max-vertical-offset="3075">
+          <caret line="66" column="10" selection-start-line="66" selection-start-column="10" selection-end-line="66" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classes/CentralFilter.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1905" max-vertical-offset="2835">
+          <caret line="138" column="36" selection-start-line="138" selection-start-column="36" selection-end-line="138" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classes/socket.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.46394232" vertical-offset="137" max-vertical-offset="1860">
+          <caret line="22" column="45" selection-start-line="22" selection-start-column="45" selection-end-line="22" selection-end-column="45" />
           <folding />
         </state>
       </provider>

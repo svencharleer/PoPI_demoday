@@ -3,27 +3,53 @@
  */
 var __vis;
 
+var __screenWidth;
+var __screenHeight;
+
 var loadAll = function(modules) {
     var _width = $(window).width();
     var _height = $(window).height();
-    $("#overlay").width(_width);
-    $("#overlay").height(_height);
+    $("#overlay").attr("width",_width*2);
+    $("#overlay").attr("height",_height*2);
 
     $("#map").width(_width);
     $("#map").height(_height);
 
-    __loadingHandler.init(_width-100,10);
-    generateMap();
+
+
+    __loadingHandler.init(_width - 100, 10);
+    if (modules[0].name == "CountryHandler")
+        generateMap();
 
     var extras = [__loadingHandler];
     __vis = new visualization();
-    __vis.init("overlay", modules,extras);
+    __vis.init("overlay", modules, extras);
+
+    $("#overlay").attr("style","width:"+_width+"px;height:+"+_height+"px;");
+
+
+    __screenWidth = $("#" + __canvas).width()*2;
+    __screenHeight = $("#" + __canvas).height()*2;
 
     //connect to socket.io
+    var cb;
+    if (modules[0].name == "CountryHandler")
+    {
+        cb = initCountries;
+    }
+    else
+    {
+        cb = function(c){c();}
+    }
+    modules.forEach(function(m){
+        if(m.init != undefined)
+            m.init();
+    })
 
-    socket.emit("registerVisualization");
+
+
     socket.on("update", function (msg) {
-        initCountries(function() {
+        cb(function() {
 
             var data = msg;
             modules.forEach(function (m) {
@@ -38,8 +64,10 @@ var loadAll = function(modules) {
         __loadingHandler.show();
     })
     socket.on("disconnect",function(){
+        //__loadingHandler.dc();
         console.log("disconnected");
     })
+    socket.emit("registerVisualization");
 
     var client;
     if(__tabletop) {
@@ -50,15 +78,15 @@ var loadAll = function(modules) {
         }),
 
             onAddTuioCursor = function (addCursor) {
-                var x = addCursor.getScreenX(_width);
-                var y = addCursor.getScreenY(_height);
+                var x = addCursor.getScreenX(__screenWidth);
+                var y = addCursor.getScreenY(__screenHeight);
                 __vis.addTouch(addCursor.cursorId, x, y);
 
             },
 
             onUpdateTuioCursor = function (updateCursor) {
-                var x = updateCursor.getScreenX(_width);
-                var y = updateCursor.getScreenY(_height);
+                var x = updateCursor.getScreenX(__screenWidth);
+                var y = updateCursor.getScreenY(__screenHeight);
                 __vis.updateTouch(updateCursor.cursorId, x, y);
 
 
@@ -98,17 +126,19 @@ var loadAll = function(modules) {
     }
     //add mouse click
     $("body").mousedown(function(e){
+
         var offset = $(this).offset();
-        __vis.addTouch("mouse",e.clientX - offset.left,e.clientY - offset.top);
+        __vis.addTouch("mouse",(e.clientX - offset.left)*2,(e.clientY - offset.top)*2);
     });
     $("body").mousemove(function(e){
         var offset = $(this).offset();
-        __vis.updateTouch("mouse",e.clientX - offset.left,e.clientY - offset.top);
+        __vis.updateTouch("mouse",(e.clientX - offset.left)*2,(e.clientY - offset.top)*2);
     });
 
 
     $("body").on({ 'touchstart' : function(ev){
         ev.originalEvent.preventDefault();
+
         var touches = ev.originalEvent.changedTouches;
         for (var i = 0; i < touches.length; i++) {
             __vis.addTouch(touches[i].identifier,touches[i].pageX, touches[i].pageY);
@@ -124,7 +154,7 @@ var loadAll = function(modules) {
      });*/
     $("body").mouseup(function(e){
         var offset = $(this).offset();
-        __vis.removeTouch("mouse",e.clientX - offset.left,e.clientY - offset.top);
+        __vis.removeTouch("mouse",(e.clientX - offset.left)*2,(e.clientY - offset.top)*2);
     });
     /*$("body").touchend(function(e){
      var touches = e.changedTouches;
@@ -152,4 +182,19 @@ var loadAll = function(modules) {
 
 
 
+}
+
+function toggleFullScreen() {
+    var doc = window.document;
+    var docEl = doc.documentElement;
+
+    var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+    var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+    if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+        requestFullScreen.call(docEl);
+    }
+    else {
+        cancelFullScreen.call(doc);
+    }
 }

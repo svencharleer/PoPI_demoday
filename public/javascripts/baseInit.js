@@ -64,7 +64,7 @@ var loadAll = function(modules) {
         __loadingHandler.show();
     })
     socket.on("disconnect",function(){
-        //__loadingHandler.dc();
+        __loadingHandler.dc();
         console.log("disconnected");
     })
     socket.emit("registerVisualization");

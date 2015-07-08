@@ -2,6 +2,49 @@
  * Created by svenc on 23/06/15.
  */
 
+var DCIcon = function()
+{
+    var _tween = 0;
+    var _tweenUpdate = .02;
+
+
+
+
+    return {
+        "init": function()
+        {
+
+        },
+        "draw":function(x,y)
+        {
+            __p.fill(0xCCFF6C5C,100);
+            __p.rect(0,0,__screenWidth,__screenHeight)
+            __p.pushMatrix();
+            __p.translate(__screenWidth/2,__screenHeight/2);
+            __p.fill(0xCCFF6C5C,_tween  * 255);
+            __p.textFont(__fontHeavy);
+            __p.textSize(200);
+            __p.textAlign(__p.CENTER,__p.CENTER)
+            __p.text("DISCONNECTED",0,0);
+            __p.popMatrix();
+
+
+
+
+        },
+        "animate":function()
+        {
+            if(_tween > 1.0 || _tween < 0.0)
+            {
+                _tweenUpdate = -_tweenUpdate;
+            }
+
+            _tween +=_tweenUpdate;
+        }
+
+    }
+}
+
 var LoadingIcon = function()
 {
     var _tween = 0;
@@ -89,6 +132,11 @@ var LoadingHandler = function()
         {
             _show = false;
             _tween = 0;
+        },
+        "dc":function()
+        {
+            _show = true;
+            _loadingIcon = new DCIcon();
         },
         "draw":function()
         {

@@ -28,6 +28,8 @@ exports.init = function(ioWeb) {
         })
         socket.on("registerFilterActivities", function (msg) {
             socket.join('filterActivitiesListener');
+            socket.emit('filterUpdate',
+                filter.__centralFilter.filterStack());
         })
         socket.on("registerResults", function (msg) {
             socket.join('resultListener');

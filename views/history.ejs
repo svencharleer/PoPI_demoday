@@ -19,24 +19,38 @@
 
         socket.on("filterUpdate",function(results) {
             var htmlString = "";
-            results.some(function(r){
-                var htmlSubString = "";
+            results.some(function(r,i){
+                //get total
+                var htmlSubString = "<div class='topBorder'>&nbsp;</div>";
+
+                var total = 0;
+                if(r.data != undefined && r.data[0] != undefined && r.data[0].result != undefined) {
+                    Object.keys(r.data[0].result.LANGUAGE).forEach(function(l){
+                        total += r.data[0].result.LANGUAGE[l];
+                    })
+                }
+
                 if(r.queries != undefined) {
                     r.queries.forEach(function (q) {
 
-                        htmlSubString += " <span class='queryString'>" + q + "</span>";
+                        htmlSubString +=  " <span class='queryString'>" + q + "</span>";
 
 
                     })
                 }
                 if(r.facets != undefined) {
                     Object.keys(r.facets).forEach(function (q) {
+                        r.facets[q].forEach(function(f){
+                            htmlSubString += " <span  class='facetString'>" + q + ":" + f + "</span>";
+                        })
 
-                        htmlSubString += " <span  class='facetString'>" + q + " = " + r.facets[q] + "</span>";
 
 
                     })
                 }
+                var totalClass = i == 0 ? "totalBase" : "totalRest"
+                htmlSubString += "<h3 class='total'><span class='" + totalClass + "'>" + total + "</span> items</h3><br/>";
+
                 htmlString = htmlSubString + "<br/>" + htmlString;
             })
 
@@ -53,7 +67,8 @@
 
   </head>
   <body>
-  <h1>nee .history</h1>
+  <div id="history">
+  <h3>nee .history</h3>
       <div id="results"></div>
      </div>
 

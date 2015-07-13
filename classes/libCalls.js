@@ -154,24 +154,29 @@ function convertQueryAndFacets(call) {
         Object.keys(facets).forEach(function (f) {
 
             if (f != toExclude) {
+                if(facet[f.toUpperCase()] == undefined)
+                    facet[f.toUpperCase()] = [];
                 facets[f].forEach(function (k) {
-                    facet[f.toUpperCase()] = k;
+                    facet[f.toUpperCase()].push(k);
                 })
             }
         })
         facetLists.push({exclude: toExclude, facets: facet});
     });
     //add one general one for the one widget that started, so that needs all the data
-
-
     var facet = {};
     Object.keys(facets).forEach(function (f) {
+        if(facet[f.toUpperCase()] == undefined)
+            facet[f.toUpperCase()] = [];
         facets[f].forEach(function (k) {
-            facet[f.toUpperCase()] = k;
+            facet[f.toUpperCase()].push(k);
         })
     });
     ;
     facetLists.push({exclude: "", facets: facet});
+
+
+
     console.log("facets " + JSON.stringify(facetLists));
     return {queries: queries, facetLists: facetLists};
 }

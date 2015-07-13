@@ -82,9 +82,9 @@ var squares = {};
 
 var initCountries = function(callback)
 {
-    $.getJSON("javascripts/countries_loc.json", function(json){
+    $.getJSON("/ecloud/javascripts/countries_loc.json", function(json){
         _countries_loc_json = json;
-        $.getJSON("javascripts/countries_name.json", function(json){
+        $.getJSON("/ecloud/javascripts/countries_name.json", function(json){
             __countriesToName = json;
 
             //files loaded, now process

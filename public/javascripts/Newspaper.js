@@ -46,9 +46,9 @@ var Scrollbar = function()
             _guid = guid();
             _this = this;
             if(_imgArrowUp == undefined)
-                _imgArrowUp = __p.loadImage("/images/arrow_up.png");
+                _imgArrowUp = __p.loadImage("/ecloud/images/arrow_up.png");
             if(_imgArrowDown == undefined)
-                _imgArrowDown = __p.loadImage("/images/arrow_down.png");
+                _imgArrowDown = __p.loadImage("/ecloud/images/arrow_down.png");
             _initialized = true;
 
 
@@ -212,10 +212,10 @@ var Newspaper = function()
             _handler = handler;
             _guid = guid();
             if(__blockSVG == undefined){
-                __blockSVG = __p.loadImage("/images/block.png");
+                __blockSVG = __p.loadImage("/ecloud/images/block.png");
             }
             if(__blockHSVG == undefined){
-                __blockHSVG = __p.loadImage("/images/block_selected.png");
+                __blockHSVG = __p.loadImage("/ecloud/images/block_selected.png");
             }
 
 
@@ -385,7 +385,7 @@ var NewspaperHandler = function()
           _offset.y =80;
           if(_imgTitle == undefined)
           {
-              _imgTitle = __p.loadImage("/images/title_newspapers.png");
+              _imgTitle = __p.loadImage("/ecloud/images/title_newspapers.png");
           }
 
         },

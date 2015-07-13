@@ -305,11 +305,11 @@ var CountryHandler = function()
 
             if(__imgCountrySelect == undefined)
             {
-                __imgCountrySelect = __p.loadImage("/images/country_select.png");
+                __imgCountrySelect = __p.loadImage("/ecloud/images/country_select.png");
             }
             if(_imgTitle == undefined)
             {
-                _imgTitle = __p.loadImage("/images/title_countries.png");
+                _imgTitle = __p.loadImage("/ecloud/images/title_countries.png");
             }
         },
 

@@ -5,14 +5,14 @@
 var mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/ecloud');
-//mongoose.connect('mongodb://ensor.cs.kuleuven.be:27017/sunshine');
+//mongoose.connect('mongodb://davinci.cs.kuleuven.be:27017/ecloud');
 //var server = new Server('ensor.cs.kuleuven.be', 27017, {auto_reconnect: true});
 
 var db_connection = mongoose.connection;
 db_connection.on('error', console.error.bind(console, 'connection error:'));
 db_connection.once('open', function callback () {
 
-    //console.log("Connected to the database");
+    console.log("Connected to the database");
 
 
 
@@ -61,13 +61,22 @@ exports.countText = function(queries, facets, callback) {
     if(queries.length > 0)
         match["$text"] = {$search: queryString};
     if(facets["COUNTRY"]!= undefined)
-        match["COUNTRY"] = facets["COUNTRY"];
+        match["COUNTRY"] = {$in: facets["COUNTRY"]};
     if(facets["LANGUAGE"]!= undefined)
-        match["LANGUAGE"] = facets["LANGUAGE"];
+        match["LANGUAGE"] = {$in: facets["LANGUAGE"]};
     if(facets["TITLE"]!= undefined)
-        match["TITLE"] = facets["TITLE"];
+        match["TITLE"] = {$in: facets["TITLE"]};
+
+    //year is a special case. it's a range.
     if(facets["YEAR"]!= undefined)
-        match["YEAR"] = facets["YEAR"];
+    {
+        console.log("is this even called" + facets["YEAR"])
+        var min = new Date();
+        min.setFullYear(facets["YEAR"][0][0],0,1);
+        var max = new Date();
+        max.setFullYear(facets["YEAR"][0][1],0,1);
+        match["DATE"] = {$gt: min, $lt: max }
+    }
 
     match = {$match:match};
     console.log(JSON.stringify(match));

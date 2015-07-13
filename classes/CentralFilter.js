@@ -9,6 +9,7 @@ var Filter = function()
     var _queries = [];
     var _facets = {};
     var _data = undefined;
+    var _range;
 
     return {
         "initWithFacet" : function(facet, filter) //facet : {facetType, facetValue}
@@ -19,6 +20,8 @@ var Filter = function()
             if(facets[facet.facetType] == undefined)
                 facets[facet.facetType] = [];
 
+            if(facet.facetType == "year")
+                facets[facet.facetType] = []; //always reset YEAR. can currently only have one value
             facets[facet.facetType].push(facet.facetValue);
             _facets = facets;
 
@@ -64,8 +67,10 @@ var Filter = function()
             _facets = facets;
 
         },
+
         "facets": function() {return _facets;},
         "queries": function() {return _queries;},
+
         "data":function(data) {_data = data;},
         "getData":function() {return _data;}
 
@@ -112,6 +117,7 @@ var CentralFilter = function()
             filter.initWithFacet({facetType:facetType, facetValue:facetValue}, getLastFilter());
             _filterStack.push(filter);
         },
+
         "disableFilter_Query" : function(query)
         {
             var filter = new Filter();
@@ -124,6 +130,7 @@ var CentralFilter = function()
             filter.initWithoutFacet({facetType:facetType, facetValue:facetValue}, getLastFilter());
             _filterStack.push(filter);
         },
+
         "systemCall" : function(callback, layer)
         {
             paperLib.filteredQueryLOCAL(getLastFilter(),_filterStack.length-1, function(data, filterId) {

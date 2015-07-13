@@ -11,3 +11,6 @@ db.papers.find().forEach( function(obj) {
 
 
 mongoimport --db ecloud --collection papers --drop --file /Users/svenc/OneDrive/development/ecloud_papers/scripts/leuven.json --jsonArray --type json
+
+
+db.papers.createIndex( { FULL_TEXT: "text"})

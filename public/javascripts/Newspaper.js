@@ -381,8 +381,8 @@ var NewspaperHandler = function()
             var screenWidth = $("#" + __canvas).width();
             var screenHeight = $("#" + __canvas).height()
           _width = screenWidth-40;
-          _height = screenHeight-80;
-          _offset.y =80;
+          _height = screenHeight-120;
+          _offset.y =10;
           if(_imgTitle == undefined)
           {
               _imgTitle = __p.loadImage("/ecloud/images/title_newspapers.png");
@@ -492,7 +492,8 @@ var NewspaperHandler = function()
             //but for now outside matrix
             __p.pushMatrix()
             __p.scale(.5)
-            __p.image(_imgTitle, 10,0)
+            var h = $(window).height()*2;
+            __p.image(_imgTitle, 10,h-100)
             __p.popMatrix();
         },
         "moduleOffset":function(){return _offset},

@@ -173,7 +173,7 @@ function convertQueryAndFacets(call) {
         })
     });
     ;
-    facetLists.push({exclude: "", facets: facet});
+    facetLists.unshift({exclude: "", facets: facet});
 
 
 
@@ -210,8 +210,10 @@ exports.getResultsLOCAL = function(filter, cb)
     var facets = filter.facets();
     var facet = {};
     Object.keys(facets).forEach(function (f) {
+        if(facet[f.toUpperCase()] == undefined)
+            facet[f.toUpperCase()] = [];
         facets[f].forEach(function (k) {
-            facet[f.toUpperCase()] = k;
+            facet[f.toUpperCase()].push(k);
         })
     });
 

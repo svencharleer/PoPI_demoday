@@ -403,10 +403,13 @@ var CountryHandler = function()
                 });
                 __p.fill(0xCC0B0B0B)
                 __p.noStroke();
-                __p.rect(0,0,__screenWidth, 60);
+                __p.rectMode(__p.CORNER)
+                __p.rect(0,$(window).height()-50,__screenWidth, 50);
                 __p.pushMatrix();
                 __p.scale(.5)
-                __p.image(_imgTitle, 10,0)
+                var h = $(window).height()*2;
+                __p.image(_imgTitle, 10,h-100)
+
                 __p.popMatrix();
 
 

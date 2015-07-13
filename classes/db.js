@@ -75,7 +75,7 @@ exports.countText = function(queries, facets, callback) {
         min.setFullYear(facets["YEAR"][0][0],0,1);
         var max = new Date();
         max.setFullYear(facets["YEAR"][0][1],0,1);
-        match["DATE"] = {$gt: min, $lt: max }
+        match["DATE"] = {$gte: min, $lte: max }
     }
 
     match = {$match:match};
@@ -124,7 +124,14 @@ exports.getResults = function(queries, facets, callback)
     if(facets["TITLE"]!= undefined)
         match["TITLE"] = facets["TITLE"];
     if(facets["YEAR"]!= undefined)
-        match["YEAR"] = facets["YEAR"];
+    {
+        console.log("is this even called" + facets["YEAR"])
+        var min = new Date();
+        min.setFullYear(facets["YEAR"][0][0],0,1);
+        var max = new Date();
+        max.setFullYear(facets["YEAR"][0][1],0,1);
+        match["DATE"] = {$gte: min, $lte: max }
+    }
     console.log("match for results: " + JSON.stringify(match))
     Paper.find(match, callback);
 }

@@ -342,16 +342,16 @@ var ResultsHandler = function()
             _offset.y = 80;
             if(_imgTitle == undefined)
             {
-                _imgTitle = __p.loadImage("/images/title_results.png");
+                _imgTitle = __p.loadImage("/ecloud/images/title_results.png");
             }
             if(__imgNewspaper == undefined) {
-                __imgNewspaper = __p.loadImage("/images/newspaper_line.png");
+                __imgNewspaper = __p.loadImage("/ecloud/images/newspaper_line.png");
             }
             if(__imgNewspaperHighlighted == undefined){
-                __imgNewspaperHighlighted = __p.loadImage("/images/newspaper_line_highlighted.png");
+                __imgNewspaperHighlighted = __p.loadImage("/ecloud/images/newspaper_line_highlighted.png");
             }
             if(__imgNewspaperIcon == undefined){
-                __imgNewspaperIcon = __p.loadImage("/images/newspaper_icon.png");
+                __imgNewspaperIcon = __p.loadImage("/ecloud/images/newspaper_icon.png");
             }
         },
         "update": function(data)

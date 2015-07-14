@@ -43,8 +43,9 @@ var TimeLine = function()
             for (var i = 3; i >= 0; i--) {
                 var h = i * (_size.h - paddingBottom) / 4;
                 if (i != 0)__p.line(0, h, _size.w, h);
-
-                __p.text(parseInt((_size.h - h) / _size.h * _max), _size.w + 5, h)
+                var nr = (_size.h - h) / _size.h * _max;
+                //nr = nr > 1 ? Math.log(nr) : (nr > 0 ? .05 : 0);
+                __p.text(parseInt(nr), _size.w + 5, h)
             }
         }
         __p.textAlign(__p.LEFT,__p.BOTTOM)
@@ -62,12 +63,15 @@ var TimeLine = function()
                 __p.fill(255);
 
                 if (i % 20 == 0) {
+                    __p.stroke(255);
                     __p.line(0, -9, 0, -7);
                     __p.textSize(8);
-                    __p.text(year, 0, 0);
+                    __p.text(year, 0, 5);
                 }
-                else
+                else {
+                    __p.stroke(0xCC404853);
                     __p.line(0, -9, 0, -9);
+                }
                 __p.popMatrix();
             }
         }
@@ -88,11 +92,14 @@ var TimeLine = function()
                     __p.fill(color);
                 __p.noStroke();
 
-               var logCount = count > 1 ? Math.log(count) : (count > 0 ? .05 : 0);
+               /*var logCount = count > 1 ? Math.log(count) : (count > 0 ? .05 : 0);
                var logprevCount = prevCount > 1 ? Math.log(prevCount) : (prevCount > 0 ? .05 : 0);
 
                 var height = logCount/Math.log(_max) * heightOfGraph;
-                var previousHeight = logprevCount/Math.log(_max) * heightOfGraph;
+                var previousHeight = logprevCount/Math.log(_max) * heightOfGraph;*/
+                var height = count/_max * heightOfGraph;
+                var previousHeight = prevCount/_max * heightOfGraph;
+                if(height < 1 && height > 0) height =1;
                 height = (_tween) * height + (1.0-_tween) * previousHeight;
                 __p.rectMode(__p.CORNER);
                 __p.rect(yearOffset * _widthPerYear,_size.h-paddingBottom, 2, - height );

@@ -182,7 +182,8 @@ var resultDummy = function()
                 __p.fill(255)
                 __p.textFont(__fontThin);
                 __p.textSize(12);
-                __p.text(_content.TITLE, 10,50, _size.w,20)
+                __p.textAlign(__p.LEFT, __p.TOP)
+                __p.text(_content.TITLE, 11,47, _size.w,20)
 
                 __p.textFont(__fontHeavy);
                 var year = new Date(_content.DATE).getFullYear();
@@ -195,7 +196,8 @@ var resultDummy = function()
                 var rgb = tinycolor(colorNew).toRgb();
                 __p.fill(__p.color(rgb.r, rgb.g, rgb.b))
                 __p.textSize(12);
-                __p.text(year,13,40)
+                __p.textAlign(__p.LEFT, __p.TOP)
+                __p.text(year,14,30)
                 __p.popMatrix();
             }
 
@@ -297,6 +299,7 @@ var ResultsHandler = function()
     var _maxYear = 0;
     var _minYear = 5000;
     var _offset = {x:0, y:0};
+    var _MAX = 35;
 
     socket.on("resultUpdate", function(msg)
     {
@@ -339,7 +342,7 @@ var ResultsHandler = function()
         "init" : function()
         {
             document.querySelector("canvas").getContext("2d").scale(2, 2);
-            _offset.y = 80;
+            _offset.y = 50;
             if(_imgTitle == undefined)
             {
                 _imgTitle = __p.loadImage("/ecloud/images/title_results.png");
@@ -448,17 +451,20 @@ var ResultsHandler = function()
                     selected = true;
                 r.draw(selected);
             })
-            __p.fill(parseInt(colors[1]));
-            __p.textFont(__fontHeavy);
-            __p.textSize(40);
-            //var screenWidth =  $("#" + __canvas).width();
-            var screenHeight = $("#" + __canvas).height();
+            __p.fill(200);
 
-            __p.text(_nrOfResults,10,screenHeight-20);
+            __p.textFont(__fontHeavy);
+            __p.textSize(20);
+            __p.text("#",10,-37);
+            __p.fill(parseInt(colors[1]));
+            __p.textSize(40);
+            __p.textAlign(__p.LEFT, __p.TOP)
+            __p.text(_nrOfResults,26,-50);
             __p.popMatrix();
             __p.pushMatrix();
             __p.scale(.5)
-            __p.image(_imgTitle, 10,0)
+            var h = $(window).height()*2;
+            __p.image(_imgTitle, 10,h-120)
             __p.popMatrix();
 
 

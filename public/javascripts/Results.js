@@ -299,7 +299,7 @@ var ResultsHandler = function()
     var _maxYear = 0;
     var _minYear = 5000;
     var _offset = {x:0, y:0};
-    var _MAX = 35;
+    var _MAX = 50;
 
     socket.on("resultUpdate", function(msg)
     {
@@ -379,9 +379,9 @@ var ResultsHandler = function()
             _nrOfResults = total;
             var screenWidth = $("#" + __canvas).width();
             var screenHeight = $("#" + __canvas).height()
-            var max = _nrOfResults > 100 ? 100 : _nrOfResults;
-            var previousMax = _nrOfPreviousResults > 100 ? 100 : _nrOfPreviousResults;
-            if(_nrOfResults < 35 && _nrOfResults >0)
+            var max = _nrOfResults > 1000 ? 1000 : _nrOfResults;
+            var previousMax = _nrOfPreviousResults > 1000 ? 1000 : _nrOfPreviousResults;
+            if(_nrOfResults < _MAX && _nrOfResults >0)
             {
                 //call server for actual results
                 socket.emit("getResults",{});
@@ -398,7 +398,7 @@ var ResultsHandler = function()
 
 
 
-                if (previousMax < 50) { //we had results before, but below 100, so reinit those as dots
+                if (previousMax < _MAX) { //we had results before, but below 100, so reinit those as dots
                     for (var i = 0; i < previousMax; i++) {
                         _results[i].init(Math.random() * screenWidth, Math.random() * screenHeight);
                     }

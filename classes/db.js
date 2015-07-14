@@ -4,8 +4,8 @@
 
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/ecloud');
-//mongoose.connect('mongodb://davinci.cs.kuleuven.be:27017/ecloud');
+//mongoose.connect('mongodb://localhost/ecloud');
+mongoose.connect('mongodb://davinci.cs.kuleuven.be:27017/ecloud');
 //var server = new Server('ensor.cs.kuleuven.be', 27017, {auto_reconnect: true});
 
 var db_connection = mongoose.connection;
@@ -118,11 +118,11 @@ exports.getResults = function(queries, facets, callback)
     if(queries.length > 0)
         match["$text"] = {$search: queryString};
     if(facets["COUNTRY"]!= undefined)
-        match["COUNTRY"] = facets["COUNTRY"];
+        match["COUNTRY"] = {$in: facets["COUNTRY"]};
     if(facets["LANGUAGE"]!= undefined)
-        match["LANGUAGE"] = facets["LANGUAGE"];
+        match["LANGUAGE"] = {$in: facets["LANGUAGE"]};
     if(facets["TITLE"]!= undefined)
-        match["TITLE"] = facets["TITLE"];
+        match["TITLE"] = {$in: facets["TITLE"]};
     if(facets["YEAR"]!= undefined)
     {
         console.log("is this even called" + facets["YEAR"])

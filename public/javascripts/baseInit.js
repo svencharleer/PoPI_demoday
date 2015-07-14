@@ -80,14 +80,14 @@ var loadAll = function(modules) {
             onAddTuioCursor = function (addCursor) {
                 var x = addCursor.getScreenX(__screenWidth);
                 var y = addCursor.getScreenY(__screenHeight);
-                __vis.addTouch(addCursor.cursorId, x, y);
+                __vis.addTouch(addCursor.cursorId, x/2, y/2);
 
             },
 
             onUpdateTuioCursor = function (updateCursor) {
                 var x = updateCursor.getScreenX(__screenWidth);
                 var y = updateCursor.getScreenY(__screenHeight);
-                __vis.updateTouch(updateCursor.cursorId, x, y);
+                __vis.updateTouch(updateCursor.cursorId, x/2, y/2);
 
 
             },

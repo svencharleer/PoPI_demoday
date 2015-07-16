@@ -20,9 +20,7 @@ var loadAll = function(modules) {
 
 
     __loadingHandler.init(_width - 100, 10);
-    modules.push(__timelineHandler);
-    modules.unshift(__newspaperHandler);
-    modules.unshift(__countryHandler);
+
 
 
     var extras = [__loadingHandler];

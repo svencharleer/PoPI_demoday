@@ -136,6 +136,7 @@ var CountryResults = function()
         //only draw country name once
         if(layerIndex == 0)
         {
+
             if(selected)
             {
                 __p.pushMatrix()
@@ -318,6 +319,7 @@ var CountryHandler = function()
             var h = $(window).height()* _layout.h / _scale;
             $("#map").width(w);
             $("#map").height(h);
+            $("#map").offset({top: _offset.y, left: _offset.x});
 
 
             if(__imgCountrySelect == undefined)
@@ -394,6 +396,7 @@ var CountryHandler = function()
                     allCountries[country.countryCode()].push({c: country, i: i});
                 })
             }
+
             Object.keys(allCountries).forEach(function (k) {
                 //sort
                 allCountries[k].sort(function (a, b) {
@@ -422,10 +425,10 @@ var CountryHandler = function()
 
 
                 });
-                __p.fill(0xCC0B0B0B)
-                __p.noStroke();
-                __p.rectMode(__p.CORNER)
-                __p.rect(0,$(window).height()-50,__screenWidth, 50);
+                //__p.fill(0xCC0B0B0B)
+                //__p.noStroke();
+                //__p.rectMode(__p.CORNER)
+                //__p.rect(0,$(window).height()-50,__screenWidth, 50);
                 /*__p.pushMatrix();
                 __p.scale(.5)
                 var h = $(window).height()*2;

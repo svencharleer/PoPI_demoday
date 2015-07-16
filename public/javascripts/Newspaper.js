@@ -49,6 +49,8 @@ var Scrollbar = function()
         "initialized" : function() { return _initialized;},
         "init" : function(x,y,w,h,l,handler)
         {
+            //if no scroll bar needed:
+            if(l < h) l = h;
             _x = x;
             _y = y;
             _w = w;
@@ -140,7 +142,11 @@ var Scrollbar = function()
                 _touched = undefined;
             }
         }  //_handler.callbackHandler(_selector);
-        ,"offset":function(){return _offset/(_h-_h/_l*_h);}
+        ,"offset":function(){
+            if(_h == _l) return 0;
+            console.log(_offset/(_h-_h/_l*_h))
+            return _offset/(_h-_h/_l*_h);
+        }
 
 
     }
@@ -512,16 +518,16 @@ var NewspaperHandler = function()
                     //console.log(i);
                     var  y =  parseInt(j/nrPerLine)*(_itemHeight+10);
                     np.c.setPosition(x,y)
-                    if(np.c.position().y - _scroll.offset()*_lastElementY <= _height && np.c.position().y - _scroll.offset()*_lastElementY >= 0)
+                    if(np.c.position().y - _scroll.offset()*_lastElementY + _itemHeight <= _height && np.c.position().y - _scroll.offset()*_lastElementY >= 0)
 
 
 
 
 
-                    if (_selectedNewspapers.indexOf(np.c.title()) >= 0)
-                        np.c.drawSelected(color, _newspapers.length);
-                    else
-                        np.c.draw(color, _newspapers.length);
+                        if (_selectedNewspapers.indexOf(np.c.title()) >= 0)
+                            np.c.drawSelected(color, _newspapers.length);
+                        else
+                            np.c.draw(color, _newspapers.length);
 
 
 

@@ -46,13 +46,7 @@
 <canvas id="overlay"></canvas>
 <script type="application/javascript">
     var __tabletop = <%- tabletop%>
-    var __layout = {
-        TimelineHandler:{x:.5,y:0.5,w:.5,h:.5},
-        ResultsHandler:{x:0,y:.5,w:.5,h:.5},
-        NewspaperHandler:{x:.5,y:0,w:.5,h:.5},
-        CountryHandler:{x:0,y:0,w:.5,h:.5}
-
-    };
+    var __layout = <%- JSON.stringify(layout) %>
 </script>
 </body>
 </html>

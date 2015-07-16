@@ -114,6 +114,12 @@ var resultDummy = function()
     var _guid;
     var _this;
     var _tween = 0;
+    function x(){
+        return _position2.x * _handler.scale() + _handler.offset().x  + _handler.scrollOffset().x
+    }
+    function y(){
+        return _position2.y * _handler.scale() + _handler.offset().y  + _handler.scrollOffset().y
+    }
     return {
         "init": function(x,y,handler)
         {
@@ -151,7 +157,7 @@ var resultDummy = function()
                 __imgNewspaperIcon = __p.loadImage("/images/newspaper_icon.png");
             }*/
         },
-
+        "position": function(){return _position2;},
         "draw": function(selected)
         {
             if(_content== undefined) {
@@ -229,10 +235,10 @@ var resultDummy = function()
                     return true;
                 }
                 if (_touched == undefined &&
-                    touch.x > _position2.x*_handler.scale() + _handler.offset().x &&
-                    touch.x < _position2.x*_handler.scale() +  _size.w + _handler.offset().x &&
-                    touch.y > _position2.y*_handler.scale() + _handler.offset().y &&
-                    touch.y < _position2.y*_handler.scale() +  _size.h + _handler.offset().y) {
+                    touch.x > x() &&
+                    touch.x < x() +  _size.w  &&
+                    touch.y >y() &&
+                    touch.y < y() +  _size.h ) {
 
 
                     touchStillExists = true;
@@ -255,10 +261,10 @@ var resultDummy = function()
         {
 
             if (_touched != undefined && _touched.id == touch.id &&
-                touch.x > _position2.x*_handler.scale() + _handler.offset().x &&
-                touch.x < _position2.x*_handler.scale() +  _size.w + _handler.offset().x &&
-                touch.y > _position2.y*_handler.scale() + _handler.offset().y &&
-                touch.y < _position2.y*_handler.scale() +  _size.h + _handler.offset().y)
+                touch.x > x() &&
+                touch.x < x() +  _size.w  &&
+                touch.y >y() &&
+                touch.y < y() +  _size.h )
             {
                 _handler.callbackHandler(_content.ID, _content.URI);
 
@@ -302,10 +308,16 @@ var ResultsHandler = function()
     var _MAX = 50;
     var _layout;
     var _scale;
+    var _width = 1024;
+    var _height = 400;
+    var _scroll = new Scrollbar();
+
+    var _lastElementY = 0;
+    var _init = false;
 
     socket.on("resultUpdate", function(msg)
     {
-
+        if(!_init) return;
         //console.log(msg);
 
         var w = __screenWidth * _layout.w;
@@ -333,7 +345,9 @@ var ResultsHandler = function()
             r.initWithContent(((i) % nrOfPapersPerWidth) * _itemWidth, parseInt((i) / nrOfPapersPerWidth) * _itemHeight, _itemWidth, _itemHeight,
                 d,_this);
             _results.push(r);
+            _lastElementY = parseInt(i/nrOfPapersPerWidth)*_itemHeight;
         });
+        _scroll.init(_width-30,0,30,_height,_lastElementY,_this);
 
 
 
@@ -343,10 +357,17 @@ var ResultsHandler = function()
     return {
         "init" : function(layout)
         {
+            _init = true;
             _layout = layout;
             _scale = 1;
             _offset.x = _layout.x * __screenWidth;
             _offset.y = _layout.y * __screenHeight;
+            var w = __screenWidth * _layout.w;
+            var h = __screenHeight* _layout.h;
+
+
+            _width = w
+            _height = h
 
             if(_imgTitle == undefined)
             {
@@ -442,31 +463,46 @@ var ResultsHandler = function()
         "activeLayer":function()
         {
 
-           return  _results;
+            var ar = [];
+            ar.push(_scroll);
+
+                ar = ar.concat(_results);
+
+            return ar;
 
         },
         "draw":function() {
 
             __p.pushMatrix()
+
             __p.translate(_offset.x,_offset.y);
 
             __p.scale(_scale);
-            _results.forEach(function(r){
-                r.animate();
-                var selected = false;
-                if(_selectedResults.indexOf(r.ID())>=0)
-                    selected = true;
-                r.draw(selected);
-            })
-            __p.fill(200);
-
             __p.textFont(__fontHeavy);
             __p.textSize(20);
+            __p.fill(200);
             __p.text("#",10,-37);
             __p.fill(parseInt(colors[1]));
             __p.textSize(40);
             __p.textAlign(__p.LEFT, __p.TOP)
             __p.text(_nrOfResults,26,-50);
+
+            if(_scroll.initialized()) _scroll.draw();
+            __p.pushMatrix();
+            __p.translate(0,-_scroll.offset()*_lastElementY);
+
+            _results.forEach(function(r){
+                r.animate();
+                var selected = false;
+                if(_selectedResults.indexOf(r.ID())>=0)
+                    selected = true;
+                if(r.position().y - _scroll.offset()*_lastElementY + _itemHeight <= _height && r.position().y - _scroll.offset()*_lastElementY >= 0)
+
+                    r.draw(selected);
+            })
+
+
+            __p.popMatrix();
             __p.popMatrix();
            /* __p.pushMatrix();
             __p.scale(.5)
@@ -479,6 +515,7 @@ var ResultsHandler = function()
         "yearRange": function(){return {min:_minYear, max:_maxYear}},
         "offset": function(){return _offset;}
         ,
+        "scrollOffset" : function(){return {x:0, y:-_scroll.offset()*_lastElementY}},
         "name": "ResultsHandler",
         "scale": function(){return _scale;},
         "boundingBox":function(){

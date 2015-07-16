@@ -110,7 +110,9 @@ var initCountries = function(callback)
 
 var generateMap = function()
 {
-    map = L.map('map',{ zoomControl:false }).setView([53.9000, 18.3167], 5);
+
+    //return;
+    map = L.map('map',{ zoomControl:false }).setView([53.9000, 18.3167], 4);
     L.tileLayer('http://api.tiles.mapbox.com/v4/svencharleer.2b20ff07/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic3ZlbmNoYXJsZWVyIiwiYSI6IllXNkdIaG8ifQ.ISDLLDx44LQ2JKuxebfqSA', {
         attribution: 'Augment - Human Computer Interaction - Computer Science Department - KU Leuven',
         maxZoom: 18

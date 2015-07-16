@@ -149,6 +149,21 @@ var TimeLine = function()
 
         __p.popMatrix();
     }
+    //for use with touch, convert them with the scale and offset modifiers
+    function selector(index)
+    {
+        return _selector[index]// * _handler.scale() + _handler.offset().x;
+    }
+    function setSelector(index, value)
+    {
+        _selector[index] = value;// = (value - _handler.offset().x)/_handler.scale();
+    }
+    function x(){
+        return _position.x * _handler.scale() + _handler.offset().x;
+    }
+    function y(){
+        return _position.y * _handler.scale() + _handler.offset().y;
+    }
 
 
     return {
@@ -257,8 +272,8 @@ var TimeLine = function()
 
                 if (_touchedLeft == undefined ) {
                     //find if there's a left touch
-                    var widthLeftArea = ((_selector[1] - _selector[0]) / 10);
-                    var leftArea = [_selector[0] + _position.x, _selector[0] +widthLeftArea  + _position.x];
+                    var widthLeftArea = ((selector(1) - selector(0)) / 10);
+                    var leftArea = [selector(0) + x(), selector(0) +widthLeftArea  + x()];
                     if (touch.x >= leftArea[0]  && touch.x <= leftArea[1]) {
                         _touchedLeft = JSON.parse(JSON.stringify(touch));
                         _touchedLeft.alive = true;
@@ -269,8 +284,8 @@ var TimeLine = function()
                 }
                 if (_touchedRight == undefined) {
                     //find if there's a right touch
-                    var widthRightArea = ((_selector[1] - _selector[0]) / 10);
-                    var rightArea = [_selector[1] - widthRightArea + _position.x, _selector[1] + _position.x ];
+                    var widthRightArea = ((selector(1) - selector(0)) / 10);
+                    var rightArea = [selector(1) - widthRightArea + x(), selector(1) + x() ];
                     if (touch.x >= rightArea[0] && touch.x <= rightArea[1]) {
                         _touchedRight = JSON.parse(JSON.stringify(touch));
                         _touchedRight.alive = true;
@@ -281,8 +296,8 @@ var TimeLine = function()
                 }
                 if (_touchedMiddle == undefined) {
                     //find if there's a middle touch
-                    var widthMiddleArea = ((_selector[1] - _selector[0]) / 10);
-                    var rightArea = [_selector[0] + widthMiddleArea + _position.x, _selector[1] - widthMiddleArea + _position.x];
+                    var widthMiddleArea = ((selector(1) - selector(0)) / 10);
+                    var rightArea = [selector(0) + widthMiddleArea + x(), selector(1) - widthMiddleArea + x()];
                     if (touch.x >= rightArea[0] && touch.x <= rightArea[1]) {
                         _touchedMiddle = JSON.parse(JSON.stringify(touch));
                         _touchedMiddle.alive = true;
@@ -295,17 +310,17 @@ var TimeLine = function()
 
             });
             if (_touchedLeft != undefined && _touchedLeft.alive) {
-                _selector[0] += _touchedLeft.xChange;
+                setSelector(0,selector(0) + _touchedLeft.xChange);
 
             }
             if (_touchedRight != undefined && _touchedRight.alive) {
-                _selector[1] += _touchedRight.xChange;
+                setSelector(1,selector(1) + _touchedRight.xChange);
             }
             if (_touchedMiddle != undefined &&_touchedMiddle.alive) {
 
+                setSelector(0,selector(0) + _touchedMiddle.xChange);
+               setSelector(1,selector(1) +_touchedMiddle.xChange);
 
-                _selector[0] += _touchedMiddle.xChange;
-                _selector[1] += _touchedMiddle.xChange;
 
 
             }
@@ -376,6 +391,9 @@ var TimelineHandler = function()
     var _maxPerYear = 0;
     var _timelines = [];
     var _imgTitle;
+    var _layout;
+    var _scale;
+    var _offset = {x:0, y:0};
     socket.on("subQueryResult_Timeline", function(data){
         var years = data["YEAR"];
         _timeline.sub(years);
@@ -395,16 +413,21 @@ var TimelineHandler = function()
         }
         if(_timelines[layer] == undefined)
             _timelines[layer] = new TimeLine();
-        var w = $(window).width();
-        var h = $(window).height();
+        var w = $(window).width()* _layout.w / _scale;
+        var h = $(window).height()* _layout.h / _scale;
 
-        _timelines[layer].init(w *.1,h *.1, w - w *.2,h - h *.2-80,years, _this, reset);
+        _timelines[layer].init(0,0, w ,h ,years, _this, reset);
     }
 
     return {
-        "init":function()
+        "init":function(layout)
         {
-            document.querySelector("canvas").getContext("2d").scale(2, 2);
+            _layout = layout;
+
+            _scale = 1;
+            _offset.x = _layout.x * __screenWidth;
+            _offset.y = _layout.y * __screenHeight;
+
             if(_imgTitle == undefined)
             {
                 _imgTitle = __p.loadImage("/ecloud/images/title_years.png");
@@ -451,6 +474,9 @@ var TimelineHandler = function()
         },
         "draw":function(){
 
+            __p.pushMatrix();
+            __p.translate(_offset.x, _offset.y)
+            __p.scale(_scale);
             if(_timelines.length > 0)
             {
                 _timelines[0].animate();
@@ -462,14 +488,25 @@ var TimelineHandler = function()
                 _timelines[i].animate();
                 _timelines[i].draw(i, _timelines.length);
             }
-            __p.scale(.5)
-            var h = $(window).height()*2;
-            __p.image(_imgTitle, 10,h-120)
+            //__p.scale(.5)
+            /*var h = $(window).height()*2;
+            __p.image(_imgTitle, 10,h-120)*/
+            __p.popMatrix();
 
         },
         "getMax": function(){
             return {maxYear: _maxGlobalYear, minYear:_minGlobalYear, maxNewspapers: _maxPerYear};
+        },
+        "name": "TimelineHandler",
+        "scale": function(){return _scale;},
+        "offset": function(){return _offset;},
+        "boundingBox":function(){
+            var w = $(window).width()* _layout.w;
+            var h = $(window).height()* _layout.h;
+            return {x1:_offset.x, x2:_offset.x + w, y1:_offset.y, y2: _offset.y + h};
+
         }
+
 
 
     }

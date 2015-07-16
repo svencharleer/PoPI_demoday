@@ -4,8 +4,8 @@
 
 var mongoose = require('mongoose');
 
-//mongoose.connect('mongodb://localhost/ecloud');
-mongoose.connect('mongodb://davinci.cs.kuleuven.be:27017/ecloud');
+mongoose.connect('mongodb://localhost/ecloud');
+//mongoose.connect('mongodb://davinci.cs.kuleuven.be:27017/ecloud');
 //var server = new Server('ensor.cs.kuleuven.be', 27017, {auto_reconnect: true});
 
 var db_connection = mongoose.connection;

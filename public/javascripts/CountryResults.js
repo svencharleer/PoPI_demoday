@@ -66,6 +66,12 @@ var CountryResults = function()
     var _tween = 0;
     var _guid;
     var _this;
+    function x(){
+        return _position.x * _handler.scale() + _handler.offset().x;
+    }
+    function y(){
+        return _position.y * _handler.scale() + _handler.offset().y;
+    }
     function drawPapersWithColor(color)
     {
         __p.rectMode(__p.CORNERS);
@@ -190,7 +196,7 @@ var CountryResults = function()
                     touchStillExists = true;
                     return true;
                 }
-                if (_touched == undefined && __p.dist(touch.x, touch.y, _position.x, _position.y) < 22) {
+                if (_touched == undefined && __p.dist(touch.x, touch.y, x(), y()) < 22) {
 
 
                         touchStillExists = true;
@@ -213,7 +219,7 @@ var CountryResults = function()
         {
 
             if (_touched != undefined && _touched.id == touch.id
-                && __p.dist(touch.x, touch.y, _position.x, _position.y) < 22)
+                && __p.dist(touch.x, touch.y, x(), y()) < 22)
 
             {
                 if(_state == "highlight")
@@ -268,6 +274,9 @@ var CountryHandler = function()
     var _selectedCountries = [];
     var _otherFilters = [];
     var _imgTitle;
+    var _layout;
+    var _offset = {x:0, y:0};
+    var _scale;
 
     function updateLayer(countries, layer,_this, original,previous) //oroginal added to support drawing of all countries on all layers, evn
     {
@@ -299,9 +308,17 @@ var CountryHandler = function()
         });
     };
     return {
-        "init": function()
+        "init": function(layout)
         {
-            document.querySelector("canvas").getContext("2d").scale(2, 2);
+            _layout = layout;
+            _scale = 1;
+            _offset.x = _layout.x * __screenWidth;
+            _offset.y = _layout.y * __screenHeight;
+            var w = $(window).width()* _layout.w / _scale;
+            var h = $(window).height()* _layout.h / _scale;
+            $("#map").width(w);
+            $("#map").height(h);
+
 
             if(__imgCountrySelect == undefined)
             {
@@ -364,6 +381,10 @@ var CountryHandler = function()
             return [];
         },
         "draw":function() {
+            __p.pushMatrix()
+            __p.translate(_offset.x,_offset.y);
+
+            __p.scale(_scale);
             var allCountries = {};
             for (var i = _countries.length - 1; i >= 0; i--) {
                 _countries[i].forEach(function (country) {
@@ -405,17 +426,26 @@ var CountryHandler = function()
                 __p.noStroke();
                 __p.rectMode(__p.CORNER)
                 __p.rect(0,$(window).height()-50,__screenWidth, 50);
-                __p.pushMatrix();
+                /*__p.pushMatrix();
                 __p.scale(.5)
                 var h = $(window).height()*2;
                 __p.image(_imgTitle, 10,h-100)
-
+                */
                 __p.popMatrix();
 
 
             });
         },
-        "max": function(){return _max;}
+        "max": function(){return _max;},
+        "boundingBox":function(){
+            var w = $(window).width()* _layout.w;
+            var h = $(window).height()* _layout.h;
+            return {x1:_offset.x, x2:_offset.x + w, y1:_offset.y, y2: _offset.y + h};
+
+        },
+        "name": "CountryHandler",
+        "offset": function(){return _offset;},
+        "scale":function(){return _scale;},
 
 
     }

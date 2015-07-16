@@ -33,6 +33,18 @@ var Scrollbar = function()
     var _imgArrowUp;
     var _imgArrowDown;
     var _initialized = false;
+    function x(){
+        return _x * _handler.scale() + _handler.offset().x
+    }
+    function y(){
+        return _y * _handler.scale() + _handler.offset().y
+    }
+    function w(){
+        return _w * _handler.scale();
+    }
+    function h(){
+        return _h * _handler.scale();
+    }
     return {
         "initialized" : function() { return _initialized;},
         "init" : function(x,y,w,h,l,handler)
@@ -97,10 +109,11 @@ var Scrollbar = function()
                 if (_touched == undefined ) {
 
 
-                    if (touch.x >= _x  + _handler.moduleOffset().x
-                        && touch.x <= _x + _w + _handler.moduleOffset().x
-                        && touch.y >= _y + _offset + _handler.moduleOffset().y
-                        && touch.y <= _y +  _offset + _h/_l*_h + _handler.moduleOffset().y) {
+                    if (touch.x >= x()
+                        && touch.x <= x() + w()
+                        && touch.y >= y()
+                        && touch.y <= y() + h())
+                    {
                         _touched = JSON.parse(JSON.stringify(touch));
                         _touched.alive = true;
                         _touched.yChange = 0;
@@ -199,6 +212,18 @@ var Newspaper = function()
             __p.text(parseInt(count),x + 8 + length + 2, y+45-2, 30, 12);
         }
     }
+    function x(){
+        return _position.x * _handler.scale() + _handler.offset().x  + _handler.scrollOffset().x
+    }
+    function y(){
+        return _position.y * _handler.scale() + _handler.offset().y  + _handler.scrollOffset().y
+    }
+    function w(){
+        return _size.w * _handler.scale();
+    }
+    function h(){
+        return _size.h * _handler.scale();
+    }
 
 
     return {
@@ -237,12 +262,12 @@ var Newspaper = function()
                     return true;
                 }
                 if (_touched == undefined
-                    && touch.x > _position.x + _handler.moduleOffset().x + _handler.scrollOffset().x
-                    && touch.x < _position.x + _size.w  + _handler.moduleOffset().x + _handler.scrollOffset().x
-                    && touch.y> _position.y  + _handler.moduleOffset().y + _handler.scrollOffset().y
-                    && touch.y < _position.y + _size.h  + _handler.moduleOffset().y + _handler.scrollOffset().y
+                    && touch.x > x()
+                    && touch.x < x() + w()
+                    && touch.y> y()
+                    && touch.y < y() + h()
                     ) {
-
+                        console.log("touched")
 
                         touchStillExists = true;
                         _touched = touch;
@@ -264,10 +289,10 @@ var Newspaper = function()
         {
 
             if (_touched != undefined && _touched.id == touch.id
-                && touch.x > _position.x + _handler.moduleOffset().x + _handler.scrollOffset().x
-                && touch.x < _position.x + _size.w  + _handler.moduleOffset().x + _handler.scrollOffset().x
-                && touch.y> _position.y  + _handler.moduleOffset().y + _handler.scrollOffset().y
-                && touch.y < _position.y + _size.h  + _handler.moduleOffset().y + _handler.scrollOffset().y
+                && touch.x > x()
+                && touch.x < x() + w()
+                && touch.y> y()
+                && touch.y < y() + h()
                 )
             {
                 _handler.callbackHandler(_name);
@@ -308,6 +333,8 @@ var NewspaperHandler = function()
     var _selectedNewspapers = [];
     var _otherFilters = [];
     var _offset = {x:10,y:10};
+    var _layout;
+    var _scale;
     var _width = 1024;
     var _height = 400;
     var _itemWidth = 182;
@@ -372,17 +399,28 @@ var NewspaperHandler = function()
 
         });
 
-        _scroll.init(_width,0,30,_height,_lastElementY,_this);
+        _scroll.init(_width-30,0,30,_height,_lastElementY,_this);
     };
     return {
-        "init": function()
+        "init": function(layout)
         {
-            document.querySelector("canvas").getContext("2d").scale(2, 2);
-            var screenWidth = $("#" + __canvas).width();
-            var screenHeight = $("#" + __canvas).height()
-          _width = screenWidth-40;
-          _height = screenHeight-120;
-          _offset.y =10;
+
+
+            _layout = layout;
+          //  _scale = _layout.w > _layout.h ? _layout.h : _layout.w;
+            _scale = 1;
+            _offset.x = _layout.x * __screenWidth;
+            _offset.y = _layout.y * __screenHeight;
+            var w = __screenWidth * _layout.w;
+            var h = __screenHeight* _layout.h;
+
+
+
+           _width = w
+          _height = h
+
+
+
           if(_imgTitle == undefined)
           {
               _imgTitle = __p.loadImage("/ecloud/images/title_newspapers.png");
@@ -447,8 +485,14 @@ var NewspaperHandler = function()
         },
         "draw":function() {
 
+
             __p.pushMatrix();
             __p.translate(_offset.x,_offset.y);
+            __p.scale(_scale);
+            __p.rectMode(__p.CORNER)
+            __p.noFill();
+            __p.stroke(155);
+            __p.rect(0,0,_width, _height);
             if(_scroll.initialized()) _scroll.draw();
             __p.pushMatrix();
             __p.translate(0,-_scroll.offset()*_lastElementY);
@@ -463,7 +507,7 @@ var NewspaperHandler = function()
                         (_otherFilters.length > 0 && i == _newspapers.length-1)) //if it's the top layer we draw, and other filters active, all goes blue there
                         color = 1;
                     np.c.animate();
-                    var nrPerLine = parseInt(_width/_itemWidth);
+                    var nrPerLine = parseInt((_width-30)/_itemWidth);
                     var x =  j%nrPerLine * _itemWidth;
                     //console.log(i);
                     var  y =  parseInt(j/nrPerLine)*(_itemHeight+10);
@@ -490,15 +534,24 @@ var NewspaperHandler = function()
             //title of screen
             //might want to do differently when showing more on one screen
             //but for now outside matrix
-            __p.pushMatrix()
+            /*__p.pushMatrix()
             __p.scale(.5)
             var h = $(window).height()*2;
             __p.image(_imgTitle, 10,h-100)
-            __p.popMatrix();
+            __p.popMatrix();*/
         },
         "moduleOffset":function(){return _offset},
         "scrollOffset" : function(){return {x:0, y:-_scroll.offset()*_lastElementY}},
-        "max": function(){return _max;}
+        "max": function(){return _max;},
+        "name": "NewspaperHandler",
+        "offset": function(){return _offset;},
+        "scale":function(){return _scale;},
+        "boundingBox":function(){
+            var w = $(window).width()* _layout.w;
+            var h = $(window).height()* _layout.h;
+            return {x1:_offset.x, x2:_offset.x + w, y1:_offset.y, y2: _offset.y + h};
+
+        }
 
 
 

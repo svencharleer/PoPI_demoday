@@ -229,10 +229,10 @@ var resultDummy = function()
                     return true;
                 }
                 if (_touched == undefined &&
-                    touch.x > _position2.x + _handler.offset().x &&
-                    touch.x < _position2.x +  _size.w + _handler.offset().x &&
-                    touch.y > _position2.y + _handler.offset().y &&
-                    touch.y < _position2.y +  _size.h + _handler.offset().y) {
+                    touch.x > _position2.x*_handler.scale() + _handler.offset().x &&
+                    touch.x < _position2.x*_handler.scale() +  _size.w + _handler.offset().x &&
+                    touch.y > _position2.y*_handler.scale() + _handler.offset().y &&
+                    touch.y < _position2.y*_handler.scale() +  _size.h + _handler.offset().y) {
 
 
                     touchStillExists = true;
@@ -255,10 +255,10 @@ var resultDummy = function()
         {
 
             if (_touched != undefined && _touched.id == touch.id &&
-                touch.x > _position2.x + _handler.offset().x &&
-                touch.x < _position2.x +  _size.w + _handler.offset().x &&
-                touch.y > _position2.y + _handler.offset().y &&
-                touch.y < _position2.y +  _size.h + _handler.offset().y)
+                touch.x > _position2.x*_handler.scale() + _handler.offset().x &&
+                touch.x < _position2.x*_handler.scale() +  _size.w + _handler.offset().x &&
+                touch.y > _position2.y*_handler.scale() + _handler.offset().y &&
+                touch.y < _position2.y*_handler.scale() +  _size.h + _handler.offset().y)
             {
                 _handler.callbackHandler(_content.ID, _content.URI);
 
@@ -300,14 +300,16 @@ var ResultsHandler = function()
     var _minYear = 5000;
     var _offset = {x:0, y:0};
     var _MAX = 50;
+    var _layout;
+    var _scale;
 
     socket.on("resultUpdate", function(msg)
     {
 
         //console.log(msg);
 
-        var screenWidth = $("#" + __canvas).width();
-        var screenHeight = $("#" + __canvas).height()
+        var w = __screenWidth * _layout.w;
+        var h = __screenHeight* _layout.h;
         var max = _nrOfResults;
 
 
@@ -318,7 +320,7 @@ var ResultsHandler = function()
         var heightOfPaper = 4 * scale;
         var nrOfPapersPerWidth = parseInt(screenWidth/widthOfPaper)+1;*/
 
-        var nrOfPapersPerWidth = parseInt(screenWidth/_itemWidth);
+        var nrOfPapersPerWidth = parseInt(w/_itemWidth);
         _results = [];
         msg.some(function(d) {
             var y = new Date(d.DATE).getFullYear();
@@ -339,10 +341,13 @@ var ResultsHandler = function()
     })
 
     return {
-        "init" : function()
+        "init" : function(layout)
         {
-            document.querySelector("canvas").getContext("2d").scale(2, 2);
-            _offset.y = 50;
+            _layout = layout;
+            _scale = 1;
+            _offset.x = _layout.x * __screenWidth;
+            _offset.y = _layout.y * __screenHeight;
+
             if(_imgTitle == undefined)
             {
                 _imgTitle = __p.loadImage("/ecloud/images/title_results.png");
@@ -377,8 +382,8 @@ var ResultsHandler = function()
                 total += data["LANGUAGE"][l];
             })
             _nrOfResults = total;
-            var screenWidth = $("#" + __canvas).width();
-            var screenHeight = $("#" + __canvas).height()
+            var w = $(window).width()* _layout.w / _scale;
+            var h = $(window).height()* _layout.h / _scale;
             var max = _nrOfResults > 1000 ? 1000 : _nrOfResults;
             var previousMax = _nrOfPreviousResults > 1000 ? 1000 : _nrOfPreviousResults;
             if(_nrOfResults < _MAX && _nrOfResults >0)
@@ -400,7 +405,7 @@ var ResultsHandler = function()
 
                 if (previousMax < _MAX) { //we had results before, but below 100, so reinit those as dots
                     for (var i = 0; i < previousMax; i++) {
-                        _results[i].init(Math.random() * screenWidth, Math.random() * screenHeight);
+                        _results[i].init(Math.random() * w, Math.random() * h);
                     }
                 }
                 if (previousMax > max) {
@@ -410,7 +415,7 @@ var ResultsHandler = function()
                 else {
                     for (var i = 0; i < max - previousMax; i++) {
                         var r = new resultDummy();
-                        r.init(Math.random() * screenWidth, Math.random() * screenHeight);
+                        r.init(Math.random() * w, Math.random() * h);
                         _results.push(r);
                     }
                 }
@@ -444,6 +449,8 @@ var ResultsHandler = function()
 
             __p.pushMatrix()
             __p.translate(_offset.x,_offset.y);
+
+            __p.scale(_scale);
             _results.forEach(function(r){
                 r.animate();
                 var selected = false;
@@ -461,16 +468,25 @@ var ResultsHandler = function()
             __p.textAlign(__p.LEFT, __p.TOP)
             __p.text(_nrOfResults,26,-50);
             __p.popMatrix();
-            __p.pushMatrix();
+           /* __p.pushMatrix();
             __p.scale(.5)
             var h = $(window).height()*2;
             __p.image(_imgTitle, 10,h-120)
-            __p.popMatrix();
+            __p.popMatrix();*/
 
 
         },
         "yearRange": function(){return {min:_minYear, max:_maxYear}},
         "offset": function(){return _offset;}
+        ,
+        "name": "ResultsHandler",
+        "scale": function(){return _scale;},
+        "boundingBox":function(){
+            var w = $(window).width()* _layout.w;
+            var h = $(window).height()* _layout.h;
+            return {x1:_offset.x, x2:_offset.x + w, y1:_offset.y, y2: _offset.y + h};
+
+        }
 
 
     }

@@ -6,20 +6,24 @@ var __vis;
 var __screenWidth;
 var __screenHeight;
 
+var __resolutionModifier = 2;
+
 var loadAll = function(modules) {
     var _width = $(window).width();
     var _height = $(window).height();
+    if(_width < 1280) _width = 1280;
+    if(_height < 1024) _height = 1024;
     $("#overlay").attr("width",_width*2);
     $("#overlay").attr("height",_height*2);
 
-    $("#map").width(_width);
-    $("#map").height(_height);
 
 
 
     __loadingHandler.init(_width - 100, 10);
-    if (modules[0].name == "CountryHandler")
-        generateMap();
+    modules.push(__timelineHandler);
+    modules.unshift(__newspaperHandler);
+    modules.unshift(__countryHandler);
+
 
     var extras = [__loadingHandler];
     __vis = new visualization();
@@ -28,9 +32,20 @@ var loadAll = function(modules) {
     $("#overlay").attr("style","width:"+_width+"px;height:+"+_height+"px;");
 
 
-    __screenWidth = $("#" + __canvas).width()*2;
-    __screenHeight = $("#" + __canvas).height()*2;
+    __screenWidth = _width//$(window).width();
+    __screenHeight = _height//$(window).height();
 
+
+    //set canvas high res
+    document.querySelector("canvas").getContext("2d").scale(__resolutionModifier, __resolutionModifier);
+    //init each module
+
+    modules.forEach(function(m){
+        if(m.init != undefined)
+            m.init(__layout[m.name]);
+    })
+    if (modules[0].name == "CountryHandler")
+        generateMap();
     //connect to socket.io
     var cb;
     if (modules[0].name == "CountryHandler")
@@ -41,10 +56,7 @@ var loadAll = function(modules) {
     {
         cb = function(c){c();}
     }
-    modules.forEach(function(m){
-        if(m.init != undefined)
-            m.init();
-    })
+
 
 
 

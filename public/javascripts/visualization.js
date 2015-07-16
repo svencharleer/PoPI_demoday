@@ -14,9 +14,21 @@ var visualization = function () {
     var handleTouches = function(processing)
     {
         _modules.forEach(function(m){
+            var touchesForModule = {};
+            var bb = m.boundingBox();
+            Object.keys(_touches).forEach(function(t){
+               var touch = _touches[t];
+               if(touch.x > bb.x1
+                   && touch.x < bb.x2
+                   && touch.y > bb.y1
+                   && touch.y < bb.y2)
+               {
+                    touchesForModule[t] = touch;
+               }
+            });
             try {
                 m.activeLayer().forEach(function(c){
-                    c.touch(_touches);
+                    c.touch(touchesForModule);
 
                 })
             }

@@ -465,7 +465,7 @@ var TimelineHandler = function()
         "callbackHandler" : function(range)
         {
             //console.log("range is " + range)
-            socket.emit("addFilter_Facet", {facetType: "year", facetValue:range });
+            socket.emit("addFilter_Facet", {neeSession:__sessionID, facetType: "year", facetValue:range });
 
         },
         "activeLayer":function()

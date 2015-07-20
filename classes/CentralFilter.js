@@ -78,7 +78,7 @@ var Filter = function()
 }
 
 
-var CentralFilter = function()
+exports.CentralFilter = function()
 {
     var _filterStack = [new Filter()]; //keep history, so people can jump back?
     //blue indicates last filter, pink current?
@@ -172,7 +172,7 @@ var CentralFilter = function()
     }
 }
 
-exports.__centralFilter = new CentralFilter();
+
 /*
 // tests
 exports.__centralFilter.reset();

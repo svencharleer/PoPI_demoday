@@ -77,7 +77,7 @@ var loadAll = function(modules) {
         __loadingHandler.dc();
         //console.log("disconnected");
     })
-    socket.emit("registerVisualization");
+    socket.emit("registerVisualization",{neeSession:__sessionID});
 
     var client;
     if(__tabletop) {

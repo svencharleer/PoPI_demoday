@@ -6,6 +6,7 @@ exports.index = function(req, res) {
 
     var module = req.params.module;
     var tabletop = req.params.tabletop != undefined ? true : false;
+    var sessionID = req.params.sessionID;
     var moduleString = "";
     var page = "visualisation";
     var layout = "";
@@ -61,7 +62,7 @@ exports.index = function(req, res) {
             };
 
     }
-    res.render(page, {modules:moduleString, tabletop:tabletop, layout:layout});
+    res.render(page, {modules:moduleString, tabletop:tabletop, layout:layout, sessionID: sessionID});
 
 }
 

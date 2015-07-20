@@ -27,8 +27,8 @@ app.use(cookieParser());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(context, express.static(path.join(__dirname, 'public')));
 app.use(path.join(context,'/bower_components'),  express.static(__dirname + '/bower_components'));
-app.use(path.join(context,'/launch/:module/:tabletop'), routes.index);
-app.use(path.join(context,'/launch/:module'), routes.index);
+app.use(path.join(context,'/id/:sessionID/launch/:module/:tabletop'), routes.index);
+app.use(path.join(context,'/id/:sessionID/launch/:module'), routes.index);
 app.use(path.join(context,'/info'), info);
 
 // catch 404 and forward to error handler

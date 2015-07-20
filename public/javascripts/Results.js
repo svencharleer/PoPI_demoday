@@ -450,13 +450,13 @@ var ResultsHandler = function()
             //already selected?
             if(_selectedResults.indexOf(ID) >= 0)
             {
-                socket.emit("hideResult", ID);
+                socket.emit("hideResult", {neeSession:__sessionID, ID: ID});
                 _selectedResults.splice(_selectedResults.indexOf(ID),1);
             }
             else
             {
                 _selectedResults = [];
-                socket.emit("showResult", ID);
+                socket.emit("showResult", {neeSession:__sessionID, ID: ID});
                 _selectedResults.push(ID);
             }
         },

@@ -12,8 +12,9 @@
       <script src="/socket.io/socket.io.js"></script>
 
     <script type="application/javascript">
+        var __sessionID  = "<%= sessionID %>"
         var socket = io();
-        socket.emit("registerFilterActivities");
+        socket.emit("registerFilterActivities",{neeSession:__sessionID});
 
 
 

@@ -12,22 +12,23 @@
       <script src="/socket.io/socket.io.js"></script>
 
     <script type="application/javascript">
+        var __sessionID  = "<%= sessionID %>"
         var socket = io.connect("");
         socket.emit("registerFilterActivities");
 
         var submit = function() {
            if($("#query").val().length > 0)
-                socket.emit("addFilter_Query", {query:($("#query").val())});
+                socket.emit("addFilter_Query", {neeSession:__sessionID,query:($("#query").val())});
             $("#query").val("");
         };
         var reset = function() {
 
-            socket.emit("resetFilter");
+            socket.emit("resetFilter",{neeSession:__sessionID});
 
         };
 
         var removeQuery = function(q){
-            socket.emit("removeFilter_Query",{query:q})
+            socket.emit("removeFilter_Query",{neeSession:__sessionID, query:q})
         }
 
 

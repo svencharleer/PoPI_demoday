@@ -478,12 +478,12 @@ var NewspaperHandler = function()
             //already selected?
             if(_selectedNewspapers.indexOf(title) >= 0)
             {
-                socket.emit("removeFilter_Facet", {facetType: "title", facetValue:title });
+                socket.emit("removeFilter_Facet", {neeSession:__sessionID, facetType: "title", facetValue:title });
                 _selectedNewspapers.splice(_selectedNewspapers.indexOf(title),1);
             }
             else
             {
-                socket.emit("addFilter_Facet", {facetType: "title", facetValue:title });
+                socket.emit("addFilter_Facet", {neeSession:__sessionID, facetType: "title", facetValue:title });
                 _selectedNewspapers.push(title);
             }
         },

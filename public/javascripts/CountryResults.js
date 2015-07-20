@@ -153,11 +153,13 @@ var CountryResults = function()
         __p.textSize(12);
         __p.textAlign(__p.CENTER,__p.TOP)
         __p.text(_name, x-50, y-44,100,15);
-        __p.stroke(255)
+
         if(!selected) {
+            __p.stroke(150)
             __p.line(x, y - 10, x, y - 30)
             __p.line(x - 10, y - 30, x + 10, y - 30)
         }
+        __p.stroke(255)
         __p.textFont(__fontHeavy);
         __p.textSize(12);
         var offset = 55;
@@ -367,12 +369,12 @@ var CountryHandler = function()
             //already selected?
             if(_selectedCountries.indexOf(countryCode) >= 0)
             {
-                socket.emit("removeFilter_Facet", {facetType: "language", facetValue:countryCode });
+                socket.emit("removeFilter_Facet", {neeSession:__sessionID, facetType: "language", facetValue:countryCode });
                 _selectedCountries.splice(_selectedCountries.indexOf(countryCode),1);
             }
             else
             {
-                socket.emit("addFilter_Facet", {facetType: "language", facetValue:countryCode });
+                socket.emit("addFilter_Facet", {neeSession:__sessionID, facetType: "language", facetValue:countryCode });
                 _selectedCountries.push(countryCode);
             }
         },

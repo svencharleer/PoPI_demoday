@@ -183,6 +183,26 @@ var visualization = function () {
             }
 
 
+        },
+        "scroll": function(delta, x,y){
+            _modules.forEach(function(m){
+                var touchesForModule = {};
+                var bb = m.boundingBox();
+
+                if(x > bb.x1
+                    && x< bb.x2
+                    && y > bb.y1
+                    && y < bb.y2)
+                {
+                    m.activeLayer().forEach(function(c){
+                        if(c.type != undefined && c.type() == "scrollbar")
+                            c.scroll(delta);
+
+                    })
+                }
+
+               
+            });
         }
 
 

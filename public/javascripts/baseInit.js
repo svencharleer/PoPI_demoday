@@ -189,6 +189,11 @@ var loadAll = function(modules) {
         }
     }
     });
+    $("canvas").on({'mousewheel DOMMouseScroll' : function(e){
+        e.originalEvent.preventDefault();
+        var offset = $(this).offset();
+        __vis.scroll(e.originalEvent.deltaY, (e.clientX - offset.left),(e.clientY - offset.top));
+    }});
 
 
 

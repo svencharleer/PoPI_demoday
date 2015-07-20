@@ -146,7 +146,14 @@ var Scrollbar = function()
             if(_h == _l) return 0;
             //console.log(_offset/(_h-_h/_l*_h))
             return _offset/(_h-_h/_l*_h);
+        },
+        "type": function(){ return "scrollbar";},
+        "scroll": function(delta) {
+            _offset += delta;
+            if(_offset < 0) _offset = 0;
+            if(_offset > _h-_h/_l*_h) _offset = _h-_h/_l*_h;
         }
+
 
 
     }

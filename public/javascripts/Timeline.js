@@ -177,7 +177,7 @@ var TimeLine = function()
             _previousYears = JSON.parse(JSON.stringify(_years));
             _years = JSON.parse(JSON.stringify(years));
             _handler = handler;
-            console.log(JSON.stringify(_previousYears));
+            //console.log(JSON.stringify(_previousYears));
             if(_initialized == false || reset == true)
             {
                 _selector = [0,_size.w];
@@ -189,7 +189,7 @@ var TimeLine = function()
             _max =_handler.getMax().maxNewspapers;
             if(_max < 1) _max =1;
             //_selector = [0,YEARS*_widthPerYear];
-            console.log(YEARS)
+            //console.log(YEARS)
 
             _guid = guid();
             _this = this;
@@ -225,7 +225,7 @@ var TimeLine = function()
                 switch(touch.id)
                 {
                     case ids[2]:
-                        console.log(touch.x,_touchedMiddle.x);
+                        //console.log(touch.x,_touchedMiddle.x);
                         _touchedMiddle.xChange = touch.x - _touchedMiddle.x;
                         _touchedMiddle.x = touch.x;
 
@@ -233,14 +233,14 @@ var TimeLine = function()
                         //own the touch!
                         touch.owner = _guid;
                         touch.ownerObject = _this;
-                       // console.log("MIDDLE STILL EXISTS");
+                       // //console.log("MIDDLE STILL EXISTS");
 
                         break;
                     case ids[0]:
                         _touchedLeft.xChange = touch.x - _touchedLeft.x;
                         _touchedLeft.x = touch.x;
                         _touchedLeft.alive = true;
-                       // console.log("LEFT STILL EXISTS");
+                       // //console.log("LEFT STILL EXISTS");
                         //own the touch!
                         touch.owner = _guid;
                         touch.ownerObject = _this;
@@ -253,7 +253,7 @@ var TimeLine = function()
                         //own the touch!
                         touch.owner = _guid;
                         touch.ownerObject = _this;
-                        //console.log("RIGHT STILL EXISTS " + _touchedRight.x);
+                        ////console.log("RIGHT STILL EXISTS " + _touchedRight.x);
 
                         break;
 
@@ -278,7 +278,7 @@ var TimeLine = function()
                         _touchedLeft = JSON.parse(JSON.stringify(touch));
                         _touchedLeft.alive = true;
                         _touchedLeft.xChange = 0;
-                        console.log("LEFT");
+                        //console.log("LEFT");
                     }
 
                 }
@@ -290,7 +290,7 @@ var TimeLine = function()
                         _touchedRight = JSON.parse(JSON.stringify(touch));
                         _touchedRight.alive = true;
                         _touchedRight.xChange = 0;
-                        console.log("RIGHT");
+                        //console.log("RIGHT");
                     }
 
                 }
@@ -302,7 +302,7 @@ var TimeLine = function()
                         _touchedMiddle = JSON.parse(JSON.stringify(touch));
                         _touchedMiddle.alive = true;
                         _touchedMiddle.xChange = 0;
-                        console.log("MIDDLE");
+                        //console.log("MIDDLE");
                     }
 
                 }
@@ -341,24 +341,24 @@ var TimeLine = function()
             _wasAnythingAlive = false;
             if (_touchedLeft != undefined && !_touchedLeft.alive) {
                 _touchedLeft = undefined;
-                //console.log("left gone");
+                ////console.log("left gone");
                 _wasAnythingAlive = true;
             }
             if (_touchedRight != undefined && !_touchedRight.alive) {
                 _touchedRight = undefined;
-                //console.log("right gone");
+                ////console.log("right gone");
                 _wasAnythingAlive = true;
             }
             if (_touchedMiddle != undefined && !_touchedMiddle.alive) {
                 _touchedMiddle = undefined;
-                //console.log("middle gone");
+                ////console.log("middle gone");
                 _wasAnythingAlive = true;
             }
 
         },
         "untouch": function(touch) {
             //only update if none are touched, but one just was let go
-            console.log(parseInt(BASEYEAR+_selector[0]/_widthPerYear), parseInt(BASEYEAR+_selector[1]/_widthPerYear));
+            //console.log(parseInt(BASEYEAR+_selector[0]/_widthPerYear), parseInt(BASEYEAR+_selector[1]/_widthPerYear));
             _handler.callbackHandler([parseInt(BASEYEAR+_selector[0]/_widthPerYear),parseInt(BASEYEAR+_selector[1]/_widthPerYear)]);
         },
         "animate" : function()
@@ -409,7 +409,7 @@ var TimelineHandler = function()
                if(_maxGlobalYear < y) _maxGlobalYear = parseInt(y);
                 if(years[y] > _maxPerYear) _maxPerYear = parseInt(years[y]);
             });
-            console.log(_minGlobalYear, _maxGlobalYear, _maxPerYear);
+            //console.log(_minGlobalYear, _maxGlobalYear, _maxPerYear);
         }
         if(_timelines[layer] == undefined)
             _timelines[layer] = new TimeLine();
@@ -464,7 +464,7 @@ var TimelineHandler = function()
         },
         "callbackHandler" : function(range)
         {
-            console.log("range is " + range)
+            //console.log("range is " + range)
             socket.emit("addFilter_Facet", {facetType: "year", facetValue:range });
 
         },

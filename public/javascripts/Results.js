@@ -67,7 +67,7 @@ var ResultPaper = function()
 
                         touchStillExists = true;
                         _touched = touch;
-                        //console.log("touched");
+                        ////console.log("touched");
                         _handler.callbackHandler(_name);
                         return true;
 
@@ -318,7 +318,7 @@ var ResultsHandler = function()
     socket.on("resultUpdate", function(msg)
     {
         if(!_init) return;
-        //console.log(msg);
+        ////console.log(msg);
 
         var w = __screenWidth * _layout.w;
         var h = __screenHeight* _layout.h;
@@ -339,7 +339,7 @@ var ResultsHandler = function()
             if(y > _maxYear) _maxYear = y;
             if(y < _minYear) _minYear = y;
         });
-        //console.log(_maxYear, _minYear);
+        ////console.log(_maxYear, _minYear);
         msg.some(function(d,i){
             var r = new resultDummy();
             r.initWithContent(((i) % nrOfPapersPerWidth) * _itemWidth, parseInt((i) / nrOfPapersPerWidth) * _itemHeight, _itemWidth, _itemHeight,

@@ -1,6 +1,7 @@
 var http = require('http');
 var curl = require("curlrequest");
 var cheerio = require("cheerio");
+var URL = require("url");
 
 
 exports.doGET2 = function(host, path, originalData, callback, auth ) {
@@ -178,3 +179,5 @@ exports.scrapeURLFromEuropeana = function(id, callback)
 
     });
 }
+
+

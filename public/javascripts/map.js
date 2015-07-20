@@ -112,11 +112,15 @@ var generateMap = function()
 {
 
     //return;
-    map = L.map('map',{ zoomControl:false }).setView([53.9000, 18.3167], 4);
+    map = L.map('map',{ zoomControl:false }).setView([0,0], 5);
+    map.fitBounds([[65, 18],[40,33]]);
     L.tileLayer('http://api.tiles.mapbox.com/v4/svencharleer.2b20ff07/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic3ZlbmNoYXJsZWVyIiwiYSI6IllXNkdIaG8ifQ.ISDLLDx44LQ2JKuxebfqSA', {
         attribution: 'Augment - Human Computer Interaction - Computer Science Department - KU Leuven',
-        maxZoom: 18
+
+        maxZoom: 10
     }).addTo(map);
+
+
 }
 
 var width = 1.8;
@@ -131,7 +135,7 @@ var convertMapCoordToScreen = function(user)
         if(countryToCoordinates[cc] == undefined)
         {
             //WE NEED TO ADD THE CODE
-            console.log("country code not found: " + cc);
+            //console.log("country code not found: " + cc);
             return;
         }
         var coords = countryToCoordinates[cc].slice();
@@ -154,7 +158,7 @@ var convertMapCoordToScreen = function(user)
     if(countryToCoordinates[countryCode] == undefined)
     {
         //WE NEED TO ADD THE CODE
-        console.log("country code not found: " + countryCode);
+        //console.log("country code not found: " + countryCode);
         return;
     }
     var bounds = [countryToCoordinates[countryCode].slice(),countryToCoordinates[countryCode].slice()];

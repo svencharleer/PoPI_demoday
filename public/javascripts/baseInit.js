@@ -75,7 +75,7 @@ var loadAll = function(modules) {
     })
     socket.on("disconnect",function(){
         __loadingHandler.dc();
-        console.log("disconnected");
+        //console.log("disconnected");
     })
     socket.emit("registerVisualization");
 
@@ -90,14 +90,14 @@ var loadAll = function(modules) {
             onAddTuioCursor = function (addCursor) {
                 var x = addCursor.getScreenX(__screenWidth);
                 var y = addCursor.getScreenY(__screenHeight);
-                __vis.addTouch(addCursor.cursorId, x/2, y/2);
+                __vis.addTouch(addCursor.cursorId, x, y);
 
             },
 
             onUpdateTuioCursor = function (updateCursor) {
                 var x = updateCursor.getScreenX(__screenWidth);
                 var y = updateCursor.getScreenY(__screenHeight);
-                __vis.updateTouch(updateCursor.cursorId, x/2, y/2);
+                __vis.updateTouch(updateCursor.cursorId, x, y);
 
 
             },
@@ -110,19 +110,19 @@ var loadAll = function(modules) {
             },
 
             onAddTuioObject = function (addObject) {
-                //console.log(addObject);
+                ////console.log(addObject);
             },
 
             onUpdateTuioObject = function (updateObject) {
-                //console.log(updateObject);
+                ////console.log(updateObject);
             },
 
             onRemoveTuioObject = function (removeObject) {
-                //console.log(removeObject);
+                ////console.log(removeObject);
             },
 
             onRefresh = function (time) {
-                //console.log(time);
+                ////console.log(time);
             };
 
         client.on("addTuioCursor", onAddTuioCursor);

@@ -140,7 +140,7 @@ var NewspaperHandlerD3 = function()
                 .key(function(d) { return d})
                 .rollup(function(d){
                     if(_raw[1] != undefined)
-                    console.log(_raw[1][d])
+                    //console.log(_raw[1][d])
                     return [
                         _raw[0][d],
                         _raw[1] != undefined ? (_raw[1][d] != undefined ? _raw[1][d]:0) : undefined

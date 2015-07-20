@@ -23,8 +23,8 @@ var otherFilters = function(exclude,data)
         }
         catch(exc)
         {
-            console.log("otherFilters: layer does not contain data, sync prob?");
-            console.log(exc);
+            //console.log("otherFilters: layer does not contain data, sync prob?");
+            //console.log(exc);
         }
 
     });
@@ -46,8 +46,8 @@ var getWidgetSpecificData = function(exclude,data)
     }
     catch(exc)
     {
-        console.log("getWidgetSpecificData: data empty, sync prob?");
-        console.log(exc);
+        //console.log("getWidgetSpecificData: data empty, sync prob?");
+        //console.log(exc);
     }
     return myData;
 }
@@ -290,7 +290,7 @@ var CountryHandler = function()
             var country = new CountryResults();
             if(languageToCountryCode[c] == undefined)
             {
-                console.log(c + " not found in language to countrycode");
+                //console.log(c + " not found in language to countrycode");
                 return;
             }
             var cc = languageToCountryCode[c];

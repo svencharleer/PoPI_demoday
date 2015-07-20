@@ -150,13 +150,13 @@ var LoadingHandler = function()
            {
                var y = _tween *_position.y + (1.0 - _tween) * (_position.y-100);
                 _loadingIcon.draw(_position.x, y);
-               //console.log("show");
+               ////console.log("show");
            }
            else
            {
                var y = (1.0 - _tween) *_position.y + _tween * (_position.y-100);
                _loadingIcon.draw(_position.x, y);
-               //console.log("hide");
+               ////console.log("hide");
            }
         }
     }

@@ -7,25 +7,33 @@
     <title>eCloud</title>
       <script type="application/javascript" src="/ecloud/bower_components/jquery/dist/jquery.min.js"></script>
     <link rel='stylesheet' href='/ecloud/stylesheets/style.css' />
+      <script type="application/javascript" src="/ecloud/bower_components/lodash/lodash.js"></script>
+
       <script src="/socket.io/socket.io.js"></script>
+      <script type="application/javascript">
+          var socket = io();
+      </script>
+
 
     <script type="application/javascript">
-        var socket = io();
+
+        var __screenWidth = $(window).width();
+        var __screenHeight = $(window).height();
+
+
+        //socket stuff
+        //------------
+
         socket.emit("registerResults");
-
-
-
-
         socket.on("update", function(uri){
             $("#results").html(uri);
             var iframe = document.getElementById("external");
             iframe.src = uri;
         });
-
-
         $(window).bind('unload', function(){
             socket.disconnect();
         });
+
 
     </script>
 

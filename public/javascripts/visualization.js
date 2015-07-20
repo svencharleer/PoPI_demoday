@@ -34,7 +34,7 @@ var visualization = function () {
             }
             catch(exc)
             {
-                console.log("touch update loop exc: " + exc);
+                //console.log("touch update loop exc: " + exc);
             }
         });
 
@@ -144,7 +144,7 @@ var visualization = function () {
             }
             _debugCursors[id] = {id:id,x:x,y:y};
             _touches[id] = {id:id,x:x,y:y, startx:x, starty:y};
-           // console.log("adding touch");
+           // //console.log("adding touch");
 
 
 
@@ -164,8 +164,8 @@ var visualization = function () {
         },
         "removeTouch" :function (id, x, y) {
 
-            console.log("remove touch")
-            console.log(_touches[id])
+            //console.log("remove touch")
+            //console.log(_touches[id])
             if(_touches[id] != undefined && _touches[id].owner != undefined)
             {
 

@@ -144,7 +144,7 @@ var Scrollbar = function()
         }  //_handler.callbackHandler(_selector);
         ,"offset":function(){
             if(_h == _l) return 0;
-            console.log(_offset/(_h-_h/_l*_h))
+            //console.log(_offset/(_h-_h/_l*_h))
             return _offset/(_h-_h/_l*_h);
         }
 
@@ -273,7 +273,7 @@ var Newspaper = function()
                     && touch.y> y()
                     && touch.y < y() + h()
                     ) {
-                        console.log("touched")
+                        //console.log("touched")
 
                         touchStillExists = true;
                         _touched = touch;
@@ -384,7 +384,7 @@ var NewspaperHandler = function()
         var nrPerLine = parseInt(_width/_itemWidth);
 
         _newspapers[layer] = [];
-       console.log(JSON.stringify(original));
+       //console.log(JSON.stringify(original));
         Object.keys(original).forEach(function(c,i) {
             var newspaper = new Newspaper();
 
@@ -515,7 +515,7 @@ var NewspaperHandler = function()
                     np.c.animate();
                     var nrPerLine = parseInt((_width-30)/_itemWidth);
                     var x =  j%nrPerLine * _itemWidth;
-                    //console.log(i);
+                    ////console.log(i);
                     var  y =  parseInt(j/nrPerLine)*(_itemHeight+10);
                     np.c.setPosition(x,y)
                     if(np.c.position().y - _scroll.offset()*_lastElementY + _itemHeight <= _height && np.c.position().y - _scroll.offset()*_lastElementY >= 0)

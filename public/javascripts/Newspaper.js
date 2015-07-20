@@ -335,7 +335,21 @@ var Newspaper = function()
                 _tween = 1;
         },
         "position": function(){return _position;},
-        "setPosition": function(x,y){_position.x = x; _position.y = y}
+        "setPosition": function(x,y){_position.x = x; _position.y = y},
+        "needsDraw": function()
+        {
+
+            if(_tween < 1.0 || _touched != undefined)
+            {
+
+                return true;
+            }
+            else
+            {
+
+                return false;
+            }
+        }
 
 
     }
@@ -360,6 +374,8 @@ var NewspaperHandler = function()
     var _keysSorted = [];
     var _max = 0;
     var _imgTitle;
+    var _needsDraw = false;
+
     function sortPapers()
     {
 
@@ -418,7 +434,7 @@ var NewspaperHandler = function()
         "init": function(layout)
         {
 
-
+            _needsDraw = true;
             _layout = layout;
           //  _scale = _layout.w > _layout.h ? _layout.h : _layout.w;
             _scale = 1;
@@ -443,10 +459,17 @@ var NewspaperHandler = function()
         "update": function(data)
         {
             _max = 0;
-            if(data.length == 1) //it's a reset, only one filter layer means show all, means reset has been hit
-            {
-                _selectedNewspapers = [];
-            }
+
+
+
+            //make sure the selected items stay in sync
+            _selectedNewspapers = [];
+            var selectedItems = data[data.length - 1].facets["title"];
+            if(selectedItems != undefined)
+                selectedItems.forEach(function(s){
+                _selectedNewspapers.push(s);
+                })
+
 
             var myData = getWidgetSpecificData("title", data[0]);
             _otherFilters = otherFilters("title", data); // see if there are other filters, needed for coloring correctly
@@ -469,7 +492,7 @@ var NewspaperHandler = function()
             }
 
             sortPapers();
-
+            _needsDraw = true;
 
 
         },
@@ -478,13 +501,15 @@ var NewspaperHandler = function()
             //already selected?
             if(_selectedNewspapers.indexOf(title) >= 0)
             {
+                //_selectedNewspapers.splice(_selectedNewspapers.indexOf(title),1);
                 socket.emit("removeFilter_Facet", {neeSession:__sessionID, facetType: "title", facetValue:title });
-                _selectedNewspapers.splice(_selectedNewspapers.indexOf(title),1);
+
             }
             else
             {
+                //_selectedNewspapers.push(title);
                 socket.emit("addFilter_Facet", {neeSession:__sessionID, facetType: "title", facetValue:title });
-                _selectedNewspapers.push(title);
+
             }
         },
         "activeLayer":function()
@@ -495,6 +520,18 @@ var NewspaperHandler = function()
                 ar = ar.concat(_newspapers[0]);
 
             return ar;
+        },
+        "updateLoop" : function()
+        {
+            var needsDraw = false;
+            for (var i = _newspapers.length - 1; i >= 0; i--) {
+                _newspapers[i].forEach(function(c){
+                    if(c.needsDraw()) needsDraw = true;
+                })
+
+            }
+
+            _needsDraw = needsDraw;
         },
         "draw":function() {
 
@@ -564,7 +601,8 @@ var NewspaperHandler = function()
             var h = $(window).height()* _layout.h;
             return {x1:_offset.x, x2:_offset.x + w, y1:_offset.y, y2: _offset.y + h};
 
-        }
+        },
+        "needsDraw":function(){return _needsDraw;}
 
 
 

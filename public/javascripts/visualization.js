@@ -68,12 +68,24 @@ var visualization = function () {
     var draw = function () {
 
         var processing = Processing.getInstanceById(__canvas);
-        processing.background(0,0);
         //processing.smooth();
 
         handleTouches(processing);
+
+
+        var needRedraw = false;
+        _modules.forEach(function(m){
+            if(m.updateLoop != undefined)
+                m.updateLoop();
+            if(m.needsDraw != undefined && m.needsDraw())
+                needRedraw = true;
+        })
+        if(!needRedraw) { return }
+        processing.background(0,0);
+
         drawModules();
         drawExtras();
+
 
         //debug draw cursors
         Object.keys(_debugCursors).forEach(function(c)

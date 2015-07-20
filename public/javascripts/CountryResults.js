@@ -266,6 +266,22 @@ var CountryResults = function()
             {
                 _tween += .05;
             }
+            else
+                _tween = 1.0;
+        },
+        "needsDraw": function()
+        {
+
+            if(_tween < 1.0 || _touched != undefined)
+            {
+
+                return true;
+            }
+            else
+            {
+
+                return false;
+            }
         }
 
 
@@ -280,6 +296,7 @@ var CountryHandler = function()
     var _layout;
     var _offset = {x:0, y:0};
     var _scale;
+    var _needsDraw = false;
 
     function updateLayer(countries, layer,_this, original,previous) //oroginal added to support drawing of all countries on all layers, evn
     {
@@ -313,6 +330,7 @@ var CountryHandler = function()
     return {
         "init": function(layout)
         {
+            _needsDraw = true;
             _layout = layout;
             _scale = 1;
             _offset.x = _layout.x * __screenWidth;
@@ -337,10 +355,13 @@ var CountryHandler = function()
         "name": "CountryHandler",
         "update": function(data)
         {
-            if(data.length == 1) //it's a reset, only one filter layer means show all, means reset has been hit
-            {
-                _selectedCountries = []
-            }
+            //make sure the selected items stay in sync
+            _selectedCountries = [];
+            var selectedItems = data[data.length - 1].facets["language"];
+            if(selectedItems != undefined)
+                selectedItems.forEach(function(s){
+                    _selectedCountries.push(s);
+                })
 
             _max = 0;
             var myData = getWidgetSpecificData("language", data[0]);
@@ -359,7 +380,7 @@ var CountryHandler = function()
                 updateLayer(getWidgetSpecificData("language", data[data.length - 1])["LANGUAGE"], 1, this,originalLayer,previousLayer);
             }
 
-
+            _needsDraw = true;
 
 
 
@@ -370,12 +391,12 @@ var CountryHandler = function()
             if(_selectedCountries.indexOf(countryCode) >= 0)
             {
                 socket.emit("removeFilter_Facet", {neeSession:__sessionID, facetType: "language", facetValue:countryCode });
-                _selectedCountries.splice(_selectedCountries.indexOf(countryCode),1);
+               // _selectedCountries.splice(_selectedCountries.indexOf(countryCode),1);
             }
             else
             {
                 socket.emit("addFilter_Facet", {neeSession:__sessionID, facetType: "language", facetValue:countryCode });
-                _selectedCountries.push(countryCode);
+                //_selectedCountries.push(countryCode);
             }
         },
         "activeLayer":function()
@@ -383,6 +404,18 @@ var CountryHandler = function()
             if(_countries.length > 0)
                 return _countries[0];
             return [];
+        },
+        "updateLoop" : function()
+        {
+            var needsDraw = false;
+            for (var i = _countries.length - 1; i >= 0; i--) {
+                _countries[i].forEach(function(c){
+                    if(c.needsDraw()) needsDraw = true;
+                })
+
+            }
+
+            _needsDraw = needsDraw;
         },
         "draw":function() {
             __p.pushMatrix()
@@ -451,6 +484,8 @@ var CountryHandler = function()
         "name": "CountryHandler",
         "offset": function(){return _offset;},
         "scale":function(){return _scale;},
+
+        "needsDraw":function(){return _needsDraw;}
 
 
     }

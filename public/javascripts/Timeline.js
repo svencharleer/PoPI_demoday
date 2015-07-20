@@ -167,7 +167,7 @@ var TimeLine = function()
 
 
     return {
-        "init" : function(x,y,w,h, years, handler, reset)
+        "init" : function(x,y,w,h, years, handler, range)
         {
             _position.x = x;
             _position.y = y;
@@ -178,11 +178,7 @@ var TimeLine = function()
             _years = JSON.parse(JSON.stringify(years));
             _handler = handler;
             //console.log(JSON.stringify(_previousYears));
-            if(_initialized == false || reset == true)
-            {
-                _selector = [0,_size.w];
-                _initialized = true;
-            }
+
             BASEYEAR = handler.getMax().minYear -  handler.getMax().minYear % 10;
             YEARS = (handler.getMax().maxYear - handler.getMax().maxYear %10) - BASEYEAR;
             _widthPerYear = _size.w / YEARS;
@@ -190,6 +186,16 @@ var TimeLine = function()
             if(_max < 1) _max =1;
             //_selector = [0,YEARS*_widthPerYear];
             //console.log(YEARS)
+
+            if(range == undefined)
+            {
+                _selector = [0,_size.w];
+
+            }
+            else
+            {
+                _selector = [(range[0]-BASEYEAR) * _widthPerYear, (range[1]-BASEYEAR) * _widthPerYear];
+            }
 
             _guid = guid();
             _this = this;
@@ -366,6 +372,26 @@ var TimeLine = function()
             if(_tween < 1.0)
             {
                 _tween += .05;
+                return false;
+            }
+            else
+            {
+                _tween = 1.0;
+                return true;
+            }
+        },
+        "needsDraw": function()
+        {
+
+            if(_tween < 1.0 || _touchedLeft != undefined || _touchedRight != undefined || _touchedMiddle != undefined)
+            {
+
+                return true;
+            }
+            else
+            {
+
+                return false;
             }
         },
 
@@ -386,6 +412,7 @@ var TimeLine = function()
 }
 var TimelineHandler = function()
 {
+    var _needsDraw = false;
     var _minGlobalYear = 5000;
     var _maxGlobalYear = 0;
     var _maxPerYear = 0;
@@ -394,11 +421,12 @@ var TimelineHandler = function()
     var _layout;
     var _scale;
     var _offset = {x:0, y:0};
+    var _range = undefined;
     socket.on("subQueryResult_Timeline", function(data){
         var years = data["YEAR"];
         _timeline.sub(years);
     });
-    function updateLayer(years, layer,_this, reset)
+    function updateLayer(years, layer,_this)
     {
 
         if(layer == 0)
@@ -416,12 +444,13 @@ var TimelineHandler = function()
         var w = $(window).width()* _layout.w / _scale;
         var h = $(window).height()* _layout.h / _scale;
 
-        _timelines[layer].init(0,0, w ,h ,years, _this, reset);
+        _timelines[layer].init(0,0, w ,h ,years, _this, _range);
     }
 
     return {
         "init":function(layout)
         {
+            _needsDraw = true;
             _layout = layout;
 
             _scale = 1;
@@ -435,12 +464,15 @@ var TimelineHandler = function()
         },
         "update": function(data)
         {
-            var reset = false
-            if(data.length == 1) //it's a reset, only one filter layer means show all, means reset has been hit
-            {
-                reset = true;
-            }
-            updateLayer(getWidgetSpecificData("year", data[0])["YEAR"],0,this, reset);
+
+            //make sure the selected items stay in sync
+            _range = undefined;
+            var selectedItems = data[data.length - 1].facets["year"];
+            if(selectedItems != undefined)
+                _range = selectedItems[0];
+
+
+            updateLayer(getWidgetSpecificData("year", data[0])["YEAR"],0,this);
             if(data.length == 1) {
                 while(_timelines.length > 1)
                 {
@@ -456,7 +488,7 @@ var TimelineHandler = function()
                 updateLayer(getWidgetSpecificData("year", data[data.length-i])["YEAR"], i,this);
             }
 
-
+            _needsDraw = true;
 
 
 
@@ -472,26 +504,41 @@ var TimelineHandler = function()
         {
             return _timelines;
         },
+        "updateLoop" : function()
+        {
+            var needsDraw = false;
+            for(var i = _timelines.length-1;i>=0;i--)
+                if(_timelines[0].needsDraw()) needsDraw = true;
+            _needsDraw = needsDraw;
+        },
+
         "draw":function(){
+
 
             __p.pushMatrix();
             __p.translate(_offset.x, _offset.y)
             __p.scale(_scale);
             if(_timelines.length > 0)
             {
-                _timelines[0].animate();
+                _timelines[0].animate()
+
+
                 _timelines[0].draw(0, _timelines.length);
             }
 
             for(var i = _timelines.length-1;i>0;i--)
             {
-                _timelines[i].animate();
+                _timelines[i].animate()
+
+
                 _timelines[i].draw(i, _timelines.length);
             }
             //__p.scale(.5)
             /*var h = $(window).height()*2;
             __p.image(_imgTitle, 10,h-120)*/
             __p.popMatrix();
+
+
 
         },
         "getMax": function(){
@@ -505,7 +552,8 @@ var TimelineHandler = function()
             var h = $(window).height()* _layout.h;
             return {x1:_offset.x, x2:_offset.x + w, y1:_offset.y, y2: _offset.y + h};
 
-        }
+        },
+        "needsDraw":function(){return _needsDraw;}
 
 
 

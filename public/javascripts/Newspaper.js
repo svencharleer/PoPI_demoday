@@ -91,7 +91,7 @@ var Scrollbar = function()
             //old touches
             Object.keys(touches).some(function (t) {
                 var touch = touches[t];
-                if(touch.owner != undefined && touch.owner != _guid) return false;
+                //if(touch.owner != undefined && touch.owner != _guid) return false;
                 if(_touched != undefined &&  touch.id == _touched.id) {
                     _touched.yChange = touch.y - _touched.y;
                     _touched.x = touch.x;
@@ -111,16 +111,16 @@ var Scrollbar = function()
                 if (_touched == undefined ) {
 
 
-                    if (touch.x >= x()
-                        && touch.x <= x() + w()
-                        && touch.y >= y()
+                    if (//touch.x >= x()
+                        //&& touch.x <= x() + w()
+                        touch.y >= y()
                         && touch.y <= y() + h())
                     {
                         _touched = JSON.parse(JSON.stringify(touch));
                         _touched.alive = true;
                         _touched.yChange = 0;
-                        touch.owner = _guid;
-                        touch.ownerObject = _this;
+                       // touch.owner = _guid;
+                       // touch.ownerObject = _this;
 
                     }
 

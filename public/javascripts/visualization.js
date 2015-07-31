@@ -88,14 +88,14 @@ var visualization = function () {
 
 
         //debug draw cursors
-        Object.keys(_debugCursors).forEach(function(c)
+       /* Object.keys(_debugCursors).forEach(function(c)
         {
             if(_debugCursors[c] != undefined)
             {
                 processing.fill(0,255,0);
                 processing.ellipse(_debugCursors[c].x, _debugCursors[c].y, 10, 10);
             }
-        });
+        });*/
 
 
 

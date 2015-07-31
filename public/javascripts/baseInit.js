@@ -11,8 +11,8 @@ var __resolutionModifier = 2;
 var loadAll = function(modules) {
     var _width = $(window).width();
     var _height = $(window).height();
-    if(_width < 1280) _width = 1280;
-    if(_height < 1024) _height = 1024;
+    //if(_width < 1280) _width = 1280;
+    //if(_height < 1024) _height = 1024;
     $("#overlay").attr("width",_width*2);
     $("#overlay").attr("height",_height*2);
 

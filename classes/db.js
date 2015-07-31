@@ -13,7 +13,7 @@ db_connection.on('error', console.error.bind(console, 'connection error:'));
 db_connection.once('open', function callback () {
 
     console.log("Connected to the database");
-
+    //exports.countText([], {}, function(err, data){console.log("result is" + JSON.stringify(data) + err)});
 
 
 
@@ -24,14 +24,14 @@ var Schema = mongoose.Schema;
 
 var paperSchema = new Schema({
     //_id: String,
-    PROVIDER_ID: String,
+    //PROVIDER_ID: String,
     LANGUAGE: String,
-    COLLECTION_ID: Number,
+    //COLLECTION_ID: Number,
     COUNTRY: String,
     FULL_TEXT: String,
     DATE: Date,
-    ID: String,
-    CREATED: String,
+    //ID: String,
+    //CREATED: String,
     TITLE: String,
     URI: String
 },{collection:"papers"});
@@ -83,9 +83,10 @@ exports.countText = function(queries, facets, callback) {
     //console.log(match);
     Paper.aggregate([match,
         {"$group":{_id:
-                {LANGUAGE:"$LANGUAGE",COUNTRY:"$COUNTRY",TITLE:"$TITLE", YEAR:{$year:"$DATE"}},
+                {LANGUAGE:"$LANGUAGE",/*COUNTRY:"$COUNTRY",*/TITLE:"$TITLE", YEAR:{$year:"$DATE"}},
                     count: { $sum : 1 }}}],
         function(err,data){
+            console.log(err)
             //aggregate it like the API does (although seperately might be interesting for cooler vis
             var facets = {LANGUAGE:{}, TITLE:{}, COUNTRY:{}, YEAR:{}};
             data.some(function(d) {

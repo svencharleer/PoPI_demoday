@@ -288,6 +288,20 @@ var resultDummy = function()
             if(_content != undefined)
                 return _content.URI;
             return "http://google.com";
+        },
+        "needsDraw": function()
+        {
+
+            if(_tween < 1.0 || _touched != undefined)
+            {
+
+                return true;
+            }
+            else
+            {
+
+                return false;
+            }
         }
 
     }
@@ -314,6 +328,7 @@ var ResultsHandler = function()
 
     var _lastElementY = 0;
     var _init = false;
+    var _needsDraw = false;
 
     socket.on("resultUpdate", function(msg)
     {
@@ -348,9 +363,7 @@ var ResultsHandler = function()
             _lastElementY = parseInt(i/nrOfPapersPerWidth)*_itemHeight;
         });
         _scroll.init(_width-30,0,30,_height,_lastElementY,_this);
-
-
-
+        _this.forceDraw();
 
     })
 
@@ -391,10 +404,7 @@ var ResultsHandler = function()
                 _selectedResults = [];
             }
             _this = this;
-            //if lower than 100 results, we can start showing details and load correct article
-            //give ID to each result, so we know when they vanish
-            //but cna't do that above 100 results
-            //so 2 vis. 1 mess, 1 x 100 perfect results
+
             _nrOfPreviousResults = _nrOfResults;
             var data = getWidgetSpecificData("", data[data.length - 1]);
 
@@ -405,42 +415,12 @@ var ResultsHandler = function()
             _nrOfResults = total;
             var w = $(window).width()* _layout.w / _scale;
             var h = $(window).height()* _layout.h / _scale;
-            var max = _nrOfResults > 1000 ? 1000 : _nrOfResults;
-            var previousMax = _nrOfPreviousResults > 1000 ? 1000 : _nrOfPreviousResults;
-            if(_nrOfResults < _MAX && _nrOfResults >0)
-            {
-                //call server for actual results
-                socket.emit("getResults",{});
-                return;
 
-            }
-            else {
+            //call server for actual results
+            socket.emit("getResults",{neeSession:__sessionID});
 
 
 
-
-
-
-
-
-
-                if (previousMax < _MAX) { //we had results before, but below 100, so reinit those as dots
-                    for (var i = 0; i < previousMax; i++) {
-                        _results[i].init(Math.random() * w, Math.random() * h);
-                    }
-                }
-                if (previousMax > max) {
-                    for (var i = 0; i < previousMax - max; i++)
-                        _results.pop();
-                }
-                else {
-                    for (var i = 0; i < max - previousMax; i++) {
-                        var r = new resultDummy();
-                        r.init(Math.random() * w, Math.random() * h);
-                        _results.push(r);
-                    }
-                }
-            }
 
 
 
@@ -523,7 +503,21 @@ var ResultsHandler = function()
             var h = $(window).height()* _layout.h;
             return {x1:_offset.x, x2:_offset.x + w, y1:_offset.y, y2: _offset.y + h};
 
-        }
+        },
+        "updateLoop" : function()
+        {
+            var needsDraw = false;
+            _results.forEach(function(r){
+
+                    if(r.needsDraw()) needsDraw = true;
+
+
+            });
+            if(_scroll.needsDraw()) needsDraw = true;
+            _needsDraw = needsDraw;
+        },
+        "needsDraw":function(){return _needsDraw;},
+        "forceDraw":function(){_needsDraw = true;}
 
 
     }

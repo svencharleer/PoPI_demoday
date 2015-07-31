@@ -33,6 +33,7 @@ var Scrollbar = function()
     var _imgArrowUp;
     var _imgArrowDown;
     var _initialized = false;
+
     function x(){
         return _x * _handler.scale() + _handler.offset().x
     }
@@ -83,6 +84,7 @@ var Scrollbar = function()
 
         },
         "touch" : function(touches) {
+
             //only update when we let go
             if(_touched != undefined)
                 _touched.alive = false;
@@ -97,6 +99,7 @@ var Scrollbar = function()
                     _touched.x = touch.x;
                     _touched.y = touch.y;
                     _touched.alive = true;
+
                 }
 
 
@@ -119,8 +122,9 @@ var Scrollbar = function()
                         _touched = JSON.parse(JSON.stringify(touch));
                         _touched.alive = true;
                         _touched.yChange = 0;
-                       // touch.owner = _guid;
-                       // touch.ownerObject = _this;
+
+                        //touch.owner = _guid;
+                        //touch.ownerObject = _this;
 
                     }
 
@@ -133,6 +137,7 @@ var Scrollbar = function()
                 _offset += _touched.yChange;
                 if(_offset < 0) _offset = 0;
                 if(_offset > _h-_h/_l*_h) _offset = _h-_h/_l*_h;
+                _needsDraw = true;
 
             }
 
@@ -152,7 +157,14 @@ var Scrollbar = function()
             _offset += delta;
             if(_offset < 0) _offset = 0;
             if(_offset > _h-_h/_l*_h) _offset = _h-_h/_l*_h;
+        },
+        "needsDraw": function()
+        {
+            if(_touched != undefined)
+                return true;
+            return false;
         }
+
 
 
 
@@ -530,6 +542,7 @@ var NewspaperHandler = function()
                 })
 
             }
+            if(_scroll.needsDraw()) needsDraw = true;
 
             _needsDraw = needsDraw;
         },
@@ -597,8 +610,8 @@ var NewspaperHandler = function()
         "offset": function(){return _offset;},
         "scale":function(){return _scale;},
         "boundingBox":function(){
-            var w = $(window).width()* _layout.w;
-            var h = $(window).height()* _layout.h;
+            var w = _width;// $(window).width()* _layout.w;
+            var h = _height;//$(window).height()* _layout.h;
             return {x1:_offset.x, x2:_offset.x + w, y1:_offset.y, y2: _offset.y + h};
 
         },

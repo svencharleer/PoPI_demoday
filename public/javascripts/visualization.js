@@ -18,10 +18,10 @@ var visualization = function () {
             var bb = m.boundingBox();
             Object.keys(_touches).forEach(function(t){
                var touch = _touches[t];
-               if(touch.x > bb.x1
-                   && touch.x < bb.x2
-                   && touch.y > bb.y1
-                   && touch.y < bb.y2)
+               if(touch.x >= bb.x1
+                   && touch.x <= bb.x2
+                   && touch.y >= bb.y1
+                   && touch.y <= bb.y2)
                {
                     touchesForModule[t] = touch;
                }

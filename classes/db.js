@@ -134,7 +134,8 @@ exports.getResults = function(queries, facets, callback)
         match["DATE"] = {$gte: min, $lte: max }
     }
     console.log("match for results: " + JSON.stringify(match))
-    Paper.find(match, callback);
+    Paper.find(match).limit(100)
+        .exec(callback);
 }
 
 exports.countText_byCountry = function(text, callback) {

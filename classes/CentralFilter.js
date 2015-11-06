@@ -2,6 +2,7 @@
  * Created by svenc on 17/06/15.
  */
 var paperLib = require('../classes/libCalls.js');
+var db = require('../classes/db.js')
 
     //every filter layer has either facet or query
 var Filter = function()
@@ -152,6 +153,20 @@ exports.CentralFilter = function()
         },
         "reset" : function()
         {
+            //dump stack in DB (for log) and reset
+            var facets = [];
+            _filterStack.forEach(function(stack){
+                facets.push(stack.facets());
+
+            });
+            var s = db.StackLog({ Timestamp: Date.now(),
+                Session: "EVAL 4-8-2015",
+                Stack: JSON.stringify(facets)
+            });
+
+            s.save(function(err){
+                if(err) console.log(err);
+            })
             _filterStack = [new Filter()];
 
         },

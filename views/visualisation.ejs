@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="minimal-ui"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
     <title>eCloud</title>
     <link rel='stylesheet' href='/ecloud/stylesheets/style.css' />
 
@@ -42,7 +42,20 @@
 <body onload="javascript:loadAll([<%- modules %>]);">
 
 <div id="d3"></div>
-<div id="map"></div>
+<%
+    if(modules.indexOf(",") < 0 && !tabletop) {
+%>
+    <div id="map" style="visibility: hidden;"></div>
+<%
+    }
+    else {
+ %>
+    <div id="map"></div>
+<%
+    }
+%>
+
+
 <canvas id="overlay"></canvas>
 <script type="application/javascript">
     var __tabletop = <%- tabletop%>

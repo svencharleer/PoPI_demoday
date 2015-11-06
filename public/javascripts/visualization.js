@@ -13,6 +13,7 @@ var visualization = function () {
 
     var handleTouches = function(processing)
     {
+
         _modules.forEach(function(m){
             var touchesForModule = {};
             var bb = m.boundingBox();
@@ -66,7 +67,6 @@ var visualization = function () {
 
 
     var draw = function () {
-
         var processing = Processing.getInstanceById(__canvas);
         //processing.smooth();
 

@@ -18,15 +18,15 @@ exports.index = function(req, res) {
             break;
         case "timeline":
             moduleString = "__timelineHandler";
-            layout = {TimelineHandler:{x:0.1,y:0.1,w:.8,h:.8}}
+            layout = {TimelineHandler:{x:0.05,y:0.05,w:.90,h:.90}}
             break;
         case "results":
             moduleString = "__resultsHandler";
-            layout = {ResultsHandler:{x:0.1,y:0.1,w:.8,h:.8}}
+            layout = {ResultsHandler:{x:0.05,y:0.05,w:.90,h:.90}}
             break;
         case "newspapers":
             moduleString = "__newspaperHandler";
-            layout = {NewspaperHandler:{x:0.1,y:0.1,w:.8,h:.8}}
+            layout = {NewspaperHandler:{x:0.05,y:0.05,w:.90,h:.90}}
             break;
         case "user":
             page = "user"
@@ -54,10 +54,10 @@ exports.index = function(req, res) {
         default:
             moduleString = "__countryHandler,__resultsHandler,__timelineHandler,__newspaperHandler";
             layout = {
-                TimelineHandler:{x:.5,y:0.5,w:.5,h:.5},
-                ResultsHandler:{x:0,y:.5,w:.5,h:.5},
-                NewspaperHandler:{x:.5,y:0,w:.5,h:.5},
-                CountryHandler:{x:0,y:0,w:.5,h:.5}
+                ResultsHandler:{x:.505,y:0.505,w:.48,h:.48},
+                NewspaperHandler:{x:0,y:.505,w:.48,h:.48},
+                TimelineHandler:{x:.505,y:0,w:.47,h:.47},
+                CountryHandler:{x:0,y:0,w:.48,h:.48}
 
             };
 

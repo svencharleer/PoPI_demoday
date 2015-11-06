@@ -199,7 +199,9 @@ var CountryResults = function()
                     touchStillExists = true;
                     return true;
                 }
-                if (_touched == undefined && __p.dist(touch.x, touch.y, x(), y()) < 22) {
+
+                if (_touched == undefined && __p.dist(touch.x, touch.y, x(), y()) < 30) {
+                    console.log(__p.dist(touch.x, touch.y, x(), y()))
 
 
                         touchStillExists = true;
@@ -222,7 +224,7 @@ var CountryResults = function()
         {
 
             if (_touched != undefined && _touched.id == touch.id
-                && __p.dist(touch.x, touch.y, x(), y()) < 22)
+                && __p.dist(touch.x, touch.y, x(), y()) < 30)
 
             {
                 if(_state == "highlight")
@@ -418,6 +420,7 @@ var CountryHandler = function()
             _needsDraw = needsDraw;
         },
         "draw":function() {
+
             __p.pushMatrix()
             __p.translate(_offset.x,_offset.y);
 

@@ -113,7 +113,7 @@ var TimeLine = function()
             __p.rectMode(__p.CORNERS);
             __p.translate(_position.x, _position.y);
             __p.stroke(parseInt(colors[3]))
-            var width = (_selector[1] - _selector[0])/10;
+            var width = (_selector[1] - _selector[0])/2;
 
 
         __p.stroke(0xCC4D586B);
@@ -125,7 +125,7 @@ var TimeLine = function()
             __p.textFont(__fontHeavy);
             __p.textSize(32);
         __p.fill(0xCC4D586B);
-            __p.text(parseInt(BASEYEAR+_selector[0]/_widthPerYear),_selector[0],-5 );
+            __p.text(parseInt(BASEYEAR+_selector[0]/_widthPerYear),_selector[0],30 );
 
 
             __p.noStroke();
@@ -141,7 +141,7 @@ var TimeLine = function()
             __p.line(_selector[1]  - width,0, _selector[1],0);
             __p.line(_selector[1]  - width,_size.h, _selector[1],_size.h);
             __p.fill(0xCC4D586B);
-            __p.text(parseInt(BASEYEAR+_selector[1]/_widthPerYear),_selector[1]-80,-5 );
+            __p.text(parseInt(BASEYEAR+_selector[1]/_widthPerYear),_selector[1]-80,5 );
 
         __p.image(_imgArrowLeft,_selector[0]-10, _size.h/2 - _imgArrowLeft.height/2);
         __p.image(_imgArrowRight,_selector[1]+10, _size.h/2 - _imgArrowRight.height/2);
@@ -278,8 +278,8 @@ var TimeLine = function()
 
                 if (_touchedLeft == undefined ) {
                     //find if there's a left touch
-                    var widthLeftArea = ((selector(1) - selector(0)) / 10);
-                    var leftArea = [selector(0) + x(), selector(0) +widthLeftArea  + x()];
+                    var widthLeftArea = ((selector(1) - selector(0)) / 2);
+                    var leftArea = [selector(0) + x()-50, selector(0) +widthLeftArea  + x()]; //50 just makes it bigger, on outside
                     if (touch.x >= leftArea[0]  && touch.x <= leftArea[1]) {
                         _touchedLeft = JSON.parse(JSON.stringify(touch));
                         _touchedLeft.alive = true;
@@ -290,8 +290,8 @@ var TimeLine = function()
                 }
                 if (_touchedRight == undefined) {
                     //find if there's a right touch
-                    var widthRightArea = ((selector(1) - selector(0)) / 10);
-                    var rightArea = [selector(1) - widthRightArea + x(), selector(1) + x() ];
+                    var widthRightArea = ((selector(1) - selector(0)) / 2);
+                    var rightArea = [selector(1) - widthRightArea + x(), selector(1) + x() + 50];
                     if (touch.x >= rightArea[0] && touch.x <= rightArea[1]) {
                         _touchedRight = JSON.parse(JSON.stringify(touch));
                         _touchedRight.alive = true;
@@ -300,7 +300,7 @@ var TimeLine = function()
                     }
 
                 }
-                if (_touchedMiddle == undefined) {
+                /*if (_touchedMiddle == undefined) {
                     //find if there's a middle touch
                     var widthMiddleArea = ((selector(1) - selector(0)) / 10);
                     var rightArea = [selector(0) + widthMiddleArea + x(), selector(1) - widthMiddleArea + x()];
@@ -311,7 +311,7 @@ var TimeLine = function()
                         //console.log("MIDDLE");
                     }
 
-                }
+                }*/
 
 
             });
@@ -334,11 +334,11 @@ var TimeLine = function()
             //end of screen left selector
             if(_selector[0] < 0)
                 _selector[0] = 0;
-            if(_selector[0] + 200 > YEARS * _widthPerYear)
-                _selector[0] = YEARS * _widthPerYear - 200;
+            if(_selector[0] + 20 > YEARS * _widthPerYear)
+                _selector[0] = YEARS * _widthPerYear - 20;
             //size of selector
-            if(_selector[1] - _selector[0] < 200)
-                _selector[1] +=  200 - (_selector[1] - _selector[0]);
+            if(_selector[1] - _selector[0] < 20)
+                _selector[1] +=  20 - (_selector[1] - _selector[0]);
             //end of screen right selector
             if(_selector[1] > YEARS * _widthPerYear)
                 _selector[1] = YEARS * _widthPerYear;

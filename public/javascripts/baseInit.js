@@ -9,6 +9,7 @@ var __screenHeight;
 var __resolutionModifier = 2;
 
 var loadAll = function(modules) {
+
     var _width = $(window).width();
     var _height = $(window).height();
     //if(_width < 1280) _width = 1280;
@@ -23,7 +24,7 @@ var loadAll = function(modules) {
 
 
 
-    var extras = [__loadingHandler];
+    var extras =  [__loadingHandler];
     __vis = new visualization();
     __vis.init("overlay", modules, extras);
 
@@ -49,6 +50,12 @@ var loadAll = function(modules) {
     if (modules[0].name == "CountryHandler")
     {
         cb = initCountries;
+        if(modules.length == 1 && !__tabletop)
+        {
+            //only country, and it's probably an ipad, so fix map
+            $("body").attr("class", "countryBody");
+        }
+
     }
     else
     {
@@ -60,6 +67,7 @@ var loadAll = function(modules) {
 
     socket.on("update", function (msg) {
         cb(function() {
+
 
             var data = msg;
             modules.forEach(function (m) {
@@ -147,6 +155,7 @@ var loadAll = function(modules) {
 
 
     $("body").on({ 'touchstart' : function(ev){
+
         ev.originalEvent.preventDefault();
 
         var touches = ev.originalEvent.changedTouches;

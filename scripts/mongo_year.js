@@ -26,3 +26,4 @@ db.papersthree.find({DATE: {$not: {$type: 9}}}).forEach( function(obj) {
         console.log(e)
     }
 });
+

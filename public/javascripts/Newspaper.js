@@ -70,6 +70,7 @@ var Scrollbar = function()
         },
         "draw" : function()
         {
+            return;
             __p.noStroke();
             __p.stroke(0xCC5E6C83);
             __p.line(_x,_y,_x,_y+_h);
@@ -85,6 +86,7 @@ var Scrollbar = function()
         },
         "touch" : function(touches) {
 
+            return;
             //only update when we let go
             if(_touched != undefined)
                 _touched.alive = false;
@@ -404,6 +406,8 @@ var NewspaperHandler = function()
         //sort
         _keysSorted.sort(function (a, b) {
             var sortLayer = _multilayer ? 1 : 0 ;
+
+
             if (_allNewspapers[a][sortLayer].c.count() < _allNewspapers[b][sortLayer].c.count())
                 return 1;
             if (_allNewspapers[a][sortLayer].c.count() > _allNewspapers[b][sortLayer].c.count())
@@ -411,6 +415,24 @@ var NewspaperHandler = function()
 
             return 0;
         })
+        //get all that are selected an put on top
+        var indices = [];
+        _keysSorted.forEach(function(k){
+            //if it's selected, put it on top:
+            var sortLayer = _multilayer ? 1 : 0 ;
+            if (_selectedNewspapers.indexOf(_allNewspapers[k][sortLayer].c.title()) >= 0)
+                indices.push(k)
+        })
+        console.log(indices)
+        indices.forEach(function(i){
+            var index = _keysSorted.indexOf(i);
+            if(index > -1)
+            {
+                _keysSorted.splice(index,1);
+                _keysSorted.unshift(i);
+            }
+        });
+
     }
 
     function updateLayer(newspapers, layer,_this, original,previous) //oroginal added to support drawing of all countries on all layers, evn
@@ -575,7 +597,7 @@ var NewspaperHandler = function()
                     ////console.log(i);
                     var  y =  parseInt(j/nrPerLine)*(_itemHeight+10);
                     np.c.setPosition(x,y)
-                    if(np.c.position().y - _scroll.offset()*_lastElementY + _itemHeight <= _height && np.c.position().y - _scroll.offset()*_lastElementY >= 0)
+                    if(np.c.position().y - _scroll.offset()*_lastElementY + _itemHeight <= _height && np.c.position().y - _scroll.offset()*_lastElementY >= -5)
 
 
 

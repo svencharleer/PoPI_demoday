@@ -36,12 +36,21 @@ var paperSchema = new Schema({
     URI: String
 },{collection:"papers"});
 
+var stackSchema = new Schema({
+
+    Timestamp: Date,
+    Session: String,
+    Stack: String
+
+},{collection:"stacklogs"});
+
 
 var Paper = mongoose.model('Paper',paperSchema);
+var StackLog = mongoose.model('Stacklog',stackSchema);
 
 exports.Paper = Paper;
 
-
+exports.StackLog = StackLog;
 /***************** QUERY METHODS *********************/
 
 exports.queryAll = function() {
@@ -49,6 +58,8 @@ exports.queryAll = function() {
     var query = Paper.find({});
     return query;
 };
+
+
 
 exports.countText = function(queries, facets, callback) {
 
@@ -164,6 +175,9 @@ exports.countText_Total = function(text, callback) {
         , callback)
 };
 
-
+exports.getStacks = function(callback)
+{
+    StackLog.find({},callback);
+}
 
 

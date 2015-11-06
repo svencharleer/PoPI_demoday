@@ -302,7 +302,8 @@ var resultDummy = function()
 
                 return false;
             }
-        }
+        },
+        "year": function() {return new Date(_content.DATE).getFullYear();}
 
     }
 }
@@ -329,6 +330,7 @@ var ResultsHandler = function()
     var _lastElementY = 0;
     var _init = false;
     var _needsDraw = false;
+    var _selectionChanged = false;
 
     socket.on("resultUpdate", function(msg)
     {
@@ -354,6 +356,13 @@ var ResultsHandler = function()
             if(y > _maxYear) _maxYear = y;
             if(y < _minYear) _minYear = y;
         });
+        msg.sort(function(a,b){
+            var ay = new Date(a.DATE).getFullYear();
+            var by = new Date(b.DATE).getFullYear();
+            if(ay > by) return -1;
+            if(ay < by) return 1;
+            return 0;
+        })
         ////console.log(_maxYear, _minYear);
         msg.some(function(d,i){
             var r = new resultDummy();
@@ -362,6 +371,7 @@ var ResultsHandler = function()
             _results.push(r);
             _lastElementY = parseInt(i/nrOfPapersPerWidth)*_itemHeight;
         });
+
         _scroll.init(_width-30,0,30,_height,_lastElementY,_this);
         _this.forceDraw();
 
@@ -428,14 +438,16 @@ var ResultsHandler = function()
         "callbackHandler" : function(ID,URI)
         {
             //already selected?
-            if(_selectedResults.indexOf(ID) >= 0)
+            /*if(_selectedResults.indexOf(ID) >= 0)
             {
                 socket.emit("hideResult", {neeSession:__sessionID, ID: ID});
                 _selectedResults.splice(_selectedResults.indexOf(ID),1);
             }
-            else
+            else*/
             {
+
                 _selectedResults = [];
+                _selectionChanged = true;
                 socket.emit("showResult", {neeSession:__sessionID, ID: ID});
                 _selectedResults.push(ID);
             }
@@ -461,11 +473,11 @@ var ResultsHandler = function()
             __p.textFont(__fontHeavy);
             __p.textSize(20);
             __p.fill(200);
-            __p.text("#",10,-37);
+            __p.text("#",10,-17);
             __p.fill(parseInt(colors[1]));
             __p.textSize(40);
             __p.textAlign(__p.LEFT, __p.TOP)
-            __p.text(_nrOfResults,26,-50);
+            __p.text(_nrOfResults,26,-30);
 
             if(_scroll.initialized()) _scroll.draw();
             __p.pushMatrix();
@@ -514,6 +526,8 @@ var ResultsHandler = function()
 
             });
             if(_scroll.needsDraw()) needsDraw = true;
+            if(_selectionChanged) needsDraw = true;
+            _selectionChanged = false;
             _needsDraw = needsDraw;
         },
         "needsDraw":function(){return _needsDraw;},
